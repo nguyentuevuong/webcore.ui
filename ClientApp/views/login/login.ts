@@ -4,7 +4,7 @@ import {component} from '../../decorator/component';
 
 @component({
     url: '/login',
-    icon: 'fa key',
+    icon: 'fa fa-key',
     title: '#login',
     styles: require('./login.css'),
     template: require('./login.html')
