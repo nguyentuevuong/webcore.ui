@@ -13,7 +13,7 @@ import { component } from '../../decorator/component';
             <span data-bind="i18n: '#language'"></span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" data-bind="foreach: regions">
-            <a class="dropdown-item" href="#" data-bind="i18n: '#' + $data, click: $vm.lang.bind($vm.lang, $data)"></a>
+            <a class="dropdown-item" href="#" data-bind="i18n: '#' + $data, click: $vm.lang.bind($vm.lang, $data), css: { 'active': ko.toJS($vm.lang) == $data  }"></a>
         </div>
     </li>`
 })
