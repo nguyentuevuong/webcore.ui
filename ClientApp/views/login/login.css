@@ -1,6 +1,8 @@
 .login-form {
     min-width: 33%;
     margin-top: 120px;
+    border: 1px solid #ccc;
+    padding: 10px;
 }
 
 .panel {
@@ -16,11 +18,10 @@
 .panel p {
     color: #777777;
     font-size: 14px;
-    line-height: 24px;
 }
 
-.form-control {
-    font-size: 14px;
+.input-group-text i.fa {
+    min-width: 16px;
 }
 
 .forgot {

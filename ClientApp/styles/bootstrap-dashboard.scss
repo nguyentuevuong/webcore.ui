@@ -7,13 +7,6 @@ $enable-shadows: false !default;
 @import './node_modules/bootswatch/dist/lumen/variables';
 @import './node_modules/bootstrap/scss/bootstrap';
 @import './node_modules/bootswatch/dist/lumen/bootswatch';
-a {
-    &:focus {
-        outline: none;
-        box-shadow: $input-focus-box-shadow;
-    }
-}
-
 .control-label {
     overflow: hidden;
     padding-left: 5px;
