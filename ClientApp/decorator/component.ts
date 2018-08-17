@@ -78,8 +78,6 @@ export function component(params: IDecoratorComponent) {
                 .replace(/\[role="([a-z0-9])+"\]\s}/gi, '}')
                 // replace rid from before @media by newline char*
                 .replace(/\[role="([a-z0-9])+"\]\s@media/gi, '\r@media')
-                // replace rid from before start media group
-                .replace(/\)\{(.|[a-z])/gi, (str: string) => str.replace(/\)\{/gi, `){${rid} `))
                 // add newline (and) or tab to group 
                 .replace(/.+/gi, (st: string) => {
                     // add new line before rid
@@ -88,7 +86,8 @@ export function component(params: IDecoratorComponent) {
                         .replace(/(\r\[role=")/gi, (rt: string) => `\r${_.startsWith(st, '@media') ? '\t' : ''}${rt.trim()}`)
                         .replace(/}}/gi, '}\r}');
                 })
-                .replace(/:\s/gi, ':');
+                .replace(/:\s/gi, ':')
+                .replace(/;}/gi, '}');
 
             params.styles = `<style type='text/css'>${rid} ${params.styles}</style>`;
         }
