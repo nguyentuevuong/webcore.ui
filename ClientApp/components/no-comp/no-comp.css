@@ -118,3 +118,21 @@
         position: fixed
     }
 }
+
+.list-group-item {
+    color: #fff;
+    background-color: #23b7e5;
+}
+
+.list-group-item:hover {
+    cursor: pointer;
+    background-color: #16aad8 !important;
+}
+
+.list-group-item .text-muted {
+    float: right;
+}
+
+.list-group-item .text-muted::before {
+    color: #fff;
+}

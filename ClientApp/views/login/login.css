@@ -1,6 +1,6 @@
 .login-form {
-    min-width: 33%;
-    margin-top: 120px;
+    max-width: 400px;
+    margin-top: 200px;
     border: 1px solid #ccc;
     padding: 10px;
 }

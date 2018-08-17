@@ -1,23 +1,43 @@
-<div class="row">
-    <div class="col-md-12 page-404">
-        <div class="number font-green"> 404 </div>
-        <div class="details">
-            <h3>Oops! You're lost.</h3>
-            <p> We can not find the page you're looking for.
-                <br>
-                <a href="/"> Return home </a> or try the search bar below.
-            </p>
-            <div class="input-group">
-                <input type="text" class="form-control" data-bind="hasFocus: focusSearch" placeholder="keyword...">
-                <div class="input-group-btn">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fa fa-search"></i>
-                    </button>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="page-404">
+            <div class="number font-green"> 404 </div>
+            <div class="details">
+                <h3>Oops! You're lost.</h3>
+                <p> We can not find the page you're looking for.
+                    <br>
+                    <a href="/"> Return home </a> or try the search bar below.
+                </p>
+                <div class="input-group">
+                    <input type="text" class="form-control" data-bind="hasFocus: focusSearch" placeholder="keyword...">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <p>
-                <a href=""><i class="fa fa-long-arrow-left"></i>go back</a>
-            </p>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="list-group bg-info auto m-b-sm m-b-lg">
+            <a href="/" class="list-group-item">
+                <i class="fa fa-chevron-right text-muted"></i>
+                <i class="fa fa-fw fa-mail-forward m-r-xs"></i>
+                <span>Goto application</span>
+            </a>
+            <a ui-sref="access.signin" class="list-group-item" href="/access/signin">
+                <i class="fa fa-chevron-right text-muted"></i>
+                <i class="fa fa-fw fa-sign-in m-r-xs"></i>
+                <span>Sign in</span>
+            </a>
+            <a ui-sref="access.signup" class="list-group-item" href="/access/signup">
+                <i class="fa fa-chevron-right text-muted"></i>
+                <i class="fa fa-fw fa-unlock-alt m-r-xs"></i>
+                <span>Sign up</span>
+            </a>
         </div>
     </div>
 </div>
