@@ -40,4 +40,11 @@ export const i18n: {
     }
 };
 
-export const lang: KnockoutObservable<string> = ko.observable('vi');
+export const lang: KnockoutObservable<string> = ko.observable(localStorage.getItem('lang') || 'vi');
+
+ko.computed({
+    read: () => {
+        let _lang = ko.toJS(lang);
+        localStorage.setItem('lang', _lang);
+    }
+});
