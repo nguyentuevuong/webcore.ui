@@ -1,0 +1,8 @@
+nts-selection .form-check-label span {
+    display: inline-block;
+    min-width: 45px;
+}
+
+.top-tool-bar .btn-group+.btn {
+    margin-left: 35px;
+}

@@ -1,0 +1,51 @@
+.login-form {
+    min-width: 33%;
+    margin-top: 120px;
+}
+
+.panel {
+    text-align: center;
+}
+
+.panel h2 {
+    color: #444444;
+    font-size: 23px;
+    margin: 0 0 8px 0;
+}
+
+.panel p {
+    color: #777777;
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.form-control {
+    font-size: 14px;
+}
+
+.forgot {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.forgot a {
+    color: #777777;
+    font-size: 14px;
+    text-decoration: underline;
+}
+
+.btn.btn-primary {
+    font-size: 14px;
+    width: 100%;
+}
+
+.back {
+    text-align: left;
+    margin-top: 10px;
+}
+
+.back a {
+    color: #444444;
+    font-size: 13px;
+    text-decoration: none;
+}

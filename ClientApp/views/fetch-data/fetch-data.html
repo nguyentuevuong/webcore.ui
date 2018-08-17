@@ -1,0 +1,24 @@
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+<p data-bind='ifnot: forecasts'><em>Loading...</em></p>
+
+<table class='table table-bordered animated fadeInLeft' data-bind='if: forecasts'>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>gender</th>
+            <th>note</th> 
+        </tr>
+    </thead>
+    <tbody data-bind='foreach: forecasts'>
+        <tr>
+            <td data-bind='text: id'></td>
+            <td data-bind='text: name'></td>
+            <td data-bind='text: gender'></td>
+            <td data-bind='text: memo'></td>
+        </tr>
+    </tbody>
+</table>

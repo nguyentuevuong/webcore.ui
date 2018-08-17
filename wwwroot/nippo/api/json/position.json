@@ -1,0 +1,30 @@
+[
+    {
+        "id": 1,
+        "name": "Giám đốc"
+    },
+    {
+        "id": 2,
+        "name": "Thư ký"
+    },
+    {
+        "id": 3,
+        "name": "Nhân viên văn phòng"
+    },
+    {
+        "id": 4,
+        "name": "Quản đốc"
+    },
+    {
+        "id": 5,
+        "name": "Công nhân"
+    },
+    {
+        "id": 6,
+        "name": "Bảo vệ"
+    },
+    {
+        "id": 7,
+        "name": "Lái xe"
+    }
+]

@@ -1,0 +1,61 @@
+<div class="row">
+    <div class="col-md-4">
+        <nts-selection params="{
+            value: $vm.employee,
+            options: $vm.employees,
+            key: ko.observable('id'),
+            text: ko.observable('name'),
+            configs: {
+                type: 'radio',
+                mode: 'selection',
+                require: false,
+                columns: {
+                    label: 'col-md-12',
+                    control: 'col-md-12'
+                },
+                label: {
+                    text: 'Chọn một nhân viên',
+                    constraint: 'Chọn một nhân viên để xem chi tiết',
+                    configs: {
+                        inline: false
+                    }
+                }
+            }
+        }">
+            <template id="template">
+                <span data-bind="text: option['id']"></span>
+                <span data-bind="text: option['name']"></span>
+            </template>
+        </nts-selection>
+        <nts-selection params="{
+            value: $vm.employee,
+            options: $vm.employees,
+            key: ko.observable('id'),
+            text: ko.observable('name'),
+            configs: {
+                type: 'radio',
+                mode: 'selection',
+                require: $vm.require,
+                columns: {
+                    label: 'col-md-12',
+                    control: 'col-md-12'
+                },
+                label: {
+                    text: $vm.text,
+                    constraint: 'Chọn một nhân viên để xem chi tiết',
+                    configs: {
+                        inline: false
+                    }
+                }
+            }
+        }">
+            <template id="template">
+                <span data-bind="text: option['id']"></span>
+                <span data-bind="text: option['name']"></span>
+            </template>
+        </nts-selection>
+    </div>
+    <div class="col-md-8">
+        <button type="button" class="btn btn-secondary" data-bind="click: $vm.change">Raise event</button>
+    </div>
+</div>

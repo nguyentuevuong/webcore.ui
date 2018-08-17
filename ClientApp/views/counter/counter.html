@@ -1,0 +1,20 @@
+<h1>Counter</h1>
+
+<p>This is a simple example of a Knockout component.</p>
+
+<p>Current count:
+    <strong data-bind='text: currentCount'></strong>
+</p>
+
+<div class="row animated fadeInUp">
+    <div class="col-md-3">
+        <label data-bind="ntsLabel: {
+                require: true,
+                text: 'User name',
+                constraint: 'ASCII_TEXT_32'
+            }"></label>
+    </div>
+    <div class="col-md-9">
+        <button data-bind='click: incrementCounter' class="btn btn-primary">Increment</button>
+    </div>
+</div>

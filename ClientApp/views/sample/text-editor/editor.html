@@ -1,0 +1,59 @@
+<div data-bind="ntsText: {
+	label: 'Demo input text',
+	value: value,
+	configs: {
+		columns: [
+			'col-md-2',
+			'col-md-4'
+		]
+	}
+}"></div>
+<div data-bind="ntsText: {
+	label: 'Demo input text',
+	value: value,
+	configs: {
+		require: true,
+		readonly: true,
+		enable: true,
+		columns: [
+			'col-md-2',
+			'col-md-4'
+		]
+	}
+}"></div>
+<div data-bind="ntsText: {
+	label: 'Demo input text',
+	value: value,
+	configs: {
+		require: true,
+		readonly: false,
+		multiline: true,
+		enable: true,
+		columns: [
+			'col-md-2',
+			'col-md-4'
+		],
+		validate: {
+			require: {
+				message: ''
+			},
+			min: {
+				value: 0,
+				message: ''
+			},
+			max: {
+				value: 0,
+				message: ''				
+			},
+			regex: {
+				partten: /(?:)/,
+				message: ''
+			}
+		}
+	}
+}"></div>
+
+<button data-bind="click: clear">Clear validate</button>
+<button data-bind="click: validate">Validate</button>
+
+<pre data-bind="text: ko.toJSON($vm, null, 4)"></pre>

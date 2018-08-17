@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "name": "Phòng tài vụ"
+    },
+    {
+        "id": 2,
+        "name": "Phòng kế toán"
+    },
+    {
+        "id": 3,
+        "name": "Phòng bảo vệ"
+    },
+    {
+        "id": 4,
+        "name": "Phòng điều hành"
+    },
+    {
+        "id": 5,
+        "name": "Phòng nhân sự"
+    }
+]

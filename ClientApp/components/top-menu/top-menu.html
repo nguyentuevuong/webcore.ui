@@ -1,0 +1,73 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top flex-md-nowrap shadow">
+    <div class="dropdown">
+        <a class="navbar-brand" href="javascript:0" aria-label="Nippo App" data-toggle="dropdown">
+            <i class="fa fa-audio-description"></i>
+        </a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="/sample/focus">
+                <i class="fa fa-tachometer"></i>
+                <span>North central</span>
+            </a>
+            <a class="dropdown-item" href="/sample/focus">
+                <i class="fa fa-hospital-o"></i>
+                <span>Middle central</span>
+            </a>
+            <a class="dropdown-item" href="/sample/focus">
+                <i class="fa fa-stack-overflow"></i>
+                <span>South central</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/sample/index">
+                <i class="fa fa-support"></i>
+                <span>Sample</span>
+            </a>
+        </div>
+    </div>
+    <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fa fa-bars"></i>
+    </button>
+    <div class="navbar-collapse collapse" id="navbarColor01">
+        <ul class="navbar-nav mr-auto">
+            <!-- ko foreach: { data: _.filter(routes, function(r) { return r.url.indexOf('sample') == -1; }), as: 'r'} -->
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" data-bind='
+                                attr: { href: $vm.router.link(r.url) },
+                                css: { active: $vm.router.currentRoute().page === r.params.page }'>
+                    <i data-bind="attr: { 'class': r.params.icon }"></i>
+                    <span data-bind="text: r.params.title"></span>
+                </a>
+            </li>
+            <!-- /ko -->
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="/no-page/1">
+                    <i class="fa fa-search"></i>
+                    <span>No page 1</span>
+                </a>
+            </li>
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" href="/sample/employee/3">
+                    <i class="fa fa-users"></i>
+                    <span>Employee</span>
+                </a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav flex-row ml-md-auto d-none d-md-flex">
+            <li class="nav-item dropdown">
+                <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <span>v4.1</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="bd-versions">
+                    <a class="dropdown-item active" href="/docs/4.1/">Latest (4.1.x)</a>
+                    <a class="dropdown-item" href="https://getbootstrap.com/docs/4.0/">v4.0.0</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="https://v4-alpha.getbootstrap.com/">v4 Alpha 6</a>
+                    <a class="dropdown-item" href="https://getbootstrap.com/docs/3.3/">v3.3.7</a>
+                    <a class="dropdown-item" href="https://getbootstrap.com/2.3.2/">v2.3.2</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>

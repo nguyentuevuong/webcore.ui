@@ -1,0 +1,75 @@
+<div data-bind="ntsDatepicker: {
+    value: date,
+    events: {
+        change: () => {
+        },
+    },
+    configs: ko.observable({
+        require: true,
+        readonly: false,
+        enable: true,
+        showbtn: true,
+        columns: [
+            'col-md-2',
+            'col-md-4'
+        ],
+        constraint: '',
+        label: 'Date picker'
+    }),
+    options: ko.observable({
+        format: 'dd-mm-yyyy',
+        startDate: '09-10-1988',
+        endDate: '09-10-2090'
+    })
+}"></div>
+
+<div data-bind="ntsDatepicker: {
+    value: date,
+    events: {
+        change: () => {
+        },
+    },
+    configs: ko.observable({
+        require: false,
+        readonly: false,
+        enable: true,
+        showbtn: true,
+        columns: [
+            'col-md-2',
+            'col-md-4'
+        ],
+        constraint: '',
+        label: 'Date picker with startDate'
+    }),
+    options: ko.observable({
+        format: 'dd-mm-yyyy',
+        startDate: '09-10-1988'
+    })
+}"></div>
+
+<div data-bind="ntsDatepicker: {
+    value: date,
+    events: {
+        change: () => {
+        },
+    },
+    configs: ko.observable({
+        require: false,
+        readonly: false,
+        enable: true,
+        showbtn: true,
+        columns: [
+            'col-md-2',
+            'col-md-4'
+        ],
+        constraint: '',
+        label: 'Date picker with endDate'
+    }),
+    options: ko.observable({
+        format: 'dd/mm/yyyy',
+        endDate: '09-10-1988'
+    })
+}"></div>
+
+<pre data-bind="text: ko.toJSON($vm.date, null, 4)"></pre>
+

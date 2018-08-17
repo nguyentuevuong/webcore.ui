@@ -1,0 +1,41 @@
+a {
+    color: #000;
+}
+
+a:focus {
+    box-shadow: none;
+}
+
+.navbar {
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.navbar-brand {
+    cursor: pointer;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-right: 0;
+    border-right: 2px solid #127ba3;
+}
+
+.nav-link i,
+.nav-link a,
+.nav-link span {
+    color: #fff;
+}
+
+.dropdown-item>span {
+    padding-left: 10px;
+}
+
+.navbar-toggler {
+    outline: none;
+}
+
+@media(max-width: 680px) {
+    .navbar-collapse {
+        padding-left: 15px;
+    }
+}

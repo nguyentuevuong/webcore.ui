@@ -1,0 +1,27 @@
+<form class="bd-search d-flex align-items-center">
+    <div class="input-group px-2 pb-2">
+        <input class="form-control" data-bind="value: keyword, valueUpdate: 'afterkeydown'">
+        <div class="input-group-append">
+            <button class="btn btn-primary">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+    <button class="btn btn-link d-md-none p-0" type="button" data-toggle="collapse" data-target="#bd-docs-nav"
+        aria-controls="bd-docs-nav" aria-expanded="false" aria-label="Toggle docs navigation">
+        <i class="fa fa-bars fa-2x"></i>
+    </button>
+</form>
+
+<nav class="collapse show" id="bd-docs-nav">
+    <ul class="nav flex-column nav-sample" data-bind="foreach: { data: ($vm.keyword(), $vm.filterRoute()), as: 'r'}">
+        <li class="nav-item">
+            <a class="nav-link" data-bind='
+                    attr: { href: $vm.router.link(r.url) },
+                    css: { active: $vm.router.currentRoute().page === r.params.page }'>
+                <i data-bind="attr: { 'class': r.params.icon }"></i>
+                <span data-bind="text: r.params.title"></span>
+            </a>
+        </li>
+    </ul>
+</nav>

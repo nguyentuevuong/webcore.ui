@@ -1,0 +1,183 @@
+<div class="top-tool-bar">
+    <div class="btn-group">
+        <button type="button" class="btn btn-secondary">
+            <i class="fa fa-file"></i> Thêm mới</button>
+        <button type="button" class="btn btn-primary" data-bind="click: $vm.saveData">
+            <i class="fa fa-save"></i> Lưu/Cập nhật</button>
+    </div>
+    <button type="button" class="btn btn-danger">
+        <i class="fa fa-trash"></i> Xoá</button>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-3">
+        <nts-selection params="{
+            value: $vm.employee()._raw,
+            options: $vm.employees,
+            configs: {
+                type: 'radio',
+                mode: 'listbox',
+                inline: true,
+                require: false,
+                columns: {
+                    label: 'col-md-12',
+                    control: 'col-md-12'
+                },
+                label: {
+                    text: 'Danh sách nhân viên',
+                    constraint: 'Chọn một nhân viên để xem chi tiết',
+                    configs: {
+                        inline: false
+                    }
+                }
+            }
+        }">
+            <template id="template">
+                <span data-bind="text: option['id']"></span>
+                <span data-bind="text: option['name']"></span>
+            </template>
+        </nts-selection>
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-3">
+                <nts-input params="{
+                    value: $vm.employee().id,
+                    configs: {
+                        require: true,
+                        disabled: true,
+                        columns: {
+                            label: 'col-md-12',
+                            control: 'col-md-12'
+                        },
+                        label: {
+                            text: 'Mã nhân viên',
+                            constraint: '',
+                            configs: {
+                                inline: false
+                            }
+                        }
+                    }
+                }"></nts-input>
+            </div>
+            <div class="col-md-9">
+                <nts-input params="{
+                    value: $vm.employee().name,
+                    configs: {
+                        require: true,
+                        columns: {
+                            label: 'col-md-12',
+                            control: 'col-md-12'
+                        },
+                        label: {
+                            text: 'Họ và tên',
+                            constraint: '',
+                            configs: {
+                                inline: false
+                            }
+                        }
+                    }
+                }"></nts-input>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <nts-selection params="{
+                        value: $vm.employee().gender,
+                        options: $vm.genders,
+                        configs: {
+                            type: 'radio',
+                            mode: 'selection',
+                            require: false,
+                            columns: {
+                                label: 'col-md-12',
+                                control: 'col-md-12'
+                            },
+                            label: {
+                                text: 'Giới tính',
+                                constraint: '',
+                                configs: {
+                                    inline: false
+                                }
+                            }
+                        }
+                    }">
+                    <template id="template">
+                        <span data-bind="text: option['id']"></span>
+                        <span data-bind="text: option['name']"></span>
+                    </template>
+                </nts-selection>
+            </div>
+            <div class="col-md-4">
+                <nts-selection params="{
+                        value: $vm.employee().position,
+                        options: $vm.positions,
+                        configs: {
+                            type: 'radio',
+                            mode: 'selection',
+                            require: true,
+                            columns: {
+                                label: 'col-md-12',
+                                control: 'col-md-12'
+                            },
+                            label: {
+                                text: 'Chức vụ',
+                                constraint: '',
+                                configs: {
+                                    inline: false
+                                }
+                            }
+                        }
+                    }">
+                    <template id="template">
+                        <span data-bind="text: option['id']"></span>
+                        <span data-bind="text: option['name']"></span>
+                    </template>
+                </nts-selection>
+            </div>
+            <div class="col-md-4">
+                <nts-selection params="{
+                        value: $vm.employee().department,
+                        options: $vm.departments,
+                        configs: {
+                            type: 'radio',
+                            mode: 'selection',
+                            require: true,
+                            columns: {
+                                label: 'col-md-12',
+                                control: 'col-md-12'
+                            },
+                            label: {
+                                text: 'Phòng ban',
+                                constraint: '',
+                                configs: {
+                                    inline: false
+                                }
+                            }
+                        }
+                    }">
+                    <template id="template">
+                        <span data-bind="text: option['id']"></span>
+                        <span data-bind="text: option['name']"></span>
+                    </template>
+                </nts-selection>
+            </div>
+        </div>
+        <div class="memo-zone">
+            <nts-label params="{ 
+                    text: 'Ghi chú',
+                    constraint: 'Ghi cái gì vào cũng được',
+                    configs: {
+                        require: false,
+                        columns: [
+                            'col-md-12',
+                            'col-md-12'
+                        ]
+                    }
+                }"></nts-label>
+            <textarea class="form-control" rows="5" data-bind="value: $vm.employee().memo"></textarea>
+        </div>
+    </div>
+</div>
+<hr />
+<pre data-bind="text: ko.toJSON($vm.employee, null, 4) "></pre>

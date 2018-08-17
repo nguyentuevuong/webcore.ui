@@ -1,0 +1,67 @@
+[
+    {
+        "id": 1,
+        "name": "Vũ Tiến Lâm",
+        "gender": 1,
+        "position": 1,
+        "department": 5,
+        "memo": "Đẹp trai, ga lăng, là leader tốt tính"
+    },
+    {
+        "id": 2,
+        "name": "Nguyễn Văn Vương",
+        "disabled": true,
+        "gender": 1,
+        "position": 3,
+        "department": 3,
+        "memo": "Có nhìn thấy gì đâu mà ghi chú"
+    },
+    {
+        "id": 3,
+        "name": "Trương Văn Lai",
+        "gender": 1,
+        "position": 3,
+        "department": 5,
+        "memo": "Nhây nhất team ccc"
+    },
+    {
+        "id": 4,
+        "name": "Lều Thị Lan",
+        "gender": 2,
+        "position": 4,
+        "department": 5,
+        "memo": "Trước thì xinh nhất, giờ thì..."
+    },
+    {
+        "id": 5,
+        "name": "Phạm Văn Dân",
+        "gender": 1,
+        "position": 5,
+        "department": 5,
+        "memo": "Đi Nhựt bổn rồi còn đâu"
+    },
+    {
+        "id": 6,
+        "name": "Lê Trung Hiếu",
+        "gender": 1,
+        "position": 3,
+        "department": 5,
+        "memo": "Lại Thằng Hiếu"
+    },
+    {
+        "id": 7,
+        "name": "Phạm Văn Thành",
+        "gender": 1,
+        "position": 2,
+        "department": 5,
+        "memo": "Thành Thất Tình"
+    },
+    {
+        "id": 8,
+        "name": "Nguyễn Hoàng Yến",
+        "gender": 2,
+        "position": 2,
+        "department": 5,
+        "memo": "Chưa ghi gì cả"
+    }
+]

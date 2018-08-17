@@ -1,0 +1,39 @@
+<header data-bind="component: {
+	name: 'top-menu',
+	params: {
+		router: router
+	}
+}"></header>
+<!-- ko if: [$vm.TEMPL.OTHER, $vm.TEMPL.HOME].indexOf(ko.toJS($vm.template)) > -1 -->
+<div class="container-fluid" data-bind='component: {
+	name: paserComp($vm.router.currentRoute().page),
+	params: $vm.router.currentRoute
+}'></div>
+<!-- /ko -->
+<!-- ko if: $vm.TEMPL.SAMPLE == ko.toJS($vm.template) -->
+<div class="container-fluid">
+	<div class="row flex-xl-nowrap">
+		<div data-bind="component: {
+				name: 'nav-menu',
+				params: {
+					router: router
+				}
+			}" class="col-12 col-md-3 col-xl-2"></div>
+		<div class="col-12 col-md-9 col-xl-10">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item">
+					<a href="#">Home</a>
+				</li>
+				<li class="breadcrumb-item">
+					<a href="#">Library</a>
+				</li>
+				<li class="breadcrumb-item active">Data</li>
+			</ol>
+			<div data-bind='component: {
+					name: paserComp($vm.router.currentRoute().page),
+					params: $vm.router.currentRoute
+				}'></div>
+		</div>
+	</div>
+</div>
+<!-- /ko -->
