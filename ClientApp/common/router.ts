@@ -2,6 +2,7 @@ import * as ko from 'knockout';
 import * as $ from 'jquery';
 import * as _ from 'lodash';
 import { History } from 'history';
+import { lang, i18n } from './app-i18n';
 import * as crossroads from 'crossroads';
 
 // This module configures crossroads.js, a routing library. If you prefer, you
@@ -92,11 +93,12 @@ export class Router {
         // computed route for change title
         ko.computed({
             read: () => {
-                let route: IRoute = ko.toJS(self.currentRoute),
+                let _lang: string = ko.toJS(lang),
+                    route: IRoute = ko.toJS(self.currentRoute),
                     title: HTMLElement | null = document.querySelector('head>title');
 
                 // change title of document
-                title!.innerText = route!.title || route!.url || '';
+                title!.innerText = route!.title ? i18n[_lang][route!.title!.replace('#', '')] : (route!.url || '');
             }
         });
     }

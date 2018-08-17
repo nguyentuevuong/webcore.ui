@@ -6,9 +6,7 @@ import { component } from '../../decorator/component';
 @component({
     url: '',
     icon: 'fa fa-home',
-    title: 'Home page',
+    title: '#home',
     template: require('./home.html')
 })
-export class HomeViewModel {
-
-}
+export class HomeViewModel { }

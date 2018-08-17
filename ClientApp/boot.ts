@@ -12,6 +12,7 @@ import 'bootstrap';
 
 // import components
 import "./common/ajax-ext";
+import './common/app-i18n';
 import './components/_cp-loader';
 import './controls/_ctrl-loader';
 import './views/_vws-loader';
