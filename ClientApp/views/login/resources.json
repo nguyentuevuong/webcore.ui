@@ -2,11 +2,15 @@
     "en": {
         "login": "Login",
         "username": "Username",
-        "password": "Password"
+        "password": "Password",
+        "login_email": "Please enter your email and password",
+        "login_forgot": "Forgot password?"
     },
     "vi": {
         "login": "Đăng nhập",
         "username": "Tên đăng nhập",
-        "password": "Mật khẩu bảo vệ"
+        "password": "Mật khẩu bảo vệ",
+        "login_email": "Vui lòng nhập thư điện tử và mật khẩu",
+        "login_forgot": "Quên mật khẩu?"
     }
 }
