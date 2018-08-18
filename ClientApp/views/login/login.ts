@@ -7,7 +7,8 @@ import {component} from '../../decorator/component';
     icon: 'fa fa-key',
     title: '#login',
     styles: require('./login.css'),
-    template: require('./login.html')
+    template: require('./login.html'),
+    resources: require('./resources.json')
 })
 export class LoginViewModel {
     focus: any = {

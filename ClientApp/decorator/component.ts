@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 import * as ko from 'knockout';
+import { i18n } from '../common/app-i18n';
 import { Routes } from '../common/app-router';
 import { randomId } from "../common/app-utils";
 
@@ -9,9 +10,10 @@ interface IDecoratorComponent {
     title?: string;
     icon?: string;
     name?: string;
-    template?: any;
-    styles?: any;
-    options?: Object;
+    styles?: string;
+    template?: string;
+    resources?: object;
+    options?: object;
 }
 
 interface ComponentConstructor {
@@ -33,6 +35,9 @@ interface ElementRef {
 export function component(params: IDecoratorComponent) {
     return function (constructor: ComponentConstructor) {
         let id = randomId();
+
+        // merge resources
+        _.merge(i18n, params.resources);
 
         if (!params.name && params.url) {
             params.name = params.url
@@ -58,7 +63,7 @@ export function component(params: IDecoratorComponent) {
         if (!_.isEmpty(params.styles)) {
             let rid = `[role="${id}"]`;
 
-            params.styles = params.styles
+            params.styles = params.styles!
                 .replace(/\/\*(?:(?!\*\/)[\s\S])*\*\/|[\r\n\t]+/g, '')
                 // now all comments, newlines and tabs have been removed
                 .replace(/\s{2,}/g, ' ')
@@ -92,7 +97,7 @@ export function component(params: IDecoratorComponent) {
             params.styles = `<style type='text/css'>${rid} ${params.styles}</style>`;
         }
 
-        ko.components.register(params.name || id,  ko.utils.extend({
+        ko.components.register(params.name || id, ko.utils.extend({
             viewModel: {
                 createViewModel: (params: any, elementRef: ElementRef) => {
                     let element = elementRef.element,

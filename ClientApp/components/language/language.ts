@@ -10,12 +10,13 @@ import { component } from '../../decorator/component';
         <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
             <i class="fa fa-globe"></i>
-            <span data-bind="i18n: '#language'"></span>
+            <span data-bind="i18n: { text: '#language' }"></span>
         </a>
         <div class="dropdown-menu dropdown-menu-right" data-bind="foreach: regions">
             <a class="dropdown-item" href="#" data-bind="i18n: { text: '#' + $data }, click: $vm.lang.bind($vm.lang, $data), css: { 'active': ko.toJS($vm.lang) == $data  }"></a>
         </div>
-    </li>`
+    </li>`,
+    resources: require('./resources.json')
 })
 export class LanguageComponent {
     lang: KnockoutObservable<string> = lang;

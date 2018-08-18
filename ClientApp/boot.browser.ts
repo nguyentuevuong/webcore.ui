@@ -5,6 +5,7 @@ import * as crossroads from 'crossroads';
 
 import { createBrowserHistory } from 'history';
 import { Routes } from './common/app-router';
+import { i18n } from './common/app-i18n';
 
 // import external libs
 import 'popper.js';
@@ -40,6 +41,7 @@ ko.utils.extend(window, {
     _: _,
     $: $,
     ko: ko,
+    i18n: i18n,
     routes: Routes,
     crossroads: crossroads
 });

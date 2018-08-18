@@ -1,5 +1,8 @@
 import * as _ from 'lodash';
+import * as $ from 'jquery';
 import * as ko from 'knockout';
+
+import './ajax-ext';
 
 import { handler } from '../decorator/binding';
 
@@ -78,25 +81,11 @@ export const i18n: {
 } = {
     'en': {
         'en': 'English',
-        'vi': 'Tiếng Việt',
-        'home': 'Home',
-        'language': 'Language',
-        'login': 'Login',
-        'username': 'Username',
-        'password': 'Password',
-        'login_email': 'Please enter your email and password',
-        'login_forgot': 'Forgot password?'
+        'vi': 'Tiếng Việt'
     },
     'vi': {
         'en': 'English',
-        'vi': 'Tiếng Việt',
-        'home': 'Trang chủ',
-        'language': 'Ngôn ngữ',
-        'login': 'Đăng nhập',
-        'username': 'Tên đăng nhập',
-        'password': 'Mật khẩu bảo vệ',
-        'login_email': 'Vui lòng nhập thư điện tử và mật khẩu',
-        'login_forgot': 'Quên mật khẩu?'
+        'vi': 'Tiếng Việt'
     }
 };
 

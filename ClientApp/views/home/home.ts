@@ -7,6 +7,7 @@ import { component } from '../../decorator/component';
     url: '',
     icon: 'fa fa-home',
     title: '#home',
-    template: require('./home.html')
+    template: require('./home.html'),
+    resources: require('./resources.json')
 })
 export class HomeViewModel { }
