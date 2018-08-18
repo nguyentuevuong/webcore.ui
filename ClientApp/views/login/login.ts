@@ -10,4 +10,8 @@ import {component} from '../../decorator/component';
     template: require('./login.html')
 })
 export class LoginViewModel {
+    focus: any = {
+        userName: ko.observable(true),
+        passWord: ko.observable(false)
+    }
 }
