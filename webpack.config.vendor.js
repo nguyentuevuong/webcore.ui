@@ -28,7 +28,8 @@ module.exports = (env) => {
                 'moment',
                 '@chenfengyuan/datepicker',
                 '@chenfengyuan/datepicker/dist/datepicker.css',
-                'font-awesome/css/font-awesome.css',
+                '@fortawesome/fontawesome-free/css/all.css',
+                '@fortawesome/fontawesome-free/css/v4-shims.css',
                 'animate.css/animate.css'
             ],
         },
