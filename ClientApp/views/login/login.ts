@@ -3,7 +3,7 @@ import * as ko from 'knockout';
 import {component} from '../../decorator/component';
 
 @component({
-    url: '/login',
+    url: '/access/signin',
     icon: 'fa fa-key',
     title: '#login',
     styles: require('./login.css'),
