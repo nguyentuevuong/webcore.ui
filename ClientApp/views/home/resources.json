@@ -1,10 +1,8 @@
 {
-    "vi": {
-        "test": "Thuwr casi coi naof",
-        "home": "Trang chủ"
-    },
     "en": {
-        "test": "test for resource loader",
         "home": "Home"
+    },
+    "vi": {
+        "home": "Trang chủ"
     }
 }

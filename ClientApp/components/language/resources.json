@@ -1,8 +1,8 @@
 {
-    "vi": {
-        "language": "Ngôn ngữ"
-    },
     "en": {
         "language": "Language"
+    },
+    "vi": {
+        "language": "Ngôn ngữ"
     }
 }
