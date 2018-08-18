@@ -25,7 +25,7 @@ module.exports = (env) => {
         entry: {
             bundles: [
                 './ClientApp/index.html',
-                './ClientApp/boot.ts',
+                './ClientApp/boot.browser.ts',
                 './ClientApp/styles/bootstrap-dashboard.scss'
             ]
         },
