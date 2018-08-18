@@ -4,5 +4,9 @@
     },
     "vi": {
         "language": "Ngôn ngữ"
+    },
+    "jp": {
+        "language": "言語",
+        "jp":  "日本語"
     }
 }

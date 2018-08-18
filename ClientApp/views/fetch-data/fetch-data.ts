@@ -1,7 +1,7 @@
 import * as ko from 'knockout';
 import * as $ from 'jquery';
 
-import {component} from '../../decorator/component';
+import { component } from '../../decorator/component';
 
 
 interface IEmployee {
@@ -14,7 +14,7 @@ interface IEmployee {
 }
 
 @component({
-    url: 'fetch',
+    url: 'ajax/fetch-data',
     icon: 'fa fa-refresh',
     name: 'fetch-data',
     template: require('./fetch-data.html')
@@ -32,11 +32,5 @@ export class FetchDataViewModel {
             error: (msg) => {
             }
         });
-
-        /*fetch('/api/company/find')
-            .then(response => response.json() as Promise<ICompany[]>)
-            .then(data => {
-                this.forecasts(data);
-            });*/
     }
 }

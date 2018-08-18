@@ -6,16 +6,7 @@ import { component } from '../../decorator/component';
 
 @component({
     name: 'i18n-lang',
-    template: `<li class="nav-item dropdown">
-        <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-            <i class="fa fa-globe"></i>
-            <span data-bind="i18n: { text: '#language' }"></span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-right" data-bind="foreach: regions">
-            <a class="dropdown-item" href="#" data-bind="i18n: { text: '#' + $data }, click: $vm.lang.bind($vm.lang, $data), css: { 'active': ko.toJS($vm.lang) == $data  }"></a>
-        </div>
-    </li>`,
+    template: require('./language.html'),
     resources: require('./resources.json')
 })
 export class LanguageComponent {
