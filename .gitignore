@@ -7,3 +7,4 @@
 **/wwwroot/**/*.eot
 **/wwwroot/**/*.svg
 **/wwwroot/**/*.ttf
+**/.DS_Store
