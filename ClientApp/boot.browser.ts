@@ -4,7 +4,7 @@ import * as ko from 'knockout';
 import * as crossroads from 'crossroads';
 
 import { createBrowserHistory } from 'history';
-import { Routes } from './common/router';
+import { Routes } from './common/app-router';
 
 // import external libs
 import 'popper.js';

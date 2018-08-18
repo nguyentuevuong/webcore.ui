@@ -2,7 +2,7 @@ import * as $ from 'jquery';
 import * as _ from 'lodash';
 import * as ko from 'knockout';
 
-import { IRoute, Router, Routes } from '../../common/router';
+import { IRoute, Router, Routes } from '../../common/app-router';
 import { component } from '../../decorator/component';
 
 interface NavMenuParams {

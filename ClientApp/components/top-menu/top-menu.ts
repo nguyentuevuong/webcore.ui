@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as ko from 'knockout';
 
 import { component } from "../../decorator/component";
-import { IRoute, Router, Routes } from "../../common/router";
+import { IRoute, Router, Routes } from "../../common/app-router";
 
 @component({
     name: 'top-menu',

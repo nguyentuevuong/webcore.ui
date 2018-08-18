@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 import * as ko from 'knockout';
-import { Routes } from '../common/router';
+import { Routes } from '../common/app-router';
 import { randomId } from "../common/app-utils";
 
 interface IDecoratorComponent {
