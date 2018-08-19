@@ -7,6 +7,9 @@ import './focus/focus';
 import './text-editor/editor';
 import './date-picker/date-picker';
 
+import './modal/modal.parent';
+import './modal/modal.childrent';
+
 import './like-widget/like-widget';
 import './deferred/deferred.1';
 import './deferred/deferred.2';
