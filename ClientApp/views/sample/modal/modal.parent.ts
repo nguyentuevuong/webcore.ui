@@ -7,8 +7,9 @@ import { component } from '../../../decorator/component';
     url: 'sample/modal',
     name: 'modal-sample',
     icon: 'fa fa-window-maximize',
-    title: 'Modal',
-    template: require('./modal.parent.html')
+    title: '#modal',
+    template: require('./modal.parent.html'),
+    resources: require('./resources.json')
 })
 export class SampleModalParentViewModel {
 
