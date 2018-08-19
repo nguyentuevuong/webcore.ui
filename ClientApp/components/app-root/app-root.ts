@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { History } from 'history';
 
 import { component } from '../../decorator/component';
-import { Components } from '../../common/app-component';
+import { Components } from '../../common/app-comp';
 import { IRoute, Router, Routes } from '../../common/app-router';
 
 @component({

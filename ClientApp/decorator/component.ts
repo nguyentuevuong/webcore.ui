@@ -4,7 +4,7 @@ import * as ko from 'knockout';
 import { i18n } from '../common/app-i18n';
 import { Routes } from '../common/app-router';
 import { randomId } from "../common/app-utils";
-import { Components } from '../common/app-component';
+import { Components } from '../common/app-comp';
 
 interface IDecoratorComponent {
     url?: string;

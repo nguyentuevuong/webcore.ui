@@ -4,7 +4,7 @@ import * as ko from 'knockout';
 
 import { getText } from '../common/app-i18n';
 import { handler } from '../decorator/binding';
-import { IComponent, Components } from '../common/app-component';
+import { IComponent, Components } from '../common/app-comp';
 
 @handler({
     virtual: true,
