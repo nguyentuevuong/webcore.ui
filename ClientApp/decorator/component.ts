@@ -4,6 +4,7 @@ import * as ko from 'knockout';
 import { i18n } from '../common/app-i18n';
 import { Routes } from '../common/app-router';
 import { randomId } from "../common/app-utils";
+import { Components } from '../common/app-component';
 
 interface IDecoratorComponent {
     url?: string;
@@ -47,6 +48,13 @@ export function component(params: IDecoratorComponent) {
         else if (!params.name && !params.url) {
             params.name = id;
         }
+
+        // add all component to component
+        Components.push({
+            icon: params.icon,
+            title: params.title,
+            name: params.name || id
+        });
 
         if (_.isString(params.url)) {
             Routes.push({

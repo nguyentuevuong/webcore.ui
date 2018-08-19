@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { History } from 'history';
 
 import { component } from '../../decorator/component';
+import { Components } from '../../common/app-component';
 import { IRoute, Router, Routes } from '../../common/app-router';
 
 @component({
@@ -49,8 +50,7 @@ export class AppRootViewModel {
     public dispose() {
         this.router.dispose();
 
-        // TODO: Need a better API for this
-        _((<any>ko).components._allRegisteredComponents).each(comp => ko.components.unregister(comp));
+        _(Components).each(comp => ko.components.unregister(comp.name));
     }
 }
 
