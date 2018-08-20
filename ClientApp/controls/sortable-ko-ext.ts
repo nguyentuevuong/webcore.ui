@@ -206,7 +206,7 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
                     }
                     dragItem = null;
                     //make sure that moves only run once, as update fires on multiple containers
-                    if (item && (this === parentEl) || (!self.hasNestedSortableFix && $.contains(this, parentEl))) {
+                    if (item && ($element[0] === parentEl) || (!self.hasNestedSortableFix && $.contains($element[0], parentEl))) {
                         //identify parents
                         sourceParent = self.dataGet(el, self.PARENTKEY);
                         sourceIndex = self.dataGet(el, self.INDEXKEY);
@@ -252,8 +252,8 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
                                 if (sourceParent) {
                                     sourceParent.splice(sourceIndex, 1);
                                     //if using deferred updates plugin, force updates
-                                    if (ko['processAllDeferredBindingUpdates']) {
-                                        ko['processAllDeferredBindingUpdates']();
+                                    if ((<any>ko)['processAllDeferredBindingUpdates']) {
+                                        (<any>ko)['processAllDeferredBindingUpdates']();
                                     }
                                     //if using deferred updates on knockout 3.4, force updates
                                     if (ko.options && ko.options.deferUpdates) {
@@ -300,8 +300,8 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
                             }
                         }
                         //if using deferred updates plugin, force updates
-                        if (ko['processAllDeferredBindingUpdates']) {
-                            ko['processAllDeferredBindingUpdates']();
+                        if ((<any>ko)['processAllDeferredBindingUpdates']) {
+                            (<any>ko)['processAllDeferredBindingUpdates']();
                         }
                         //allow binding to accept a function to execute after moving the item
                         if (sortable.afterMove) {
@@ -345,7 +345,7 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
         //attach meta-data
         self.dataSet(element, self.LISTKEY, templateOptions.foreach);
         //call template binding's update with correct options
-        ko.bindingHandlers.template.update(element, function () { return templateOptions; }, allBindingsAccessor, viewModel, bindingContext);ß
+        ko.bindingHandlers.template.update!(element, function () { return templateOptions; }, allBindingsAccessor, viewModel, bindingContext);
     }
 }
 
