@@ -1,0 +1,46 @@
+.ccg001-btn {
+    width: 40px;
+    height: 300px;
+    text-align: center;
+    display: table;
+    color: white;
+    cursor: pointer;
+    position: absolute;
+    top: calc(50% - 150px);
+    background-color: #2ECC71;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.ccg001-btn:hover {
+    background-color: #2BBF6A;
+}
+
+.ccg001-btn:after {
+    content: '';
+    position: absolute;
+    left: 42px;
+    top: calc(50% - 25px);
+    border-left: 16px solid #2ECC71;
+    border-top: 32px solid transparent;
+    border-bottom: 32px solid transparent;
+}
+
+.ccg001-btn:hover:after {
+    border-left-color: #2BBF6A;
+}
+
+.ccg001-btn>div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.ccg001-btn span {
+    width: 40px;
+    padding-top: 15px;
+    display: block;
+    font-size: 1.8em;
+    writing-mode: vertical-rl;
+    -ms-writing-mode: bt-rl;
+    white-space: nowrap;
+}
