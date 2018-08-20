@@ -1,10 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = (env) => {
     return [{
-        mode: 'development',
+        mode: env && env.prod ? 'production' : 'development',
         stats: {
             modules: false
         },
@@ -40,6 +42,7 @@ module.exports = (env) => {
             library: '[name]_[hash]',
         },
         optimization: {
+            minimize: env && env.prod,
             splitChunks: {
                 chunks: 'async',
                 minSize: 30000,
@@ -60,14 +63,18 @@ module.exports = (env) => {
                         reuseExistingChunk: true
                     }
                 }
-            }
+            },
+            minimizer: [
+                new UglifyJsPlugin({}),
+                new OptimizeCSSAssetsPlugin({})
+            ]
         },
         plugins: [
             new MiniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
                 // both options are optional
-                filename: '[name].css',
-                chunkFilename: '[id].css',
+                filename: env && env.prod ? '[name].[hash].css' : '[name].css',
+                chunkFilename: env && env.prod ? '[id].[hash].css' : '[id].css',
             }),
             // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
             new webpack.ProvidePlugin({
