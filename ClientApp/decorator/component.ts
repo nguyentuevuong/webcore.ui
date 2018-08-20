@@ -136,8 +136,9 @@ export function component(params: IDecoratorComponent) {
             },
             template: `${params.styles || ''}
                 <!-- ko let: { $vm: $data, $afterRender: $data.afterRender || function() {} } -->
+                    <!-- ko template: { afterRender: $afterRender.bind($vm) } -->
                     ${params.template}
-                    <!-- ko template: { afterRender: $afterRender.bind($vm) } --><!-- /ko -->
+                    <!-- /ko -->
                 <!-- /ko -->`,
             synchronous: true,
         }, params.options as Object));
