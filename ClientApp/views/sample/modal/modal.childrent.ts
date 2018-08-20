@@ -10,6 +10,7 @@ import { component } from '../../../decorator/component';
     template: require('./modal.childrent.html')
 })
 export class SampleModalChildrentViewModel {
+    focus: KnockoutObservable<boolean> = ko.observable(false);
     btnName: KnockoutObservable<string> = ko.observable('Show modal');
 
     constructor(private params: { btnName: string }) {
@@ -18,4 +19,9 @@ export class SampleModalChildrentViewModel {
         }
     }
 
+    afterRender = () => {
+        let self = this;
+
+        self.focus(true)
+    }
 }
