@@ -1,6 +1,6 @@
 import * as ko from 'knockout';
 
-import {component} from '../../decorator/component';
+import { component } from '../../decorator/component';
 
 @component({
     url: '/access/signin',
@@ -14,5 +14,15 @@ export class LoginViewModel {
     focus: any = {
         userName: ko.observable(true),
         passWord: ko.observable(false)
+    }
+
+    constructor(params: any, private element: HTMLElement) {
+        console.log(element.outerHTML);
+    }
+
+    afterRender = () => {
+        let self = this;
+
+        console.log(self.element.outerHTML);
     }
 }
