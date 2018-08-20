@@ -134,7 +134,11 @@ export function component(params: IDecoratorComponent) {
                     return new constructor(_.omit(params, ['page', 'icon', 'title', '$raw']), element, templateNodes);
                 }
             },
-            template: `${params.styles || ''}<!-- ko let: { $vm: $data } -->${params.template}<!-- /ko -->`,
+            template: `${params.styles || ''}
+                <!-- ko let: { $vm: $data, $afterRender: $data.afterRender || function() {} } -->
+                    ${params.template}
+                    <!-- ko template: { afterRender: $afterRender.bind($vm) } --><!-- /ko -->
+                <!-- /ko -->`,
             synchronous: true,
         }, params.options as Object));
     };
