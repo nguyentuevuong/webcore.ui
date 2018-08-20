@@ -81,6 +81,9 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
 
                             $tab.removeAttr('data-tabindex');
                         });
+
+                        // bind component to modal
+                        ko.bindingHandlers['component'].init!($body[0], () => ({ name: viewName, params: params }), allBindingsAccessor, viewModel, bindingContext);
                     })
                     .on('hidden.bs.modal', () => {
                         // remove modal when hide
@@ -105,9 +108,6 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
                         // focus to old element
                         $element.focus();
                     });
-
-                // bind component to modal
-                ko.bindingHandlers['component'].init!($body[0], () => ({ name: viewName, params: params }), allBindingsAccessor, viewModel, bindingContext);
             }
         });
     }
