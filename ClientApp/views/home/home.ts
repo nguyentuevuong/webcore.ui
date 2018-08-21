@@ -10,4 +10,8 @@ import { component } from '../../decorator/component';
     template: require('./home.html'),
     resources: require('./resources.json')
 })
-export class HomeViewModel { }
+export class HomeViewModel {
+    status: KnockoutObservable<string | undefined> = ko.observable('pending');
+
+
+}

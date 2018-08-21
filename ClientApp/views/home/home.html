@@ -1,0 +1,14 @@
+<div data-bind="switch: status">
+    <div data-bind="case: 'shipped'">
+        Your order has been shipped. Your tracking number is abc
+    </div>
+    <div data-bind="case: 'pending'">
+        Your order is being processed. Please be patient.
+    </div>
+    <div data-bind="case: 'incomplete'">
+        Your order could not be processed. Please go back and complete the missing data.
+    </div>
+    <div data-bind="case: $default">
+        Please call customer service to determine the status of your order.
+    </div>
+</div>
