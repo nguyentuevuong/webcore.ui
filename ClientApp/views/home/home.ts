@@ -1,5 +1,8 @@
 import * as ko from 'knockout';
 import * as _ from 'lodash';
+import * as $ from 'jquery';
+
+import 'sortablejs';
 
 import { component } from '../../decorator/component';
 
@@ -12,6 +15,9 @@ import { component } from '../../decorator/component';
 })
 export class HomeViewModel {
     status: KnockoutObservable<string | undefined> = ko.observable('pending');
+    listEmployee: KnockoutObservableArray<any> = ko.observableArray([]);
 
-
+    constructor() {
+        $.getJSON('/json/employee.json', {}, this.listEmployee)
+    }
 }
