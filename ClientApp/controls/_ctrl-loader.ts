@@ -1,6 +1,8 @@
 import "../common/app-utils";
 
+
 import "./let-ko-ext";
+import './switch-ko-ext';
 import './modal-ko-ext';
 import "./alert-ko-ext";
 import "./class-ko-ext";
