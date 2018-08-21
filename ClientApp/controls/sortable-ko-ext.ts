@@ -2,6 +2,13 @@ import * as ko from 'knockout';
 import * as $ from 'jquery';
 import 'jqueryui';
 
+import { handler } from '../decorator/binding';
+
+@handler({
+    virtual: true,
+    bindingName: 'sortable'
+})
+
 export class SortableBindingHandler implements KnockoutBindingHandler {
     ITEMKEY = "ko_sortItem";
     INDEXKEY = "ko_sourceIndex";
@@ -348,5 +355,3 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
         ko.bindingHandlers.template.update!(element, function () { return templateOptions; }, allBindingsAccessor, viewModel, bindingContext);
     }
 }
-
-ko.bindingHandlers["ntsSortable"] = new SortableBindingHandler();
