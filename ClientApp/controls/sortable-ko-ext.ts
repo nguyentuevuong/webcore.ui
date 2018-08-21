@@ -88,8 +88,8 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
         ko.utils.arrayForEach(["afterAdd", "afterRender", "as", "beforeRemove", "includeDestroyed", "templateEngine", "templateOptions", "nodes"], function (option) {
             if (options.hasOwnProperty(option)) {
                 result[option] = options[option];
-            } else if (ko.bindingHandlers['ntsSortable'].hasOwnProperty(option)) {
-                result[option] = ko.bindingHandlers['ntsSortable'][option];
+            } else if (ko.bindingHandlers['sortable'].hasOwnProperty(option)) {
+                result[option] = ko.bindingHandlers['sortable'][option];
             }
         });
 
@@ -122,7 +122,7 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
         self.stripTemplateWhitespace(element, templateOptions.name);
 
         //build a new object that has the global options with overrides from the binding
-        $.extend(true, sortable, ko.bindingHandlers['ntsSortable']);
+        $.extend(true, sortable, ko.bindingHandlers['sortable']);
 
         if (value.options && sortable.options) {
             ko.utils.extend(sortable.options, value.options);
@@ -213,7 +213,7 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
                     }
                     dragItem = null;
                     //make sure that moves only run once, as update fires on multiple containers
-                    if (item && ($element[0] === parentEl) || (!self.hasNestedSortableFix && $.contains($element[0], parentEl))) {
+                    if (item && ($element[0] === parentEl) || (!self.hasNestedSortableFix && $.contains(<any>this, parentEl))) {
                         //identify parents
                         sourceParent = self.dataGet(el, self.PARENTKEY);
                         sourceIndex = self.dataGet(el, self.INDEXKEY);

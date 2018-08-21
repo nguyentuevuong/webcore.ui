@@ -1,4 +1,4 @@
-<div data-bind="switch: status">
+<div data-bind="switch: 'pending'">
     <div data-bind="case: 'shipped'">
         Your order has been shipped. Your tracking number is abc
     </div>
@@ -10,5 +10,18 @@
     </div>
     <div data-bind="case: $default">
         Please call customer service to determine the status of your order.
+    </div>
+</div>
+
+<div class="abc">
+    <div class="row">
+        <div class="col-md-4">
+            <ul class="list-group" data-bind="sortable: [1,2,3,4]">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Cras justo odio
+                    <span class="badge badge-primary badge-pill" data-bind="text: $data"></span>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>
