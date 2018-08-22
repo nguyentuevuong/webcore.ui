@@ -9,6 +9,7 @@ import './date-picker/date-picker';
 
 import './modal/modal.parent';
 import './modal/modal.childrent';
+import './modal/modal.childrent.2';
 
 import './like-widget/like-widget';
 import './deferred/deferred.1';

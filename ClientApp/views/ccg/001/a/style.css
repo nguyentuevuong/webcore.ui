@@ -1,3 +1,32 @@
+.panel {
+    background-color: #fff;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    height: 600px;
+    position: absolute;
+    z-index: 9999;
+}
+
+.panel.show {
+    width: 400px;
+    border: 1px solid #ccc;
+}
+
+.panel.show-2x {
+    width: 800px;
+    border: 1px solid #ccc;
+}
+
+.panel>.content {
+    display: none;
+    padding: 15px;
+}
+
+.panel.show>.content,
+.panel.show-2x>.content {
+    display: block;
+}
+
 .ccg001-btn {
     width: 40px;
     height: 300px;
@@ -6,6 +35,7 @@
     color: white;
     cursor: pointer;
     position: absolute;
+    right: -40px;
     top: calc(50% - 150px);
     background-color: #2ECC71;
     border-top-right-radius: 10px;
@@ -16,7 +46,7 @@
     background-color: #2BBF6A;
 }
 
-.ccg001-btn:after {
+.panel:not(.show):not(.show-2x) .ccg001-btn:after {
     content: '';
     position: absolute;
     left: 42px;
