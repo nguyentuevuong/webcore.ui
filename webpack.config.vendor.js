@@ -42,7 +42,7 @@ module.exports = (env) => {
             library: '[name]_[hash]',
         },
         optimization: {
-            minimize: env && env.prod,
+            //minimize: env && env.prod,
             splitChunks: {
                 chunks: 'async',
                 minSize: 30000,
@@ -65,8 +65,8 @@ module.exports = (env) => {
                 }
             },
             minimizer: [
-                new UglifyJsPlugin({}),
-                new OptimizeCSSAssetsPlugin({})
+                //new UglifyJsPlugin({}),
+                //new OptimizeCSSAssetsPlugin({})
             ]
         },
         plugins: [
