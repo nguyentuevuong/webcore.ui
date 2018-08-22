@@ -11,11 +11,13 @@ import { component } from '../../../decorator/component';
 })
 export class SampleModalChildrentViewModel {
     focus: KnockoutObservable<boolean> = ko.observable(false);
-    btnName: KnockoutObservable<string> = ko.observable('Show modal');
+    userName: KnockoutObservable<string> = ko.observable('');
+    passWord: KnockoutObservable<string> = ko.observable('');
 
-    constructor(private params: { btnName: string }) {
-        if (params && params.btnName) {
-            this.btnName(params.btnName);
+    constructor(private params: { userName: KnockoutObservable<string>, passWord: KnockoutObservable<string> }) {
+        if (params) {
+            this.userName(ko.toJS(params.userName));
+            this.passWord(ko.toJS(params.passWord));
         }
     }
 
@@ -23,5 +25,10 @@ export class SampleModalChildrentViewModel {
         let self = this;
 
         self.focus(true)
+    }
+
+    getData() {
+        this.params.userName(ko.toJS(this.userName));
+        this.params.passWord(ko.toJS(this.passWord));
     }
 }

@@ -12,5 +12,8 @@ import { component } from '../../../decorator/component';
     resources: require('./resources.json')
 })
 export class SampleModalParentViewModel {
+    
+    userName: KnockoutObservable<string> = ko.observable('admin8');
+    passWord: KnockoutObservable<string> = ko.observable('admin8');
 
 }
