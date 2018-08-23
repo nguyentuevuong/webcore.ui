@@ -1,4 +1,8 @@
 // code for ssr
+import 'lodash';
+import 'knockout';
+import 'jquery';
+
 /*
 import * as domino from 'domino';
 import { Promise } from 'es6-promise';

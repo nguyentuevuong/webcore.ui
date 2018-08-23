@@ -1,4 +1,4 @@
-<div class="panel animated" data-bind="css: $vm._show, event: { animationend: hidePanel }">
+<div class="panel animated" data-bind="css: $vm._show, event: { animationend: hidePanel }, clickOut: () => {}">
     <div class="content">
         <div class="row">
             <div class="col-md-6">
@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-    <div class="ccg001-btn noselect" data-bind="click: $vm.showPanel">
+    <div class="show-btn noselect" data-bind="click: $vm.showPanel">
         <div>
             <i class="fa fa-search fa-2x"></i>
             <span data-bind="i18n: { text: '#ccg_button' }"></span>

@@ -15,7 +15,7 @@ export class Ccg001aViewModel {
     listEmployee: KnockoutObservableArray<any> = ko.observableArray([]);
 
     constructor(params: any, element: HTMLElement) {
-        $.getJSON('/json/employee.json', {}, this.listEmployee)
+        $.getJSON('/json/employee.json', {}, this.listEmployee);
     }
 
     showPanel = () => {
@@ -30,5 +30,9 @@ export class Ccg001aViewModel {
             show: boolean = String(ko.toJS(self._show)).indexOf('slideOutLeft') > -1;
 
         self._show(show ? '' : 'show-2x');        
+    }
+
+    afterRender = () => {
+
     }
 }

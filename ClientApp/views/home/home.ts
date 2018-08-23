@@ -2,8 +2,6 @@ import * as ko from 'knockout';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 
-import 'sortablejs';
-
 import { component } from '../../decorator/component';
 
 @component({
