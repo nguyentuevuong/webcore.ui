@@ -21,3 +21,4 @@ import './employee/employee';
 
 import './selections/dropdown/dropdown';
 import './selections/listbox/listbox';
+import './color-pallet/color-panel';
