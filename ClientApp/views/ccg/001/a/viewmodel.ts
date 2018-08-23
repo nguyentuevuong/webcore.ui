@@ -19,10 +19,7 @@ export class Ccg001aViewModel {
     }
 
     showPanel = () => {
-        let self = this,
-            show: boolean = String(ko.toJS(self._show)).indexOf('show-2x') > -1;
-
-        self._show(!show ? 'show-2x fadeInLeft' : ' show-2x slideOutLeft');
+        alert('clicked');
     }
 
     hidePanel = () => {

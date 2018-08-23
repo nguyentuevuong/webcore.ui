@@ -83,7 +83,7 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
                         });
 
                         // bind component to modal
-                        ko.bindingHandlers['component'].init!($body[0], () => ({ name: viewName, params: params }), allBindingsAccessor, viewModel, bindingContext);
+                        ko.bindingHandlers['component'].init!($body[0], () => ({ name: viewName || 'no-component', params: params }), allBindingsAccessor, viewModel, bindingContext);
                     })
                     .on('hidden.bs.modal', () => {
                         // remove modal when hide
