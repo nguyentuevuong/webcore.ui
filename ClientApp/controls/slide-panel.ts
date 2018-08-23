@@ -1,7 +1,10 @@
 import * as $ from 'jquery';
+import * as _ from 'lodash';
 import * as ko from 'knockout';
 
+import { lang, getText } from '../common/app-i18n';
 import { handler } from '../decorator/binding';
+import { IComponent, Components } from '../common/app-comp';
 
 @handler({
     virtual: false,
@@ -21,6 +24,16 @@ export class SlidePanelBindingHandler implements KnockoutBindingHandler {
             $show_div = $('<div>', {}).appendTo($show),
             $fa_search = $('<i>', { 'class': 'fa fa-search fa-2x' }).appendTo($show_div),
             $span = $('<span>', { 'text': 'Search #{any}' }).appendTo($show_div);
+        ko.computed({
+            read: () => {
+                let _lang = ko.toJS(lang),
+                    _comp = _.find(Components, (c: IComponent) => _.isEqual(c.name, viewName));
+                    
+                if (_comp) {
+                    $span.text(getText(_comp.title || ''));
+                }
+            }
+        })
 
         $element
             .addClass('panel-container')

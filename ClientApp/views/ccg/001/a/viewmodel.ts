@@ -5,6 +5,7 @@ import { component } from '../../../../decorator/component';
 
 @component({
     name: 'ccg-001',
+    title: '#ccg_button',
     styles: require('./style.css'),
     template: require('./index.html'),
     resources: require('./resources.json')
