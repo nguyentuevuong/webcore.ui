@@ -1,6 +1,6 @@
 <div class="function row">
-    <div class="col-md-6">
-        <button class="btn btn-primary">
+    <div class="col-md-9">
+        <button class="btn btn-primary" data-bind="safeClick: $vm.preventLog.bind($vm, 'xxx')">
             <i class="fa fa-save"></i>
             <span data-bind="i18n: { text: '#save_info' }"></span>
         </button>
@@ -13,7 +13,7 @@
             <span data-bind="i18n: { text: '#delete' }"></span>
         </button>
     </div>
-    <div class="col-md-6 d-flex justify-content-end">
+    <div class="col-md-3 d-flex justify-content-end">
             <button class="btn btn-link btn-link-bg mr-2" href="/">Go to design layout page</button>
             <button class="btn btn-link btn-link-bg" href="/">Go to design layout page 2</button>
     </div>
@@ -36,6 +36,7 @@
                 <cps001-avatar></cps001-avatar>
                 <cps001-infomation></cps001-infomation>
                 <cps001-avatar></cps001-avatar>
+                <div id="log"></div>
             </div>
         </div>
     </div>

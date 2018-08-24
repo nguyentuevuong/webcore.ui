@@ -12,6 +12,7 @@ import 'popper.js';
 import 'bootstrap';
 
 // import components
+import './common/app-prefix';
 import "./common/ajax-ext";
 import './common/app-i18n';
 import './components/_cp-loader';

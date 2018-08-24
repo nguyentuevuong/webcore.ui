@@ -14,8 +14,11 @@ import { component } from '../../../../decorator/component';
 export class Cps001aViewModel {
     listEmployee: KnockoutObservableArray<any> = ko.observableArray([]);
 
-    constructor(params: any, element: HTMLElement) {
+    constructor(params: any, private element: HTMLElement) {
         $.getJSON('/json/employee.json', {}, this.listEmployee)
+    }
 
+    preventLog(abc: string) {
+        $(this.element).find('#log').append($('<pre>', { text: abc + ': ' + new Date().getTime() }))
     }
 }
