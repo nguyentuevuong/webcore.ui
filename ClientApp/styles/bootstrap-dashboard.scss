@@ -153,7 +153,7 @@ $enable-shadows: false !default;
     &.nav-tabs {
         padding-left: 1rem;
         padding-right: 1rem;
-        border-bottom-color: darken($secondary, 20%);
+        border-bottom-color: transparent;
         .nav-item {
             &:not(:first-child) {
                 .nav-link {
@@ -164,14 +164,16 @@ $enable-shadows: false !default;
                 margin-top: 0;
                 border-color: darken($secondary, 20%);
                 border-bottom-color: transparent;
+                border-top-left-radius: 3px;
+                border-top-right-radius: 3px;
                 &.active {
                     color: $black;
                     background-color: $secondary;
-                    border-top-width: 3px;
-                    padding: calc(0.5rem - 2px) 1rem 0.5rem 1rem;
+                    border-top-width: 5px;
+                    padding: calc(0.5rem - 4px) 1rem 0.5rem 1rem;
                     &:focus,
                     &:hover {
-                        padding: calc(0.5rem - 2px) 1rem 0.5rem 1rem;
+                        padding: calc(0.5rem - 4px) 1rem 0.5rem 1rem;
                     }
                 }
                 &.disabled,
@@ -194,11 +196,14 @@ $enable-shadows: false !default;
                 }
                 &:focus {
                     outline: none;
-                    border-color: $input-focus-border-color;
-                    border-bottom-color: transparent;
-                    box-shadow: $input-focus-box-shadow;
                 }
             }
+        }
+        &+.tab-content {
+            padding: 15px;
+            border: 1px solid darken($secondary, 20%);
+            margin-top: -1px;
+            border-radius: 5px;
         }
     }
     &.nav-pills {
@@ -675,22 +680,42 @@ pre {
     border: 2px dashed #cbd3e3;
 }
 
+/* -- layout -- */
+
+.function {
+    top: 40px;
+    left: 15px;
+    right: 15px;
+    position: fixed;
+    box-sizing: border-box;
+    padding: 5px 0;
+    z-index: 999;
+    background-color: #fff;
+    border-bottom: 1px solid darken($color: $secondary, $amount: 20);
+    &+.contents {
+        margin-top: 55px;
+        max-width: 1200px;
+        margin-bottom: 15px;
+    }
+}
+
 /*-- slide panel --*/
 
 .panel-container {
     top: 0;
     left: 0;
-    position: absolute;
+    position: fixed;
     &.show {
         right: 0;
         bottom: 0;
+        z-index: 999;
     }
     .panel {
         background-color: #fff;
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
         height: calc(100vh - 100px);
-        position: absolute;
+        position: fixed;
         z-index: 9999;
         top: 90px;
         &.show {
@@ -755,5 +780,73 @@ pre {
                 border-bottom: 32px solid transparent;
             }
         }
+    }
+}
+
+/* -- list-caret-background */
+
+.process {
+    &-bg {
+        padding: 15px;
+        border-radius: 5px;
+        background-color: $success;
+        &:after {
+            content: '';
+            top: 35px;
+            right: 0px;
+            position: absolute;
+            border-left: 16px solid $success;
+            border-top: 32px solid transparent;
+            border-bottom: 32px solid transparent;
+        }
+    }
+    &-search {
+        margin-top: 1.4rem;
+        &:before {
+            color: #fff;
+            text-align: center;
+            content: "\F002";
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            display: block;
+            top: 0px;
+            left: 0px;
+            font-size: 1.2rem;
+            background: $success;
+            width: 38px;
+            line-height: 38px;
+            border-radius: 5px;
+        }
+    }
+}
+
+/* -- header-panel -- */
+
+.header-panel {
+    border: 1px solid darken($secondary, 20%);
+    &:after {
+        content: '';
+        display: block;
+        border-bottom: 5px solid #00B050;
+    }
+}
+
+/* link-button */
+
+.btn-link {
+    position: relative;
+    background-color: lighten($color: #00B050, $amount: 5%);
+    padding-right: 25px;
+    &:focus,
+    &:active {
+        background-color: lighten($color: #00B050, $amount: 5%);
+    }
+    &:after {
+        content: "\F35A";
+        position: absolute;
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        font-size: 15px;
     }
 }

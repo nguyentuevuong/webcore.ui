@@ -1,3 +1,4 @@
+import * as $ from 'jquery';
 import * as ko from 'knockout';
 
 import { component } from '../../../../decorator/component';
@@ -11,8 +12,10 @@ import { component } from '../../../../decorator/component';
     resources: require('./resources.json')
 })
 export class Cps001aViewModel {
+    listEmployee: KnockoutObservableArray<any> = ko.observableArray([]);
 
     constructor(params: any, element: HTMLElement) {
+        $.getJSON('/json/employee.json', {}, this.listEmployee)
 
     }
 }
