@@ -754,7 +754,7 @@ pre {
             &:hover,
             &:active {
                 color: white;
-                box-shadow: 0 0 0 2px lighten($success, 25%);
+                box-shadow: 2px 0 0 2px rgba(40, 182, 44, 0.5019607843137255);
                 background-color: darken($color: $success, $amount: 5%);
             }
             &:hover:after {
@@ -849,15 +849,10 @@ pre {
         &:hover {
             text-decoration: none;
             background-color: #E0F59E;
+            border-color: darken(#E0F59E, 25%);
         }
         &:focus {
-            box-shadow: 0 0 0 2px darken(#E0F59E, 25%);
-        }
-        &:not(.disabled) {
-            &:hover {
-                margin-top: 0;
-                border-bottom-width: 4px;
-            }
+            box-shadow: 0 0 0 2px lighten(#E0F59E, 5%);
         }
         &:before {
             color: #0D86D1;
