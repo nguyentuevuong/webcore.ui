@@ -20,8 +20,8 @@ export class SlidePanelBindingHandler implements KnockoutBindingHandler {
             configs: any = ko.unwrap(accessor.configs),
             $panel = $('<div>', { 'class': 'panel animated' }).appendTo($element),
             $content = $('<div>', { 'class': 'content' }).appendTo($panel),
-            $show = $('<div>', { 'class': 'show-btn noselect' }).appendTo($panel),
-            $show_div = $('<div>', {}).appendTo($show),
+            $show = $('<a>', { 'class': 'show-btn noselect' }).appendTo($panel),
+            $show_div = $('<section>', {}).appendTo($show),
             $fa_search = $('<i>', { 'class': 'fa fa-search fa-2x' }).appendTo($show_div),
             $span = $('<span>', { 'text': 'Search #{any}' }).appendTo($show_div);
 

@@ -163,17 +163,16 @@ $enable-shadows: false !default;
             .nav-link {
                 margin-top: 0;
                 border-color: darken($secondary, 20%);
-                border-bottom-color: transparent;
                 border-top-left-radius: 3px;
                 border-top-right-radius: 3px;
                 &.active {
-                    color: $black;
-                    background-color: $secondary;
-                    border-top-width: 5px;
-                    padding: calc(0.5rem - 4px) 1rem 0.5rem 1rem;
+                    color: $white;
+                    border-color: #00B050;
+                    background-color: #00B050;
+                    padding: calc(0.5rem - 1px) 1rem 0.5rem 1rem;
                     &:focus,
                     &:hover {
-                        padding: calc(0.5rem - 4px) 1rem 0.5rem 1rem;
+                        padding: calc(0.5rem - 1px) 1rem 0.5rem 1rem;
                     }
                 }
                 &.disabled,
@@ -191,11 +190,13 @@ $enable-shadows: false !default;
                         &:not(.active) {
                             padding: 0.5rem 1rem;
                         }
-                        background-color: lighten($secondary, 3.5%);
                     }
                 }
                 &:focus {
                     outline: none;
+                    border-color: #00B050;
+                    border-bottom-color: transparent;
+                    box-shadow: 0px -2px 0px 2px rgba(40, 182, 44, 0.5019607843137255);
                 }
             }
         }
@@ -749,24 +750,28 @@ pre {
             background-color: $success;
             border-top-right-radius: 10px;
             border-bottom-right-radius: 10px;
-            &:hover {
-                background-color: darken($color: $success, $amount: 0.5);
+            &:focus,
+            &:hover,
+            &:active {
+                color: white;
+                box-shadow: 0 0 0 2px lighten($success, 25%);
+                background-color: darken($color: $success, $amount: 5%);
             }
             &:hover:after {
-                border-left-color: darken($color: $success, $amount: 0.5);
+                border-left-color: darken($color: $success, $amount: 5%);
             }
-            >div {
+            >section {
                 display: table-cell;
                 vertical-align: middle;
-            }
-            span {
-                width: 40px;
-                padding-top: 15px;
-                display: block;
-                font-size: 1.8em;
-                writing-mode: vertical-rl;
-                -ms-writing-mode: bt-rl;
-                white-space: nowrap;
+                span {
+                    width: 40px;
+                    padding-top: 15px;
+                    display: block;
+                    font-size: 1.8em;
+                    writing-mode: vertical-rl;
+                    -ms-writing-mode: bt-rl;
+                    white-space: nowrap;
+                }
             }
         }
         &:not(.show):not(.show-2x) {
@@ -789,13 +794,13 @@ pre {
     &-bg {
         padding: 15px;
         border-radius: 5px;
-        background-color: $success;
+        background-color: #E0F59E;
         &:after {
             content: '';
             top: 35px;
             right: 0px;
             position: absolute;
-            border-left: 16px solid $success;
+            border-left: 16px solid #E0F59E;
             border-top: 32px solid transparent;
             border-bottom: 32px solid transparent;
         }
@@ -836,15 +841,17 @@ pre {
 
 .btn-link {
     &-bg {
-        position: relative;
-        color: #0D86D1 !important;
-        background-color: #E0F59E;
-        text-decoration: #00B050;
         text-indent: 25px;
+        position: relative;
+        border-radius: 3px;
+        color: #0D86D1 !important;
         &:focus,
-        &:active,
         &:hover {
+            text-decoration: none;
             background-color: #E0F59E;
+        }
+        &:focus {
+            box-shadow: 0 0 0 2px darken(#E0F59E, 25%);
         }
         &:not(.disabled) {
             &:hover {
@@ -853,7 +860,7 @@ pre {
             }
         }
         &:before {
-            color: #0D86D1 ;
+            color: #0D86D1;
             content: "\F2F5";
             font-family: 'Font Awesome 5 Free';
             font-weight: 900;
