@@ -21,14 +21,14 @@ export class SlidePanelBindingHandler implements KnockoutBindingHandler {
             $panel = $('<div>', { 'class': 'panel animated' }).appendTo($element),
             $content = $('<div>', { 'class': 'content' }).appendTo($panel),
             $show = $('<a>', { 'class': 'show-btn noselect' }).appendTo($panel),
-            $show_div = $('<section>', {}).appendTo($show),
-            $fa_search = $('<i>', { 'class': 'fa fa-search fa-2x' }).appendTo($show_div),
+            $show_div = $('<section>', {}).appendTo($show)
+                .append($('<i>', { 'class': 'fa fa-search fa-2x' })),
             $span = $('<span>', { 'text': 'Search #{any}' }).appendTo($show_div);
 
         ko.computed({
             read: () => {
                 ko.toJS(lang);
-                
+
                 let _comp = _.find(Components, (c: IComponent) => _.isEqual(c.name, viewName));
 
                 if (_comp) {
