@@ -3,6 +3,7 @@
 **/package-lock.json
 **/vendor*
 **/bundles*
+**/main-server*
 **/wwwroot/**/*.html
 **/wwwroot/**/*.eot
 **/wwwroot/**/*.svg
