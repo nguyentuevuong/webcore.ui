@@ -1,0 +1,22 @@
+import * as _ from 'lodash';
+import * as ko from 'knockout';
+
+import { handler } from '../decorator/binding';
+
+@handler({
+    virtual: true,
+    bindingName: 'each'
+})
+export class SafeClickBindingHandler implements KnockoutBindingHandler {
+    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+        return ko.bindingHandlers.foreach.init!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+    }
+    update = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+        let array = ko.utils.unwrapObservable(valueAccessor().data || valueAccessor()),
+            extendedContext = bindingContext.extend({
+                "$length": array.length
+            });
+
+        ko.bindingHandlers.foreach.update!(element, valueAccessor, allBindingsAccessor, viewModel, extendedContext);
+    }
+}
