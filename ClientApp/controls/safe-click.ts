@@ -3,20 +3,23 @@ import * as ko from 'knockout';
 
 import { handler } from '../decorator/binding';
 
+let originalClick = ko.bindingHandlers.click;
+
 @handler({
     virtual: false,
-    bindingName: 'safeClick'
+    bindingName: 'click'
 })
 export class SafeClickBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let lastPreventTime: number = new Date().getTime(),
             originalFunction = valueAccessor(),
+            timeClick: number | undefined = ko.toJS(allBindingsAccessor().timeClick),
             newValueAccesssor = function () {
                 return function () {
                     let currentPreventTime: number = new Date().getTime(),
                         time: number = currentPreventTime - lastPreventTime;
-                        
-                    if (time > 500) {
+
+                    if (time > (timeClick || 500)) {
                         //pass through the arguments
                         originalFunction.apply(viewModel, _.concat([viewModel], arguments));
                     }
@@ -24,6 +27,6 @@ export class SafeClickBindingHandler implements KnockoutBindingHandler {
                     lastPreventTime = new Date().getTime();
                 }
             };
-        ko.bindingHandlers.click.init!(element, newValueAccesssor, allBindingsAccessor, viewModel, bindingContext);
+        originalClick.init!(element, newValueAccesssor, allBindingsAccessor, viewModel, bindingContext);
     }
 }
