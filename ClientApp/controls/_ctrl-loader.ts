@@ -8,6 +8,7 @@ import "./class-ko-ext";
 import "./label-ko-ext";
 import "./check-ko-ext";
 import './safe-click';
+import './each';
 
 import "./sortable-ko-ext";
 import "./combobox-ko-ext";
