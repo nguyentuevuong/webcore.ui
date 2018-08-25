@@ -25,7 +25,7 @@ import { Promise } from 'es6-promise';
 import { createServerRenderer, RenderResult, BootFuncParams, BootFunc } from 'aspnet-prerendering';
 
 export default createServerRenderer(((params: BootFuncParams) => {
-    let window = domino.createWindow(require('./index.html'), 'http://localhost:9000');
+    let window = domino.createWindow(require('./index.html'), params.url);
 
     // History component needs no trailing slash
     const base = window.document.querySelector('base'),
