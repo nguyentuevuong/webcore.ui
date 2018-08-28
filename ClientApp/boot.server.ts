@@ -1,7 +1,7 @@
 // code for ssr
 
 // import external libs
-import 'lodash';
+/*import 'lodash';
 import 'jquery';
 import 'knockout';
 import 'popper.js';
@@ -43,4 +43,4 @@ export default createServerRenderer(((params: BootFuncParams) => {
             html: window.document.querySelector("body>div")!.outerHTML
         });
     });
-}) as BootFunc);
+}) as BootFunc);*/
