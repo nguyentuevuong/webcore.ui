@@ -20,23 +20,52 @@
 </div>
 <div class="contents">
     <div class="row">
-        <div class="col-md-3">
-            <div class="wizard">
-                <div class="header">
-                    <div class="img"></div>
-                    <h4>Title of wizard</h4>
-                </div>
-                <ul class="step-list list-group noselect" data-bind="each: { data: listEmployee, as: '$item' }">
-                    <li class="list-group-item active" data-bind="text: ko.toJS($item).name, css: { 'active': $index() == 1  }">
-                    </li>
-                </ul>
-                <div class="footer btn-group d-none">
-                    <button class="btn btn-link">Back</button>
-                    <button class="btn btn-link">Next</button>
-                </div>
-            </div>
+        <div class="col-md-1">
         </div>
-        <div class="col-md-9">
+        <div class="col-md-2">
+            <div data-bind="wizard: {
+                step: $vm.step,
+                icon: 'fa fa-users',
+                title: '#title_wizard',
+                steps: ['#step_1', '#step_2', '#step_3', '#step_4', '#step_5', '#step_6', '#step_finish'],
+                showFooter: true,
+                selectable: true
+            }"></div>
+        </div>
+        <div class="col-md-8">
+            <!-- ko switch: $vm.step -->
+            <!-- ko case: 0 -->
+            <h1>Step 1</h1>
+            <!-- /ko -->
+            <!-- ko case: 1 -->
+            <h1>Step 2</h1>
+            <!-- /ko -->
+            <!-- ko case: 2 -->
+            <h1>Step 3</h1>
+            <!-- /ko -->
+            <!-- ko case: 3 -->
+            <h1>Step 4</h1>
+            <!-- /ko -->
+            <!-- ko case: 4 -->
+            <h1>Step 5</h1>
+            <!-- /ko -->
+            <!-- ko case: 5 -->
+            <h1>Step 6</h1>
+            <!-- /ko -->
+            <!-- ko case: $default -->
+            <h1>Out of steps</h1>
+            <!-- /ko -->
+            <!-- /ko -->
+            <div class="footer btn-group">
+                <button class="btn btn-link" data-bind="click: $vm.preview">
+                    <i class="fas fa-arrow-circle-left"></i>
+                    <span>Preview</span>
+                </button>
+                <button class="btn btn-link" data-bind="click: $vm.next">
+                    <span>Next</span>
+                    <i class="fas fa-arrow-circle-right"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>

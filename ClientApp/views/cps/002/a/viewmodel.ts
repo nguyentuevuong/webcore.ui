@@ -12,6 +12,7 @@ import { component } from '../../../../decorator/component';
     resources: require('./resources.json')
 })
 export class Cps002aViewModel {
+    step: KnockoutObservable<number> = ko.observable(1);
     listEmployee: KnockoutObservableArray<any> = ko.observableArray([]);
 
     constructor(params: any, private element: HTMLElement) {
@@ -20,5 +21,17 @@ export class Cps002aViewModel {
 
     preventLog(abc: string) {
         $(this.element).find('#log').append($('<pre>', { text: abc + ': ' + new Date().getTime() }))
+    }
+
+    preview() {
+        let self = this;
+
+        self.step(self.step() - 1);
+    }
+
+    next() {
+        let self = this;
+
+        self.step(self.step() + 1);
     }
 }
