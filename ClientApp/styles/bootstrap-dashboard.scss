@@ -716,13 +716,26 @@ pre {
             border-radius: 50%;
             background-color: #fff;
             border: 2px solid #00B050;
-            +h4 {
+            .fa,
+            .fab,
+            .fas {
+                color: #00B050;
+                font-size: 3em;
+                width: 76px;
+                line-height: 76px;
+                text-align: center;
+            }
+            +h5 {
                 margin: 0;
                 margin-left: 45px;
                 padding-left: 40px;
                 line-height: 60px;
-                background-color: #E2F79F;
+                color: #fff;
+                background-color: #00B050;
                 border-radius: 15px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
             }
         }
     }
@@ -744,10 +757,14 @@ pre {
                     line-height: 25px;
                     margin-top: 20px;
                     font-weight: bold;
-                    font-size: 1rem;
+                    font-size: 0.9rem;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
                 }
                 &:not(:last-child) {
                     color: #fff;
+                    cursor: pointer;
                     line-height: 22px;
                     margin-left: 20px;
                     border-radius: 10px;
@@ -767,6 +784,7 @@ pre {
                         color: #4d4d4d;
                         background-color: #fff;
                         &:before {
+                            border: 4px double #fff;
                             background-color: #00B050;
                         }
                         &:after {
@@ -779,6 +797,11 @@ pre {
                             z-index: 0;
                             top: calc(50% - 2px);
                             background-color: #fff;
+                        }
+                    }
+                    &:not(.active) {
+                        &:hover {
+                            background-color: rgba(226, 246, 159, 0.2);
                         }
                     }
                 }
@@ -813,6 +836,18 @@ pre {
         text-align: center;
         .btn {
             width: 50%;
+            color: #fff;
+            &:hover,
+            &:active {
+                text-decoration: none;
+            }
+            >i+span,
+            >span+i {
+                margin-left: 10px;
+                &:hover {
+                    text-decoration: none;
+                }
+            }
         }
     }
 }
@@ -823,6 +858,7 @@ pre {
     top: 0;
     left: 0;
     position: fixed;
+    z-index: 10;
     &.show {
         right: 0;
         bottom: 0;
