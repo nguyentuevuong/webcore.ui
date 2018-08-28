@@ -1,0 +1,43 @@
+<div class="function row">
+    <div class="col-md-9">
+        <button class="btn btn-primary" data-bind="click: $vm.preventLog.bind($vm, 'clickParam')">
+            <i class="fa fa-save"></i>
+            <span data-bind="i18n: { text: '#save_info' }"></span>
+        </button>
+        <button type="button" class="btn btn-secondary">
+            <i class="fa fa-refresh"></i>
+            <span data-bind="i18n: { text: '#restore_employee_info' }"></span>
+        </button>
+        <button class="btn btn-danger ml-5">
+            <i class="fa fa-trash"></i>
+            <span data-bind="i18n: { text: '#delete' }"></span>
+        </button>
+    </div>
+    <div class="col-md-3 d-flex justify-content-end">
+        <button class="btn btn-link btn-link-bg mr-2" href="/">Go to design layout page</button>
+        <button class="btn btn-link btn-link-bg" href="/">Go to design layout page 2</button>
+    </div>
+</div>
+<div class="contents">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="wizard">
+                <div class="header">
+                    <div class="img"></div>
+                    <h4>Title of wizard</h4>
+                </div>
+                <ul class="step-list list-group noselect" data-bind="each: { data: listEmployee, as: '$item' }">
+                    <li class="list-group-item active" data-bind="text: ko.toJS($item).name, css: { 'active': $index() == 1  }">
+                    </li>
+                </ul>
+                <div class="footer btn-group d-none">
+                    <button class="btn btn-link">Back</button>
+                    <button class="btn btn-link">Next</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+        </div>
+    </div>
+</div>
+<div data-bind="slidePanel: { viewName: 'ccg-001' }"></div>
