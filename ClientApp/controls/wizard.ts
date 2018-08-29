@@ -49,15 +49,15 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
                 _.each(steps, (s: string, i: number) => {
                     $('<li>', { 'class': `list-group-item ${step == i ? 'active' : ''}`, text: getText(s) })
                         .appendTo($steps)
-                        .on('click', evt => {
-                            if (selectable && _.size(steps) > i + 1) {
+                        .on('click', () => {
+                            if (selectable && _.size(steps) >= i + 1) {
                                 accessor.step(i);
                             }
                         });
                 });
 
                 $prev.prop('disabled', step <= 0);
-                $next.prop('disabled', step >= _.size(steps) - 2);
+                $next.prop('disabled', step >= _.size(steps) - 1);
             }
         });
 

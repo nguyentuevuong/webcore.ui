@@ -745,6 +745,7 @@ pre {
             border-left: 8px double #fff;
             position: relative;
             .list-group-item {
+                cursor: pointer;
                 position: relative;
                 border-color: transparent;
                 background-color: transparent;
@@ -761,10 +762,13 @@ pre {
                     white-space: nowrap;
                     text-overflow: ellipsis;
                     overflow: hidden;
+                    &.active {
+                        background-color: #fff;
+                        box-shadow: 0 0 0 2px lighten(#00B050, 5%);
+                    }
                 }
                 &:not(:last-child) {
                     color: #fff;
-                    cursor: pointer;
                     line-height: 22px;
                     margin-left: 20px;
                     border-radius: 10px;
