@@ -67,32 +67,36 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
 
                 $modal
                     .on('shown.bs.modal', () => {
-                        // remove tabindex of all input item
-                        $('body [tabindex], body a, body button, body input, body select, body textarea').each((i, tab) => {
-                            let $tab = $(tab);
+                        let modaless: boolean = ko.toJS(configs.modaless);
 
-                            $tab
-                                .attr({
-                                    'data-tabindex': _.isNil($tab.attr('tabindex')) ? -1 : $tab.attr('tabindex')
-                                }).attr({
-                                    'tabindex': '-1'
-                                });
-                        });
+                        if (!modaless) {
+                            // remove tabindex of all input item
+                            $('body [tabindex], body a, body button, body input, body select, body textarea').each((i, tab) => {
+                                let $tab = $(tab);
 
-                        $body.find('[tabindex]').each((i, tab) => {
-                            let $tab = $(tab);
-
-                            if ($tab.attr('data-tabindex') != '-1') {
                                 $tab
                                     .attr({
-                                        'tabindex': $tab.attr('data-tabindex')
-                                    })
-                            } else {
-                                $tab.removeAttr('tabindex');
-                            }
+                                        'data-tabindex': _.isNil($tab.attr('tabindex')) ? -1 : $tab.attr('tabindex')
+                                    }).attr({
+                                        'tabindex': '-1'
+                                    });
+                            });
 
-                            $tab.removeAttr('data-tabindex');
-                        });
+                            $body.find('[tabindex]').each((i, tab) => {
+                                let $tab = $(tab);
+
+                                if ($tab.attr('data-tabindex') != '-1') {
+                                    $tab
+                                        .attr({
+                                            'tabindex': $tab.attr('data-tabindex')
+                                        })
+                                } else {
+                                    $tab.removeAttr('tabindex');
+                                }
+
+                                $tab.removeAttr('data-tabindex');
+                            });
+                        }
 
                         // bind component to modal
                         ko.bindingHandlers['component'].init!($body[0], () => ({ name: viewName || 'no-component', params: params }), allBindingsAccessor, viewModel, bindingContext);
