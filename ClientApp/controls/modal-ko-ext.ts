@@ -16,7 +16,7 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
             accessor: any = valueAccessor(),
             params: any = ko.unwrap(accessor.params),
             viewName: string = ko.toJS(accessor.viewName),
-            configs: IConfigs = ko.unwrap(accessor.configs);
+            configs: IConfigs = ko.unwrap(accessor.configs) || {};
 
 
         $element.on('click', () => {
@@ -51,6 +51,18 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
                     show: true,
                     focus: true,
                     backdrop: false,
+                });
+
+                ko.computed({
+                    read: () => {
+                        let modaless: boolean = ko.toJS(configs.modaless);
+
+                        if (modaless) {
+                            $modal.addClass('modaless');
+                        } else {
+                            $modal.removeClass('modaless');
+                        }
+                    }
                 });
 
                 $modal
@@ -116,5 +128,6 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
 export interface IConfigs {
     size: 'lg' | 'md' | 'sm' | KnockoutObservable<string>,
     backdrop: boolean | KnockoutObservable<boolean>,
-    closeBtn: boolean | KnockoutObservable<boolean>
+    closeBtn: boolean | KnockoutObservable<boolean>,
+    modaless: boolean | KnockoutObservable<boolean>
 }
