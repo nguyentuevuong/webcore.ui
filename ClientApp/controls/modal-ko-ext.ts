@@ -50,7 +50,7 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
                 (<any>$modal).modal({
                     show: true,
                     focus: true,
-                    backdrop: false,
+                    backdrop: !!ko.toJS(configs.backdrop),
                 });
 
                 ko.computed({
@@ -123,6 +123,8 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
 
                         // focus to old element
                         $element.focus();
+                    }).find('.modal-content').draggable({
+                        handle: ".modal-header"
                     });
             }
         });
