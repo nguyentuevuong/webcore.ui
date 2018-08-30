@@ -4,7 +4,7 @@ import * as ko from 'knockout';
 
 import './ajax-ext';
 
-import { handler } from '../decorator/binding';
+import { handler } from './binding';
 
 @handler({
     virtual: false,

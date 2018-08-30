@@ -1,7 +1,8 @@
-import { component } from '../../../decorator/component';
+import { component } from '../../../common/component';
 import * as ko from 'knockout';
 
-import '../../../decorator/worker-ext';
+import '../../../common/worker-ext';
+
 interface FunctionConstructor {
     toWorker(): Worker
 }

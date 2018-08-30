@@ -1,4 +1,4 @@
-import { component } from '../../../decorator/component';
+import { component } from '../../../common';
 import * as $ from 'jquery';
 import * as ko from 'knockout';
 
@@ -6,7 +6,7 @@ import * as ko from 'knockout';
     name: 'deferred3',
     template: require('./deferred.3.html')
 })
-class Deferred3ViewModel {
+export class Deferred3ViewModel {
     type: string = '';
     starttime: number = 0;
 

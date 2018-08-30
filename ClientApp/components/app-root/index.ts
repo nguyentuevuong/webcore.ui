@@ -2,14 +2,12 @@ import * as ko from 'knockout';
 import * as _ from 'lodash';
 import { History } from 'history';
 
-import { component } from '../../decorator/component';
-import { Components } from '../../common/app-comp';
-import { IRoute, Router, Routes } from '../../common/app-router';
+import { component, Components, IRoute, Router, Routes } from '../../common';
 
 @component({
     name: 'app-root',
-    styles: require('./app-root.css'),
-    template: require('./app-root.html')
+    styles: require('./style.css'),
+    template: require('./index.html')
 })
 export class AppRootViewModel {
     public router: Router;

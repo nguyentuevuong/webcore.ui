@@ -1,7 +1,7 @@
 import * as ko from 'knockout';
 import * as $ from 'jquery';
 
-import { component } from '../../../../decorator/component';
+import { component } from '../../../../common';
 
 @component({
     name: 'cps001-tab',

@@ -1,7 +1,7 @@
 import * as ko from 'knockout';
 import * as $ from 'jquery';
 
-import { component } from '../../decorator/component';
+import { component } from '../../common';
 
 
 interface IEmployee {
@@ -17,7 +17,7 @@ interface IEmployee {
     url: 'ajax/fetch-data',
     icon: 'fa fa-refresh',
     name: 'fetch-data',
-    template: require('./fetch-data.html')
+    template: require('./index.html')
 })
 export class FetchDataViewModel {
     public forecasts = ko.observableArray<IEmployee>();

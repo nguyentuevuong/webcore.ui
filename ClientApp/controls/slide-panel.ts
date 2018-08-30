@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as ko from 'knockout';
 
 import { lang, getText } from '../common/app-i18n';
-import { handler } from '../decorator/binding';
+import { handler } from '../common/binding';
 import { IComponent, Components } from '../common/app-comp';
 
 @handler({

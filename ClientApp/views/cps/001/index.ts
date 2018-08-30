@@ -1,0 +1,2 @@
+import './comps';
+import './a';

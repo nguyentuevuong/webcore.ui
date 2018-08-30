@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 
-import { handler } from '../decorator/binding';
+import { handler } from '../common';
 
 @handler({
     virtual: false,

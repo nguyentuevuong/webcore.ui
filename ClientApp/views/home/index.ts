@@ -2,13 +2,13 @@ import * as ko from 'knockout';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 
-import { component } from '../../decorator/component';
+import { component } from '../../common';
 
 @component({
     url: '',
     icon: 'fa fa-home',
     title: '#home',
-    template: require('./home.html'),
+    template: require('./index.html'),
     resources: require('./resources.json')
 })
 export class HomeViewModel {

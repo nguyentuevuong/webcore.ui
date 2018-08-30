@@ -1,4 +1,4 @@
-import { component } from '../../../decorator/component';
+import { component } from '../../../common';
 import * as ko from 'knockout';
 
 @component({
@@ -15,7 +15,7 @@ import * as ko from 'knockout';
         You <strong data-bind="text: chosenValue"></strong> it
     </div>`
 })
-class SampleDeferredViewModel {
+export class SampleDeferredViewModel {
     chosenValue: KnockoutObservable<string | undefined> = ko.observable();
 
     constructor(params: any) {

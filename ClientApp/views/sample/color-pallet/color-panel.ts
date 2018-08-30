@@ -1,4 +1,4 @@
-import { component } from '../../../decorator/component';
+import { component } from '../../../common/component';
 
 import * as $ from 'jquery';
 import * as _ from 'lodash';

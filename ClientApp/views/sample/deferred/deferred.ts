@@ -1,4 +1,4 @@
-import { component } from '../../../decorator/component';
+import { component } from '../../../common';
 import * as ko from 'knockout';
 
 @component({
@@ -24,7 +24,7 @@ import * as ko from 'knockout';
         </div>
     `
 })
-class SampleDeferredViewModel {
+export class SampleDeferredViewModel {
     constructor(params: any) {
 
     }

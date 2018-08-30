@@ -1,12 +1,11 @@
 import * as ko from 'knockout';
 import * as _ from 'lodash';
 
-import { lang, i18n } from '../../common/app-i18n';
-import { component } from '../../decorator/component';
+import { lang, i18n, component } from '../../common';
 
 @component({
     name: 'i18n-lang',
-    template: require('./language.html'),
+    template: require('./index.html'),
     resources: require('./resources.json')
 })
 export class LanguageComponent {

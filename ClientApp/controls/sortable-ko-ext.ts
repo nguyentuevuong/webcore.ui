@@ -2,7 +2,7 @@ import * as ko from 'knockout';
 import * as $ from 'jquery';
 import 'jqueryui';
 
-import { handler } from '../decorator/binding';
+import { handler } from '../common/binding';
 
 
 const ITEMKEY = "ko_sortItem",

@@ -1,4 +1,4 @@
-import { component } from "../../../decorator/component";
+import { component } from "../../../common";
 
 import * as data from './data';
 import * as ko from 'knockout';

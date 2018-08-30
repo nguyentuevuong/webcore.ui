@@ -1,13 +1,13 @@
 import * as ko from 'knockout';
 
-import { component } from '../../decorator/component';
+import { component } from '../../common';
 
 @component({
     url: '/access/signin',
     icon: 'fa fa-key',
     title: '#login',
-    styles: require('./login.css'),
-    template: require('./login.html'),
+    styles: require('./style.css'),
+    template: require('./index.html'),
     resources: require('./resources.json')
 })
 export class LoginViewModel {

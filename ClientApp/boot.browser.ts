@@ -4,20 +4,18 @@ import * as ko from 'knockout';
 import * as crossroads from 'crossroads';
 
 import { createBrowserHistory } from 'history';
-import { Routes } from './common/app-router';
-import { i18n } from './common/app-i18n';
+import { i18n, Routes } from './common';
 
 // import external libs
 import 'popper.js';
 import 'bootstrap';
 
 // import components
-import './common/app-prefix';
-import "./common/ajax-ext";
-import './common/app-i18n';
-import './components/_cp-loader';
-import './controls/_ctrl-loader';
-import './views/_vws-loader';
+import './common';
+
+import './controls';
+import './components';
+import './views';
 
 // History component needs no trailing slash
 const base = document.querySelector('base'),

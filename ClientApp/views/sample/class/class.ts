@@ -1,6 +1,6 @@
 import * as ko from 'knockout';
 
-import { component } from '../../../decorator/component';
+import { component } from '../../../common';
 
 @component({
     url: 'sample/class-toggle',

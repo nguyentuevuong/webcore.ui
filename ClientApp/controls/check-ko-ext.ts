@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 
 import * as cm from './_ctrl-cm';
 import { randomId } from '../common/app-utils';
-import { handler } from '../decorator/binding';
+import { handler } from '../common/binding';
 
 @handler({
     virtual: true,

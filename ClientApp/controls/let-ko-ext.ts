@@ -1,5 +1,5 @@
 import * as ko from 'knockout';
-import { handler } from '../decorator/binding';
+import { handler } from '../common/binding';
 
 @handler({
     virtual: true,

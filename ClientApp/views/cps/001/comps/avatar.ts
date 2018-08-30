@@ -1,6 +1,6 @@
 import * as ko from 'knockout';
 
-import { component } from '../../../../decorator/component';
+import { component } from '../../../../common';
 
 @component({
     name: 'cps001-avatar',

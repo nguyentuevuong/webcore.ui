@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
 import * as ko from 'knockout';
 
-import { handler } from '../decorator/binding';
+import { handler } from '../common/binding';
 
 @handler({
     virtual: true,
     bindingName: 'each'
 })
-export class SafeClickBindingHandler implements KnockoutBindingHandler {
+export class EachBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
         return ko.bindingHandlers.foreach.init!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
     }

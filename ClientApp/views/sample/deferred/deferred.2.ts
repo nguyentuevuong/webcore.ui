@@ -1,4 +1,4 @@
-import { component } from '../../../decorator/component';
+import { component } from '../../../common';
 
 import * as _ from 'lodash';
 import * as $ from 'jquery';
@@ -8,7 +8,7 @@ import * as ko from 'knockout';
     name: 'deferred2',
     template: require('./deferred.2.html')
 })
-class Deferred2ViewModel {
+export class Deferred2ViewModel {
     type = '';
     starttime: number = 0;
     data: KnockoutObservableArray<any> = ko.observableArray([]);

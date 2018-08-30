@@ -1,4 +1,3 @@
-import './index';
 import './icons/icons';
 import './json/json';
 import './jquery/jquery';

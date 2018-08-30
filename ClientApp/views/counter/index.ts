@@ -1,12 +1,12 @@
 import * as ko from 'knockout';
 
-import {component} from '../../decorator/component';
+import { component } from '../../common';
 
 @component({
     url: '/count/counter',
     icon: 'fa fa-pie-chart',
     title: 'Counter sample',
-    template: require('./counter.html')
+    template: require('./index.html')
 })
 export class CounterExampleViewModel {
     public currentCount = ko.observable(0);

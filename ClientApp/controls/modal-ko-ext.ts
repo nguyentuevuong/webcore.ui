@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as ko from 'knockout';
 
 import { getText } from '../common/app-i18n';
-import { handler } from '../decorator/binding';
+import { handler } from '../common/binding';
 import { IComponent, Components } from '../common/app-comp';
 
 @handler({
@@ -16,7 +16,7 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
             accessor: any = valueAccessor(),
             params: any = ko.unwrap(accessor.params),
             viewName: string = ko.toJS(accessor.viewName),
-            configs: IConfigs = ko.unwrap(accessor.configs) || {};
+            configs: IModalConfigs = ko.unwrap(accessor.configs) || {};
 
 
         $element.on('click', () => {
@@ -131,7 +131,7 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
     }
 }
 
-export interface IConfigs {
+export interface IModalConfigs {
     size: 'lg' | 'md' | 'sm' | KnockoutObservable<string>,
     backdrop: boolean | KnockoutObservable<boolean>,
     closeBtn: boolean | KnockoutObservable<boolean>,

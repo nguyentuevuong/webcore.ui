@@ -1,4 +1,4 @@
-import {component} from "../../../decorator/component";
+import {component} from "../../../common";
 
 @component({
     url: '/sample/json-viewer',

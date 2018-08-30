@@ -3,13 +3,13 @@ import * as _ from 'lodash';
 import * as ko from 'knockout';
 
 import { getText } from '../common/app-i18n';
-import { handler } from '../decorator/binding';
+import { handler } from '../common/binding';
 
 @handler({
     virtual: false,
     bindingName: 'wizard'
 })
-export class ModalBindingHandler implements KnockoutBindingHandler {
+export class WizardBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let $element = $(element),
             accessor: any = valueAccessor(),

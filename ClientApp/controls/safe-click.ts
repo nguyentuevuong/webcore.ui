@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as ko from 'knockout';
 
-import { handler } from '../decorator/binding';
+import { handler } from '../common/binding';
 
 let originalClick = ko.bindingHandlers.click;
 
