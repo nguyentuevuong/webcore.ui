@@ -1,4 +1,4 @@
-import { component } from '../../common';
+import { component } from 'common';
 import * as ko from 'knockout';
 
 @component({

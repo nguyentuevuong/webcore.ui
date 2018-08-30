@@ -1,1 +1,1 @@
-import './a/viewmodel';
+import './a';

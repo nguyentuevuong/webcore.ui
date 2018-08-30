@@ -12,7 +12,11 @@ module.exports = (env) => {
             modules: false
         },
         resolve: {
-            extensions: ['.js', '.ts']
+            extensions: ['.js', '.ts'],
+            alias: {
+                common: path.join(__dirname, 'ClientApp', 'common'),
+                controls: path.join(__dirname, 'ClientApp', 'controls')
+            }
         },
         module: {
             rules: [

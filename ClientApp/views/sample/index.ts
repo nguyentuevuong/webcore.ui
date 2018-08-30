@@ -1,7 +1,7 @@
 import './icons/icons';
 import './json/json';
 import './jquery/jquery';
-import './class/class';
+import './class';
 import './focus/focus';
 import './text-editor/editor';
 import './date-picker/date-picker';
@@ -20,4 +20,4 @@ import './employee/employee';
 
 import './selections/dropdown/dropdown';
 import './selections/listbox/listbox';
-import './color-pallet/color-panel';
+import './color-pallet';

@@ -1,7 +1,7 @@
 import * as ko from 'knockout';
 import * as $ from 'jquery';
 
-import { component } from '../../common';
+import { component } from 'common';
 
 
 interface IEmployee {

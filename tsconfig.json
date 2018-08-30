@@ -10,7 +10,16 @@
     "types": [
       "es6-promise",
       "webpack-env"
-    ]
+    ],
+    "baseUrl": "ClientApp",
+    "paths": {
+      "common/*": [
+        "common/*"
+      ],
+      "controls/*": [
+        "controls/*"
+      ]
+    }
   },
   "exclude": [
     "bin",

@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import * as ko from 'knockout';
 
-import { component } from '../../../../common';
+import { component } from 'common';
 
 @component({
     url: '/update-employee-info',
