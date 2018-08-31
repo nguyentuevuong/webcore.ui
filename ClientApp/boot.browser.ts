@@ -13,6 +13,7 @@ import 'bootstrap';
 // import components
 import '@app/common';
 import '@app/controls';
+import '@app/components';
 
 
 import './components';

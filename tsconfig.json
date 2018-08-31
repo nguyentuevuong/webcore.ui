@@ -18,6 +18,9 @@
       ],
       "@app/controls/*": [
         "@app/controls/*"
+      ],
+      "@app/components/*": [
+        "@app/components/*"
       ]
     }
   },

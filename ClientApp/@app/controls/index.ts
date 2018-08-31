@@ -16,6 +16,3 @@ import "./texteditor-ko-ext";
 
 import './slide-panel';
 import './click-out-ko-ext';
-
-// load component
-import "./com.controls";
