@@ -1,16 +1,19 @@
 import * as _ from 'lodash';
 import * as $ from 'jquery';
 import * as ko from 'knockout';
-import * as crossroads from 'crossroads';
 
+import * as crossroads from 'crossroads';
 import { createBrowserHistory } from 'history';
-import { i18n, Routes } from '@app/common';
+
+import { i18n } from '@app/common/lang';
+import { Routes } from '@app/common/router';
 
 // import external libs
 import 'popper.js';
 import 'bootstrap';
 
 // import components
+import '@app/common/ajax-ext';
 import '@app/common';
 import '@app/controls';
 import '@app/components';

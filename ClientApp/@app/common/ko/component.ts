@@ -2,7 +2,9 @@ import * as _ from 'lodash';
 import * as $ from 'jquery';
 import * as ko from 'knockout';
 
-import { i18n, Routes, randomId, Components } from '.';
+import { Routes, randomId, Components } from '..';
+
+import { i18n } from '@app/common/lang';
 
 interface IDecoratorComponent {
     url?: string;

@@ -1,10 +1,7 @@
-import * as _ from 'lodash';
-import * as $ from 'jquery';
-import * as ko from 'knockout';
+import { _, ko } from '@app/providers';
 
-import './ajax-ext';
-
-import { handler } from './binding';
+import { handler } from '@app/common/ko';
+import { lang, i18n, Ii18n } from '@app/common/lang';
 
 @handler({
     virtual: false,
@@ -15,7 +12,7 @@ export class I18nBindingHandler implements KnockoutBindingHandler {
         ko.computed({
             read: () => {
                 let _lang: string = ko.toJS(lang),
-                    _i18n: string | II18N = ko.toJS(valueAccessor());
+                    _i18n: string | Ii18n = ko.toJS(valueAccessor());
 
                 if (_.isString(_i18n)) {
                     if (_i18n.indexOf('#') == -1) {
@@ -66,36 +63,3 @@ export class I18nBindingHandler implements KnockoutBindingHandler {
         });
     }
 }
-
-interface II18N {
-    html?: string;
-    text?: string;
-    title?: string;
-    placeholder?: string;
-}
-
-export const i18n: {
-    [lang: string]: {
-        [key: string]: string
-    }
-} = {
-    'en': {
-        'en': 'English',
-        'vi': 'Tiếng Việt'
-    },
-    'vi': {
-        'en': 'English',
-        'vi': 'Tiếng Việt'
-    }
-};
-
-export const lang: KnockoutObservable<string> = ko.observable(localStorage.getItem('lang') || 'vi');
-
-ko.computed({
-    read: () => {
-        localStorage.setItem('lang', ko.toJS(lang));
-    }
-});
-
-// sua ham nay de get resource nhung va dung cho ham computed o bind i18n
-export const getText = (resource: string) => i18n[ko.toJS(lang)][resource.replace('#', '')];

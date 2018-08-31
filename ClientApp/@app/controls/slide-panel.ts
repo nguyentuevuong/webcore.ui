@@ -1,8 +1,9 @@
-import * as $ from 'jquery';
-import * as _ from 'lodash';
-import * as ko from 'knockout';
+import { _, $, ko } from '@app/providers';
 
-import { handler, lang, getText, IComponent, Components } from '@app/common';
+import { handler } from '@app/common/ko';
+import { lang, getText } from '@app/common/lang';
+
+import { IComponent, Components } from '@app/common';
 
 @handler({
     virtual: false,

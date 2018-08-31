@@ -3,7 +3,7 @@ import * as $ from 'jquery';
 import { handler } from "@app/common";
 
 @handler({
-    bindingName: 'ntsAlert'
+    bindingName: 'alert'
 })
 export class AlertBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {

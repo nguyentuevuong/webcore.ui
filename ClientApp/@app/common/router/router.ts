@@ -1,9 +1,10 @@
-import * as ko from 'knockout';
-import * as $ from 'jquery';
-import * as _ from 'lodash';
+import { _, ko, $ } from '@app/providers';
+import { lang, i18n } from '@app/common/lang';
+
 import { History } from 'history';
-import { lang, i18n } from './app-i18n';
 import * as crossroads from 'crossroads';
+
+import { IRoute } from '@app/common/router';
 
 // This module configures crossroads.js, a routing library. If you prefer, you
 // can use any other routing library (or none at all) as Knockout is designed to
@@ -112,14 +113,3 @@ export class Router {
         $(document).off('click', 'a', self.clickEventListener);
     }
 }
-
-export interface IRoute {
-    url?: string;
-    title?: string;
-    params?: any;
-    viewModel?: any;
-    history?: History
-}
-
-// Declare the client-side routing configuration
-export const Routes: IRoute[] = [];
