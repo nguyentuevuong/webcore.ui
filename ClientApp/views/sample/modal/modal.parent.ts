@@ -1,7 +1,7 @@
 import * as ko from 'knockout';
 import * as _ from 'lodash';
 
-import { component } from '../../../common';
+import { component } from '@app/common';
 
 @component({
     url: 'sample/modal',

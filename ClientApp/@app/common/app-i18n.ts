@@ -10,7 +10,7 @@ import { handler } from './binding';
     virtual: false,
     bindingName: 'i18n'
 })
-export class CheckboxBindingHandler implements KnockoutBindingHandler {
+export class I18nBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any) => {
         ko.computed({
             read: () => {

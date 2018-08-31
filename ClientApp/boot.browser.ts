@@ -4,16 +4,17 @@ import * as ko from 'knockout';
 import * as crossroads from 'crossroads';
 
 import { createBrowserHistory } from 'history';
-import { i18n, Routes } from './common';
+import { i18n, Routes } from '@app/common';
 
 // import external libs
 import 'popper.js';
 import 'bootstrap';
 
 // import components
-import './common';
+import '@app/common';
+import '@app/controls';
 
-import './controls';
+
 import './components';
 import './views';
 

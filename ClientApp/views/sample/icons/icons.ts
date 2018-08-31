@@ -1,4 +1,4 @@
-import { component } from "../../../common";
+import { component } from "@app/common";
 
 import * as data from './data';
 import * as ko from 'knockout';

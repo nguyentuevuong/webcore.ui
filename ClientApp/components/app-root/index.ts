@@ -2,7 +2,7 @@ import * as ko from 'knockout';
 import * as _ from 'lodash';
 import { History } from 'history';
 
-import { component, Components, IRoute, Router, Routes } from 'common';
+import { component, Components, IRoute, Router, Routes } from '@app/common';
 
 @component({
     name: 'app-root',

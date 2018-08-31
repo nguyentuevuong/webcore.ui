@@ -2,7 +2,7 @@ import * as $ from 'jquery';
 import * as _ from 'lodash';
 import * as ko from 'knockout';
 
-import { IRoute, Router, Routes, component } from 'common';
+import { IRoute, Router, Routes, component } from '@app/common';
 
 interface NavMenuParams {
     router: Router;

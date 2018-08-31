@@ -1,4 +1,4 @@
-import { component } from "../../common";
+import { component } from "@app/common";
 import * as ko from 'knockout';
 import * as _ from 'lodash';
 
@@ -8,7 +8,7 @@ import {
     TypeOfConstraint,
     TypeOfNumber,
     TypeOfString
-} from '../../common/constraint';
+} from '@app/common';
 
 @component({
     name: 'nts-label',

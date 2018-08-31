@@ -13,11 +13,11 @@
     ],
     "baseUrl": "ClientApp",
     "paths": {
-      "common/*": [
-        "common/*"
+      "@app/common/*": [
+        "@app/common/*"
       ],
-      "controls/*": [
-        "controls/*"
+      "@app/controls/*": [
+        "@app/controls/*"
       ]
     }
   },

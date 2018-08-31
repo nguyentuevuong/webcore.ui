@@ -1,10 +1,8 @@
-import { component } from "../../common";
+import { component } from "@app/common";
 
 import * as ko from 'knockout';
 import * as _ from 'lodash';
 import * as $ from 'jquery';
-
-import { Selectables } from '../../common/ui-selectable';
 
 import { BaseComponentControl, IBaseConfigs, IBaseParamConstructor } from "./_base-comp";
 

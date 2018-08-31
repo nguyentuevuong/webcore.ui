@@ -2,8 +2,7 @@ import * as $ from 'jquery';
 import * as _ from 'lodash';
 import * as ko from 'knockout';
 
-import { getText } from '../common/app-i18n';
-import { handler } from '../common/binding';
+import { handler, getText } from '@app/common';
 
 @handler({
     virtual: false,

@@ -1,7 +1,7 @@
 import * as ko from 'knockout';
 import * as $ from 'jquery';
 import * as _ from 'lodash';
-import { handler } from '../common/binding';
+import { handler } from '@app/common';
 
 @handler({
     virtual: false,

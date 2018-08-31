@@ -1,7 +1,7 @@
-import { component } from '../../../common/component';
+import { component } from '@app/common';
 import * as ko from 'knockout';
 
-import '../../../common/worker-ext';
+import { worker } from '@app/common';
 
 interface FunctionConstructor {
     toWorker(): Worker

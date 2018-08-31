@@ -1,6 +1,6 @@
 import * as $ from 'jquery';
 
-import { handler } from '../common';
+import { handler } from '@app/common';
 
 @handler({
     virtual: false,

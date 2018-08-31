@@ -1,6 +1,6 @@
 import * as ko from 'knockout';
 
-import { component } from 'common';
+import { component } from '@app/common';
 
 @component({
     url: '/access/signin',

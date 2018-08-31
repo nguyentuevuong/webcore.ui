@@ -1,6 +1,6 @@
 import * as ko from 'knockout';
 import * as $ from 'jquery';
-import { handler } from 'common';
+import { handler } from '@app/common';
 
 @handler({
     bindingName: 'ntsLabel'

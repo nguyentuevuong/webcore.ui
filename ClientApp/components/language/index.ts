@@ -1,7 +1,7 @@
 import * as ko from 'knockout';
 import * as _ from 'lodash';
 
-import { lang, i18n, component } from 'common';
+import { lang, i18n, component } from '@app/common';
 
 @component({
     name: 'i18n-lang',
