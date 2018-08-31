@@ -8,7 +8,7 @@ import * as _ from 'lodash';
     url: '/sample/icons',
     icon: 'fa fa-address-book-o',
     title: 'Font icons',
-    template: require('./icons.html'),
+    template: require('./index.html'),
     styles: `.icon {
         padding-top: 5px;
         padding-bottom: 5px;

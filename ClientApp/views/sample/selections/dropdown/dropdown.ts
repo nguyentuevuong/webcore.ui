@@ -1,5 +1,6 @@
 import * as ko from 'knockout';
 import * as $ from 'jquery';
+
 import { component } from '@app/common';
 
 @component({

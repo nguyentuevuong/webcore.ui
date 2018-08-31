@@ -4,7 +4,7 @@ import {component} from "@app/common";
     url: '/sample/json-viewer',
     icon: 'fa fa-file-code-o',
     title: 'Json viewer',
-    template: require('./json.html')
+    template: require('./index.html')
 })
 export class JsonViewModel {
     public model = {

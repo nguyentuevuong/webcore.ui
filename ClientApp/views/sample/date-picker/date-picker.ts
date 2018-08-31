@@ -8,6 +8,6 @@ import {component} from '@app/common';
     title: 'Date picker',
     template: require('./date-picker.html')
 })
-class DatePickerViewModel {
+export class DatePickerViewModel {
     public date = ko.observable(new Date());
 }

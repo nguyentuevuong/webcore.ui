@@ -7,9 +7,9 @@ import * as _ from 'lodash';
     url: 'sample/jquery',
     title: 'Demo jquery',
     icon: 'fa fa-globe',
-    template: require('./jquery.html')
+    template: require('./index.html')
 })
-class SampleJqueryViewModel {
+export class SampleJqueryViewModel {
 
     constructor(params: any, private element: HTMLElement) {
         let self = this,

@@ -19,6 +19,9 @@
       "@app/controls/*": [
         "@app/controls/*"
       ],
+      "@app/providers/*": [
+        "@app/providers/*"
+      ],
       "@app/components/*": [
         "@app/components/*"
       ]
