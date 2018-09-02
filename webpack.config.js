@@ -14,10 +14,7 @@ module.exports = (env) => {
         resolve: {
             extensions: ['.js', '.ts'],
             alias: {
-                '@app/common': path.join(__dirname, 'ClientApp', '@app/common'),
-                '@app/controls': path.join(__dirname, 'ClientApp', '@app/controls'),
-                '@app/providers': path.join(__dirname, 'ClientApp', '@app/providers'),
-                '@app/components': path.join(__dirname, 'ClientApp', '@app/components')
+                '@app': path.join(__dirname, 'ClientApp', '@app')
             }
         },
         module: {
