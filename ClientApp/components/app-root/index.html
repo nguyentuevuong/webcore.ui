@@ -6,7 +6,7 @@
 }"></header>
 <!-- ko if: [$vm.TEMPL.OTHER, $vm.TEMPL.HOME].indexOf(ko.toJS($vm.template)) > -1 -->
 <div class="container-fluid" data-bind='component: {
-	name: paserComp($vm.router.currentRoute().page),
+	name: paserComp($vm.router.currentRoute().component.name),
 	params: $vm.router.currentRoute
 }'></div>
 <!-- /ko -->
@@ -30,7 +30,7 @@
 				<li class="breadcrumb-item active">Data</li>
 			</ol>
 			<div data-bind='component: {
-					name: paserComp($vm.router.currentRoute().page),
+					name: paserComp($vm.router.currentRoute().component.name),
 					params: $vm.router.currentRoute
 				}'></div>
 		</div>

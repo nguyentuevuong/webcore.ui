@@ -17,9 +17,9 @@
         <li class="nav-item">
             <a class="nav-link" data-bind='
                     attr: { href: $vm.router.link(r.url) },
-                    css: { active: $vm.router.currentRoute().page === r.params.page }'>
-                <i data-bind="attr: { 'class': r.params.icon }"></i>
-                <span data-bind="text: r.params.title"></span>
+                    css: { active: $vm.router.currentRoute().component.name === r.name }'>
+                <i data-bind="attr: { 'class': r.icon }"></i>
+                <span data-bind="text: r.title"></span>
             </a>
         </li>
     </ul>

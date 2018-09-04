@@ -38,6 +38,7 @@ export class Router {
             self.currentRoute({
                 url: url,
                 title: 'Not found',
+                name: 'no-component',
                 history: history
             });
 
@@ -48,24 +49,23 @@ export class Router {
         })
 
         routes.forEach(route => {
-            crossroads.addRoute(route.url, (requestParams: any) => {
-                let rmk = _.chain(requestParams).keys()
-                    .map(k => Number(k))
-                    .filter(k => _.isNumber(k))
-                    .map(k => String(k))
-                    .value();
+            if (route.url) {
+                crossroads.addRoute(route.url, (requestParams: any) => {
+                    let rmk = _.chain(requestParams).keys()
+                        .map(k => Number(k))
+                        .filter(k => _.isNumber(k))
+                        .map(k => String(k))
+                        .value();
 
-                // remove request, vals, number params;
-                self.currentRoute(ko.utils.extend(
-                    _.omit(requestParams, _.concat(rmk, ['request_', 'vals_'])),
-                    route.params
-                ));
+                    // remove request, vals, number params;
+                    self.currentRoute(ko.utils.extend({ component: route }, _.omit(requestParams, _.concat(rmk, ['request_', 'vals_']))));
 
-                // remove lastest bypassed url
-                _.extend(crossroads, {
-                    _prevBypassedRequest: null
+                    // remove lastest bypassed url
+                    _.extend(crossroads, {
+                        _prevBypassedRequest: null
+                    });
                 });
-            });
+            }
         });
 
         // Make history.js watch for navigation and notify Crossroads
@@ -110,7 +110,7 @@ export class Router {
         let self = this;
 
         self.disposeHistory();
-        
+
         $(document).off('click', 'a', self.clickEventListener);
     }
 }

@@ -39,8 +39,8 @@ export class AppRootViewModel implements IView, IDispose {
     }
 
     public paserComp = (viewName: string) => {
-        let viewNames = _.map(Components, v => v.params.page);
-
+        let viewNames = _.map(Components, v => v.name);
+        
         return viewNames.indexOf(viewName) > -1 ? viewName : "no-component";
     }
 

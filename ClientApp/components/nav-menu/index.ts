@@ -35,7 +35,7 @@ export class NavMenuViewModel {
             keyword: string = _.toLower(ko.toJS(self.keyword));
 
         return _.filter(routes, r => {
-            return _.toLower(r.params.title).indexOf(keyword) > -1 && (r.url || '').indexOf('sample') > -1;
+            return _.toLower(r.title).indexOf(keyword) > -1 && (r.url || '').indexOf('sample') > -1;
         });
     }
 

@@ -51,17 +51,12 @@ export function component(params: IDecoratorComponent) {
         }
 
         // add all component to component
-        if (_.isString(params.url)) {
-            Components.push({
-                url: `/${params.url}`.replace(/\/+/gi, "/"),
-                title: params.title || params.name,
-                params: {
-                    page: params.name || id,
-                    title: params.title || params.name || id,
-                    icon: params.icon || 'd-none'
-                }
-            });
-        }
+        Components.push({
+            url: `/${params.url}`.replace(/\/+/gi, "/"),
+            name: params.name,
+            icon: params.icon || 'd-none',
+            title: params.title || params.name
+        });
 
         if (!_.isEmpty(params.styles)) {
             let rid = `[role="${id}"]`;
@@ -125,8 +120,8 @@ export function component(params: IDecoratorComponent) {
                     } else if (_.size($contents) == 1) {
                         $contents.replaceWith(templateNodes);
                     }
-
-                    return new constructor(_.omit(params, ['page', 'icon', 'title', '$raw']), element, templateNodes);
+                    
+                    return new constructor(_.omit(params, ['$raw', 'component']), element, templateNodes);
                 }
             },
             template: `${params.styles || ''}
