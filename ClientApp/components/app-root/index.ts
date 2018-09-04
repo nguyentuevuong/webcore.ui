@@ -2,14 +2,15 @@ import * as ko from 'knockout';
 import * as _ from 'lodash';
 import { History } from 'history';
 
-import { component, Components, IRoute, Router, Routes } from '@app/common';
+import { Router } from '@app/common/router';
+import { component, IComponent, Components, IView, IDispose } from '@app/common/ko';
 
 @component({
     name: 'app-root',
     styles: require('./style.css'),
     template: require('./index.html')
 })
-export class AppRootViewModel {
+export class AppRootViewModel implements IView, IDispose {
     public router: Router;
     public TEMPL = TEMPLATE;
 
@@ -17,11 +18,11 @@ export class AppRootViewModel {
 
     constructor(params: { history: History, baseName: string }) {
         // Activate the client-side router
-        this.router = new Router(params.history, Routes, params.baseName);
+        this.router = new Router(params.history, Components, params.baseName);
 
         ko.computed({
             read: () => {
-                let route: IRoute = ko.toJS(this.router),
+                let route: IComponent = ko.toJS(this.router),
                     templ = _(this.TEMPL).map(m => m)
                         .filter(f => !_.isNumber(f))
                         .map(m => String(m).toLowerCase())
@@ -38,17 +39,21 @@ export class AppRootViewModel {
     }
 
     public paserComp = (viewName: string) => {
-        let viewNames = _.map(Routes, v => v.params.page);
+        let viewNames = _.map(Components, v => v.params.page);
 
         return viewNames.indexOf(viewName) > -1 ? viewName : "no-component";
     }
+
+    afterRender = () => {
+
+    };
 
     // To support hot module replacement, this method unregisters the router and KO components.
     // In production scenarios where hot module replacement is disabled, this would not be invoked.
     public dispose() {
         this.router.dispose();
 
-        _(Components).each(comp => ko.components.unregister(comp.name));
+        _([]).each((comp: any) => ko.components.unregister(comp.name));
     }
 }
 

@@ -1,9 +1,8 @@
-import { IComponent, Components } from '@app/common';
-
 import { _, ko, $ } from '@app/providers';
 
-import { handler } from '@app/common/ko';
 import { getText } from '@app/common/lang';
+
+import { handler, IComponent, Components } from '@app/common/ko';
 
 @handler({
     virtual: true,

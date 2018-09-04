@@ -7,7 +7,7 @@ import "jqueryui";
 import '@chenfengyuan/datepicker';
 
 import * as cm from './_ctrl-cm';
-import { handler } from '@app/common';
+import { handler } from '@app/common/ko';
 
 const MSG_ERROR = "msg_error";
 

@@ -1,7 +1,7 @@
 import * as ko from 'knockout';
 import * as $ from 'jquery';
 
-import { component } from '@app/common';
+import { component } from '@app/common/ko';
 
 @component({
     name: 'cps001-tab',

@@ -3,7 +3,7 @@ import * as lb from './label-comp';
 import * as ko from 'knockout';
 import * as _ from 'lodash';
 
-import { randomId } from '@app/common';
+import { randomId } from '@app/common/id';
 
 export class BaseComponentControl {
     $id = randomId;

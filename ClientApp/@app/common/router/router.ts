@@ -1,10 +1,10 @@
 import { _, ko, $ } from '@app/providers';
-import { lang, i18n } from '@app/common/lang';
 
 import { History } from 'history';
 import * as crossroads from 'crossroads';
 
-import { IRoute } from '@app/common/router';
+import { IComponent } from '@app/common/ko';
+import { lang, i18n } from '@app/common/lang';
 
 // This module configures crossroads.js, a routing library. If you prefer, you
 // can use any other routing library (or none at all) as Knockout is designed to
@@ -15,13 +15,13 @@ import { IRoute } from '@app/common/router';
 // Knockout that requires or even knows about this technique. It's just one of
 // many possible ways of setting up client-side routes.
 export class Router {
-    public currentRoute = ko.observable<IRoute>({});
+    public currentRoute = ko.observable<IComponent>({});
     private disposeHistory: () => void;
     private clickEventListener: JQuery.EventHandlerBase<any, JQuery.Event<Document, any>>;
 
     private matchUrl = (url: string) => !!_.size((crossroads as any)._getMatchedRoutes(url));
 
-    constructor(private history: History, routes: IRoute[], basename: string) {
+    constructor(private history: History, routes: IComponent[], basename: string) {
         let self = this;
 
         // extend NormAsObject
@@ -95,7 +95,7 @@ export class Router {
         ko.computed({
             read: () => {
                 let _lang: string = ko.toJS(lang),
-                    route: IRoute = ko.toJS(self.currentRoute),
+                    route: IComponent = ko.toJS(self.currentRoute),
                     title: HTMLElement | null = document.querySelector('head>title');
 
                 // change title of document
@@ -110,6 +110,7 @@ export class Router {
         let self = this;
 
         self.disposeHistory();
+        
         $(document).off('click', 'a', self.clickEventListener);
     }
 }

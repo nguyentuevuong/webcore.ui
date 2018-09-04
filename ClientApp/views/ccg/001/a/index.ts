@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import * as ko from 'knockout';
 
-import { component } from '@app/common';
+import { component } from '@app/common/ko';
 
 @component({
     name: 'ccg-001',

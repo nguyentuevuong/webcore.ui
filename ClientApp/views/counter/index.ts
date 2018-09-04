@@ -1,6 +1,6 @@
 import * as ko from 'knockout';
 
-import { component } from '@app/common';
+import { component } from '@app/common/ko';
 
 @component({
     url: '/count/counter',

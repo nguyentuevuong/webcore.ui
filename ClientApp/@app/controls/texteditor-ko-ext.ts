@@ -3,7 +3,7 @@ import * as $ from 'jquery';
 import * as _ from 'lodash';
 
 import * as cm from './_ctrl-cm';
-import { handler } from '@app/common';
+import { handler } from '@app/common/ko';
 
 @handler({
     bindingName: 'ntsText'

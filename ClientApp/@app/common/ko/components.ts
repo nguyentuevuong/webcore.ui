@@ -1,7 +1,9 @@
 import { History } from 'history';
 
-export interface IRoute {
+export interface IComponent {
     url?: string;
+    name?: string;
+    icon?: string;
     title?: string;
     params?: any;
     viewModel?: any;
@@ -9,4 +11,4 @@ export interface IRoute {
 }
 
 // Declare the client-side routing configuration
-export const Routes: IRoute[] = [];
+export const Components: IComponent[] = [];

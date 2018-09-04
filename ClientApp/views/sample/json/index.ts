@@ -1,4 +1,4 @@
-import {component} from "@app/common";
+import {component} from "@app/common/ko";
 
 @component({
     url: '/sample/json-viewer',

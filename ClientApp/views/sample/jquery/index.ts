@@ -1,4 +1,4 @@
-import { component } from '@app/common';
+import { component } from '@app/common/ko';
 import * as ko from 'knockout';
 import * as $ from 'jquery';
 import * as _ from 'lodash';

@@ -3,7 +3,8 @@ import * as $ from 'jquery';
 import * as _ from 'lodash';
 
 import * as cm from './_ctrl-cm';
-import { handler, randomId } from '@app/common';
+import { handler } from '@app/common/ko';
+import { randomId } from '@app/common/id';
 
 @handler({
     virtual: true,

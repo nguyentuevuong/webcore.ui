@@ -1,5 +1,5 @@
 import * as ko from 'knockout';
-import { handler } from '@app/common';
+import { handler } from '@app/common/ko';
 
 @handler({
     virtual: true,

@@ -1,7 +1,10 @@
 import * as _ from 'lodash';
 import * as ko from 'knockout';
 
-import { component, IRoute, Router, Routes } from "@app/common";
+import { component } from "@app/common/ko";
+import { Router } from '@app/common/router';
+
+import { IComponent, Components } from '@app/common/ko';
 
 @component({
     name: 'top-menu',
@@ -10,10 +13,9 @@ import { component, IRoute, Router, Routes } from "@app/common";
 })
 export class TopMenuViewModel {
     router: Router;
-    routes: IRoute[] = Routes;
+    routes: IComponent[] = Components;
 
     constructor(params: any) {
-
         this.router = params.router;
     }
 }

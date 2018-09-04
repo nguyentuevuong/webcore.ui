@@ -2,9 +2,10 @@ import * as _ from 'lodash';
 import * as $ from 'jquery';
 import * as ko from 'knockout';
 
-import { Routes, randomId, Components } from '..';
-
 import { i18n } from '@app/common/lang';
+import { randomId } from '@app/common/id';
+import { Components } from '@app/common/ko';
+
 
 interface IDecoratorComponent {
     url?: string;
@@ -50,14 +51,8 @@ export function component(params: IDecoratorComponent) {
         }
 
         // add all component to component
-        Components.push({
-            icon: params.icon,
-            title: params.title,
-            name: params.name || id
-        });
-
         if (_.isString(params.url)) {
-            Routes.push({
+            Components.push({
                 url: `/${params.url}`.replace(/\/+/gi, "/"),
                 title: params.title || params.name,
                 params: {

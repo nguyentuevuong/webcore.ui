@@ -29,7 +29,7 @@
     </button>
     <div class="navbar-collapse collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
-            <!-- ko foreach: { data: _.filter(routes, function(r) { return r.url.indexOf('sample') == -1; }), as: 'r'} -->
+            <!-- ko foreach: { data: _.filter([], function(r) { return r.url.indexOf('sample') == -1; }), as: 'r'} -->
             <li class="nav-item text-nowrap">
                 <a class="nav-link" data-bind='
                                 attr: { href: $vm.router.link(r.url) },

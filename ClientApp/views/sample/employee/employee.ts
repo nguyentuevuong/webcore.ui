@@ -1,4 +1,4 @@
-import { component } from '@app/common';
+import { component, IView, IDispose } from '@app/common/ko';
 
 import * as $ from 'jquery';
 import * as _ from 'lodash';
@@ -12,7 +12,13 @@ import * as ko from 'knockout';
     styles: require('./employee.css'),
     template: require('./employee.html')
 })
-export class SampleEmployeeViewModel {
+export class SampleEmployeeViewModel implements IView, IDispose {
+    dispose(): void {
+        console.log("Class disposed.");
+    }
+    afterRender(): void {
+        console.log("UI renderred.");
+    }
     genders: KnockoutObservableArray<IData> = ko.observableArray([]);
     positions: KnockoutObservableArray<IData> = ko.observableArray([]);
     departments: KnockoutObservableArray<IData> = ko.observableArray([]);

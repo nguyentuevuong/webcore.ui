@@ -2,21 +2,23 @@ import * as $ from 'jquery';
 import * as _ from 'lodash';
 import * as ko from 'knockout';
 
-import { IRoute, Router, Routes, component } from '@app/common';
+import { component } from '@app/common/ko';
+import { Router } from '@app/common/router';
+import { IComponent, Components } from '@app/common/ko';
 
 interface NavMenuParams {
     router: Router;
-    routes: IRoute[];
+    routes: IComponent[];
 }
 
 @component({
     name: 'nav-menu',
-    styles: require('./nav-menu.css'),
-    template: require('./nav-menu.html')
+    styles: require('./style.css'),
+    template: require('./index.html')
 })
 export class NavMenuViewModel {
     public router: Router;
-    public routes: IRoute[] = Routes;
+    public routes: IComponent[] = Components;
 
     public keyword: KnockoutObservable<string> = ko.observable('');
 
@@ -29,7 +31,7 @@ export class NavMenuViewModel {
 
     public filterRoute() {
         let self = this,
-            routes: Array<IRoute> = ko.toJS(self.routes),
+            routes: Array<IComponent> = ko.toJS(self.routes),
             keyword: string = _.toLower(ko.toJS(self.keyword));
 
         return _.filter(routes, r => {

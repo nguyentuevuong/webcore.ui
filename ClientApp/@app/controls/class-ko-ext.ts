@@ -1,6 +1,6 @@
 import * as ko from "knockout";
 import * as $ from 'jquery';
-import { handler } from "@app/common";
+import { handler } from "@app/common/ko";
 
 
 // Knockout doesn't allow to use 'css: className' and 'css: { 'class-name': boolValue }' bindings on same element

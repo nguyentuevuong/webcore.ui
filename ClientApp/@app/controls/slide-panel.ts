@@ -3,7 +3,7 @@ import { _, $, ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 import { lang, getText } from '@app/common/lang';
 
-import { IComponent, Components } from '@app/common';
+import { IComponent, Components } from '@app/common/ko';
 
 @handler({
     virtual: false,
