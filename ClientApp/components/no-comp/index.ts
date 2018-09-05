@@ -1,5 +1,5 @@
-import { component } from '@app/common/ko';
 import * as ko from 'knockout';
+import { component } from '@app/common/ko';
 
 @component({
     name: 'no-component',

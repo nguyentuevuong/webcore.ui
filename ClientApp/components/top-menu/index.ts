@@ -15,7 +15,7 @@ export class TopMenuViewModel {
     router: Router;
     routes: IComponent[] = Components;
 
-    constructor(params: any) {
+    constructor(params: { router: Router }) {
         this.router = params.router;
     }
 }

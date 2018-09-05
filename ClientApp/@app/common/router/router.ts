@@ -3,7 +3,7 @@ import { _, ko, $ } from '@app/providers';
 import { History } from 'history';
 import * as crossroads from 'crossroads';
 
-import { IComponent } from '@app/common/ko';
+import { IComponent, Components } from '@app/common/ko';
 import { lang, i18n } from '@app/common/lang';
 
 // This module configures crossroads.js, a routing library. If you prefer, you
@@ -19,9 +19,7 @@ export class Router {
     private disposeHistory: () => void;
     private clickEventListener: JQuery.EventHandlerBase<any, JQuery.Event<Document, any>>;
 
-    private matchUrl = (url: string) => !!_.size((crossroads as any)._getMatchedRoutes(url));
-
-    constructor(private history: History, routes: IComponent[], basename: string) {
+    constructor(private history: History, basename: string) {
         let self = this;
 
         // extend NormAsObject
@@ -48,7 +46,7 @@ export class Router {
             });
         })
 
-        routes.forEach(route => {
+        Components.forEach(route => {
             if (route.url) {
                 crossroads.addRoute(route.url, (requestParams: any) => {
                     let rmk = _.chain(requestParams).keys()

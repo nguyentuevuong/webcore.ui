@@ -6,11 +6,6 @@ import { component } from '@app/common/ko';
 import { Router } from '@app/common/router';
 import { IComponent, Components } from '@app/common/ko';
 
-interface NavMenuParams {
-    router: Router;
-    routes: IComponent[];
-}
-
 @component({
     name: 'nav-menu',
     styles: require('./style.css'),
@@ -22,7 +17,7 @@ export class NavMenuViewModel {
 
     public keyword: KnockoutObservable<string> = ko.observable('');
 
-    constructor(params: NavMenuParams) {
+    constructor(params: { router: Router }) {
         // This viewmodel doesn't do anything except pass through the 'route' parameter to the view.
         // You could remove this viewmodel entirely, and define 'nav-menu' as a template-only component.
         // But in most apps, you'll want some viewmodel logic to determine what navigation options appear.
