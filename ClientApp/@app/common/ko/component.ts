@@ -6,7 +6,6 @@ import { i18n } from '@app/common/lang';
 import { randomId } from '@app/common/id';
 import { Components } from '@app/common/ko';
 
-
 interface IDecoratorComponent {
     url?: string;
     title?: string;
@@ -62,6 +61,9 @@ export function component(params: IDecoratorComponent) {
         if (!_.isEmpty(params.styles)) {
             let rid = `[role="${id}"]`;
 
+            if (params.url && params.url!.indexOf('color') > -1) {
+                debugger;
+            }
             params.styles = params.styles!
                 .replace(/\/\*(?:(?!\*\/)[\s\S])*\*\/|[\r\n\t]+/g, '')
                 // now all comments, newlines and tabs have been removed

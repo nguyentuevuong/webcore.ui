@@ -9,6 +9,7 @@ import * as ko from 'knockout';
     name: 'color-panel',
     title: 'Color system',
     icon: 'fa fa-users',
+    styles: require('./style.scss'),
     template: require('./index.html')
 })
 export class SampleColorViewModel {
