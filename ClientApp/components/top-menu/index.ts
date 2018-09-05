@@ -13,7 +13,7 @@ import { IComponent, Components } from '@app/common/ko';
 })
 export class TopMenuViewModel {
     router: Router;
-    routes: IComponent[] = Components;
+    routes: IComponent[] = _.filter(Components, c => !_.isUndefined(c.url));
 
     constructor(params: { router: Router }) {
         this.router = params.router;

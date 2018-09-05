@@ -39,8 +39,9 @@ export class AppRootViewModel implements IView, IDispose {
     }
 
     public paserComp = (viewName: string) => {
-        let viewNames = _.map(Components, v => v.name);
-        
+        let self = this,
+            viewNames = _.map(Components, v => v.url && v.name);
+
         return viewNames.indexOf(viewName) > -1 ? viewName : "no-component";
     }
 
@@ -53,7 +54,7 @@ export class AppRootViewModel implements IView, IDispose {
     public dispose() {
         this.router.dispose();
 
-        _([]).each((comp: any) => ko.components.unregister(comp.name));
+        _(Components).each((comp: IComponent) => ko.components.unregister(comp.name || ''));
     }
 }
 

@@ -37,7 +37,10 @@ export class Router {
                 url: url,
                 title: 'Not found',
                 name: 'no-component',
-                history: history
+                history: history,
+                component: {
+                    name: 'no-component'
+                }
             });
 
             // remove lastest matched url
@@ -54,7 +57,7 @@ export class Router {
                         .filter(k => _.isNumber(k))
                         .map(k => String(k))
                         .value();
-
+                        
                     // remove request, vals, number params;
                     self.currentRoute(ko.utils.extend({ component: route }, _.omit(requestParams, _.concat(rmk, ['request_', 'vals_']))));
 

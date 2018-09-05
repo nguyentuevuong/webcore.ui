@@ -7,7 +7,8 @@ export interface IComponent {
     title?: string;
     params?: any;
     viewModel?: any;
-    history?: History
+    history?: History;
+    component?: any
 }
 
 // Declare the client-side routing configuration

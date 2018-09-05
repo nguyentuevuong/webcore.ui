@@ -41,18 +41,19 @@ export function component(params: IDecoratorComponent) {
         // merge resources
         _.merge(i18n, params.resources);
 
-        if (!params.name && params.url) {
-            params.name = params.url
-                .replace(/\/+/gi, '-')
-                .replace(/^-/gi, '');
-        }
-        else if (!params.name && !params.url) {
-            params.name = id;
+        if (!params.name) {
+            if (params.url) {
+                params.name = params.url
+                    .replace(/\/+/gi, '-')
+                    .replace(/^-/gi, '') || id;
+            } else {
+                params.name = id;
+            }
         }
 
         // add all component to component
         Components.push({
-            url: `/${params.url}`.replace(/\/+/gi, "/"),
+            url: params.url && `/${params.url}`.replace(/\/+/gi, "/"),
             name: params.name,
             icon: params.icon || 'd-none',
             title: params.title || params.name
@@ -120,7 +121,7 @@ export function component(params: IDecoratorComponent) {
                     } else if (_.size($contents) == 1) {
                         $contents.replaceWith(templateNodes);
                     }
-                    
+
                     return new constructor(_.omit(params, ['$raw', 'component']), element, templateNodes);
                 }
             },

@@ -1,6 +1,6 @@
 import * as ko from 'knockout';
 
-import { component } from '@app/common/ko';
+import { component, IDispose, IView } from '@app/common/ko';
 
 @component({
     url: '/access/signin',
@@ -10,19 +10,18 @@ import { component } from '@app/common/ko';
     template: require('./index.html'),
     resources: require('./resources.json')
 })
-export class LoginViewModel {
+export class LoginViewModel implements IView, IDispose {
     focus: any = {
         userName: ko.observable(true),
         passWord: ko.observable(false)
     }
 
     constructor(params: any, private element: HTMLElement) {
-        console.log(element.outerHTML);
     }
 
-    afterRender = () => {
-        let self = this;
+    afterRender(): void {
+    }
 
-        console.log(self.element.outerHTML);
+    dispose(): void {
     }
 }
