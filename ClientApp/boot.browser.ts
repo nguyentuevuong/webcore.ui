@@ -19,7 +19,6 @@ import '@app/common';
 import '@app/controls';
 import '@app/components';
 
-
 import './components';
 import './views';
 
@@ -32,7 +31,7 @@ const base = document.querySelector('base'),
 ko.applyBindings({
     baseName: baseName,
     history: createBrowserHistory({ basename: baseName })
-}, document.querySelector('body'));
+}, document.body);
 
 // Basic hot reloading support. Automatically reloads and restarts the Knockout app each time
 // you modify source files. This will not preserve any application state other than the URL.
