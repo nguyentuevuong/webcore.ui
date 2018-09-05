@@ -100,7 +100,7 @@ export class Router {
                     title: HTMLElement | null = document.querySelector('head>title');
 
                 // change title of document
-                title!.innerText = route!.title ? i18n[_lang][route!.title!.replace('#', '')] : (route!.url || '');
+                title!.innerText = route!.component!.title ? i18n[_lang][route!.component!.title!.replace('#', '')] : (route!.url || '');
             }
         });
     }
