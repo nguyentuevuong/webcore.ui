@@ -1,0 +1,46 @@
+.login-form {
+    max-width: 320px;
+    margin-top: 200px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    .panel {
+        text-align: center;
+        h2 {
+            color: #444444;
+            font-size: 23px;
+            margin: 0 0 8px 0;
+        }
+        p {
+            color: #777777;
+            font-size: 14px;
+        }
+    }
+    .input-group-text {
+        i.fa {
+            min-width: 16px;
+        }
+    }
+    .forgot {
+        text-align: left;
+        margin-bottom: 1rem;
+        a {
+            color: #777777;
+            font-size: 14px;
+            text-decoration: underline;
+        }
+    }
+    .btn {
+        &.btn-primary {
+            font-size: 14px;
+        }
+    }
+    .back {
+        text-align: left;
+        margin-top: 10px;
+        a {
+            color: #444444;
+            font-size: 13px;
+            text-decoration: none;
+        }
+    }
+}

@@ -6,7 +6,7 @@ import { component, IDispose, IView } from '@app/common/ko';
     url: '/access/signin',
     icon: 'fa fa-key',
     title: '#login',
-    styles: require('./style.css'),
+    styles: require('./style.scss'),
     template: require('./index.html'),
     resources: require('./resources.json')
 })
