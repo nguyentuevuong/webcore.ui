@@ -1,28 +1,32 @@
-<div data-bind="switch: 'pending'">
+<div id="sample_switch" data-bind="switch: 'pending'">
     <div data-bind="case: 'shipped'">
         Your order has been shipped. Your tracking number is abc
     </div>
     <div data-bind="case: 'pending'">
-        Your order is being processed. Please be patient.
+        <span>Your order is being processed. Please be patient.</span>
     </div>
     <div data-bind="case: 'incomplete'">
         Your order could not be processed. Please go back and complete the missing data.
     </div>
     <div data-bind="case: $default">
-        Please call customer service to determine the status of your order.
+        <span>Please call customer service to determine the status of your order.</span>
     </div>
 </div>
 
-<div class="abc">
+<pre data-bind="code: '#sample_class'"></pre>
+
+<pre data-bind="code: '{id: 1, name: \'xxx\'}'"></pre>
+
+<div id="sample_class" class="abc">
     <div class="row">
         <div class="col-md-4">
-            <ul class="list-group" data-bind="sortable: listEmployee">
-                <li class="list-group-item d-flex justify-content-between align-items-center" data-bind="text: ko.toJS($data).name">
+            <ul class="list-group" data-bind="sortable: { data: $vm.listEmployee, as: 'item' }">
+                <li class="list-group-item d-flex justify-content-between align-items-center" data-bind="text: item.name">
                 </li>
             </ul>
         </div>
-        <div class="col-md-8" data-bind="dragable: {}">
-            <pre data-bind="text: ko.toJSON(listEmployee, null, 4)"></pre>
+        <div class="col-md-8" data-bind="dragable: { }">
+            <pre data-bind="code: listEmployee"></pre>
         </div>
     </div>
 </div>

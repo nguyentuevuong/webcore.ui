@@ -23,3 +23,5 @@ import "./datepicker-ko-ext";
 import "./texteditor-ko-ext";
 
 import './click-out-ko-ext';
+
+import '@app/controls/code';

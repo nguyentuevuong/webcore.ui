@@ -683,19 +683,21 @@ pre {
 
 /* -- layout -- */
 
-.function {
-    top: 40px;
-    left: 15px;
-    right: 15px;
-    position: fixed;
-    box-sizing: border-box;
-    padding: 5px 0;
-    z-index: 999;
-    background-color: #fff;
-    border-bottom: 1px solid darken($color: $secondary, $amount: 20);
-    &+.contents {
-        margin-top: 55px;
-        margin-bottom: 15px;
+.container-fluid {
+    >.function {
+        top: 40px;
+        left: 15px;
+        right: 15px;
+        position: fixed;
+        box-sizing: border-box;
+        padding: 5px 0;
+        z-index: 999;
+        background-color: #fff;
+        border-bottom: 1px solid darken($color: $secondary, $amount: 20);
+        &+.contents {
+            margin-top: 55px;
+            margin-bottom: 15px;
+        }
     }
 }
 
@@ -1026,6 +1028,55 @@ pre {
             top: 0;
             left: -15px;
             position: absolute;
+        }
+    }
+}
+
+/* pretty-print */
+
+pre {
+    .xml {
+        .tag {
+            color: #00B050;
+            .name {
+                color: brown;
+            }
+            .attr {
+                color: #0D86D1;
+            }
+            .string {
+                color: #4d4d4d;
+            }
+        }
+    }
+    .typescript {
+        color: rebeccapurple;
+        .title {
+            color: #f00;
+        }
+        .keyword {
+            color: #4d4d4d;
+        }
+        .built_in {
+            color: #0D86D1;
+        }
+        .number {
+            color: #0D86D1;
+        }
+        .string {
+            color: #4d4d4d;
+        }
+        .function {
+            color: #f00;
+            .keyword {
+                color: brown;
+            }
+            .title {
+                color: dodgerblue;
+            }
+            .params {
+                color: #4d4d4d;
+            }
         }
     }
 }
