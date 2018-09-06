@@ -20,9 +20,10 @@ module.exports = (env) => {
         module: {
             rules: [
                 { test: /\.css|\.html$/, use: 'raw-loader' },
-                { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=100000' },
                 { test: /\.ts$/, include: /ClientApp/, loader: 'ts-loader' },
-                { test: /\.(sa|sc)ss$/, use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'] }
+                { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=100000' },
+                { test: /\.(sa|sc)ss$/, include: /views/, use: ['raw-loader', 'sass-loader'] },
+                { test: /\.(sa|sc)ss$/, include: /styles/, use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'] }
             ]
         },
         entry: {
