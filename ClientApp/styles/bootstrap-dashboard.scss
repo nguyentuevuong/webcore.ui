@@ -115,7 +115,6 @@ $enable-shadows: false !default;
     font-weight: unset;
     text-transform: unset;
     border-width: 1px 1px 4px 1px;
-    box-sizing: border-box;
     &-secondary {
         border-color: darken($secondary, 20%);
         &.focus,
@@ -135,7 +134,6 @@ $enable-shadows: false !default;
         border-color: darken($warning, 10%);
     }
     &-group {
-        max-height: 35px;
         &-vertical {
             .btn:not(:first-child) {
                 border-top-width: 0px;
@@ -234,6 +232,8 @@ $enable-shadows: false !default;
         }
     }
 }
+
+/* -- dropdown menu group -- */
 
 .navbar {
     .dropdown-menu.show {
@@ -1046,8 +1046,27 @@ pre {
 
 /* pretty-print */
 
-pre {
+pre.pretty-print {
+    border-radius: 5px;
+    >code {
+        display: block;
+        position: relative;
+        &:after {
+            display: block;
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            padding: 3px 5px;
+            background-color: darken(#ccc, 5%);
+            border-bottom-left-radius: 5px;
+            color: #fff;
+            font-size: 1rem;
+        }
+    }
     .css {
+        &:after {
+            content: 'css';
+        }
         .selector-class {
             color: #00B050;
         }
@@ -1059,6 +1078,9 @@ pre {
         }
     }
     .scss {
+        &:after {
+            content: 'scss';
+        }
         .selector-class {
             color: #00B050;
         }
@@ -1070,6 +1092,9 @@ pre {
         }
     }
     .xml {
+        &:after {
+            content: 'html';
+        }
         .tag {
             color: #00B050;
             .name {
@@ -1084,6 +1109,9 @@ pre {
         }
     }
     .json {
+        &:after {
+            content: 'JSON';
+        }
         .attr {
             color: #0D86D1;
         }
@@ -1095,24 +1123,59 @@ pre {
         }
     }
     .typescript {
-        color: rebeccapurple;
+        &:after {
+            content: 'TypeScript';
+        }
+        color: #0D86D1;
         .title {
             color: #f00;
         }
         .keyword {
-            color: #4d4d4d;
+            color: #00B050;
         }
         .built_in {
-            color: #0D86D1;
-        }
-        .number {
-            color: #0D86D1;
-        }
-        .string {
             color: #4d4d4d;
         }
-        .function {
+        .number {
+            color: #4d4d4d;
+        }
+        .string {
             color: #f00;
+        }
+        .function {
+            color: brown;
+            .keyword {
+                color: brown;
+            }
+            .title {
+                color: dodgerblue;
+            }
+            .params {
+                color: #4d4d4d;
+            }
+        }
+    }
+    .javascript {
+        &:after {
+            content: 'JavaScript';
+        }
+        .title {
+            color: #f00;
+        }
+        .keyword {
+            color: #00B050;
+        }
+        .built_in {
+            color: #4d4d4d;
+        }
+        .number {
+            color: #4d4d4d;
+        }
+        .string {
+            color: #f00;
+        }
+        .function {
+            color: brown;
             .keyword {
                 color: brown;
             }
