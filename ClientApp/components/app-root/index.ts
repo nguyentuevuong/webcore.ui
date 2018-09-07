@@ -7,7 +7,7 @@ import { component, IComponent, Components, IView, IDispose } from '@app/common/
 
 @component({
     name: 'app-root',
-    styles: require('./style.css'),
+    styles: require('./style.scss'),
     template: require('./index.html')
 })
 export class AppRootViewModel implements IView, IDispose {

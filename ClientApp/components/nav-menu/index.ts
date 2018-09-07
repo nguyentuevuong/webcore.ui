@@ -8,7 +8,7 @@ import { IComponent, Components } from '@app/common/ko';
 
 @component({
     name: 'nav-menu',
-    styles: require('./style.css'),
+    styles: require('./style.scss'),
     template: require('./index.html')
 })
 export class NavMenuViewModel {

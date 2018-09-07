@@ -1,0 +1,18 @@
+div.sidebar-sticky {
+    a {
+        &.nav-link {
+            &.active {
+                color: #fff !important;
+                background-color: #158cba;
+            }
+            .fa {
+                font-size: 1.3rem;
+                padding-right: 5px;
+            }
+        }
+    }
+    height: calc(100vh - 90px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-bottom: 15px;
+}
