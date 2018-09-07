@@ -16,6 +16,7 @@ import "@app/controls/sortable";
 
 import '@app/controls/modal';
 import '@app/controls/wizard';
+import '@app/controls/nav-tab';
 import '@app/controls/slide-panel';
 
 import "./combobox-ko-ext";

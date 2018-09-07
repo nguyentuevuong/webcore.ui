@@ -1,6 +1,6 @@
 <h2>Step wizard</h2>
 <hr />
-<div class="row">
+<div id="wizard" class="row">
     <div class="col-md-3">
         <div data-bind="wizard: {
             step: $vm.step,
@@ -44,3 +44,86 @@
         <!-- /ko -->
     </div>
 </div>
+<hr />
+<!-- ko let: { $tab: ko.observable('#use') } -->
+<div data-bind="tabs:  {
+    selected: $tab,
+    dataSources: ['#use', '#API']
+}"></div>
+<div class="tab-content">
+    <!-- ko switch: $tab -->
+    <!-- ko case: '#use' -->
+    <pre data-bind="code: $vm.html, type: 'xml'"></pre>
+    <!-- /ko -->
+    <!-- ko case: '#API' -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>gender</th>
+                <th>note</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Vũ Tiến Lâm</td>
+                <td>1</td>
+                <td>Đẹp trai, ga lăng, là leader tốt tính</td>
+            </tr>
+
+            <tr>
+                <td>2</td>
+                <td>Nguyễn Văn Vương</td>
+                <td>1</td>
+                <td>Có nhìn thấy gì đâu mà ghi chú</td>
+            </tr>
+
+            <tr>
+                <td>3</td>
+                <td>Trương Văn Lai</td>
+                <td>1</td>
+                <td>Nhây nhất team ccc</td>
+            </tr>
+
+            <tr>
+                <td>4</td>
+                <td>Lều Thị Lan</td>
+                <td>2</td>
+                <td>Trước thì xinh nhất, giờ thì...</td>
+            </tr>
+
+            <tr>
+                <td>5</td>
+                <td>Phạm Văn Dân</td>
+                <td>1</td>
+                <td>Đi Nhựt bổn rồi còn đâu</td>
+            </tr>
+
+            <tr>
+                <td>6</td>
+                <td>Lê Trung Hiếu</td>
+                <td>1</td>
+                <td>Lại Thằng Hiếu</td>
+            </tr>
+
+            <tr>
+                <td>7</td>
+                <td>Phạm Văn Thành</td>
+                <td>1</td>
+                <td>Thành Thất Tình</td>
+            </tr>
+
+            <tr>
+                <td>8</td>
+                <td>Nguyễn Hoàng Yến</td>
+                <td>2</td>
+                <td>Chưa ghi gì cả</td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- /ko -->
+    <!-- /ko-->
+</div>
+<!-- /ko -->
