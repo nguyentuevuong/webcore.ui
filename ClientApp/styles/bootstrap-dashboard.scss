@@ -7,6 +7,8 @@ $enable-shadows: false !default;
 @import './node_modules/bootswatch/dist/lumen/variables';
 @import './node_modules/bootstrap/scss/bootstrap';
 @import './node_modules/bootswatch/dist/lumen/bootswatch';
+/* -- custom style -- */
+
 .control-label {
     overflow: hidden;
     padding-left: 5px;
@@ -167,8 +169,8 @@ $enable-shadows: false !default;
                 border-top-right-radius: 3px;
                 &.active {
                     color: $white;
-                    border-color: #00B050;
-                    background-color: #00B050;
+                    border-color: $success;
+                    background-color: $success;
                     padding: calc(0.5rem - 1px) 1rem 0.5rem 1rem;
                     &:focus,
                     &:hover {
@@ -196,7 +198,7 @@ $enable-shadows: false !default;
                     outline: none;
                     border-color: #00B050;
                     border-bottom-color: transparent;
-                    box-shadow: 0px -2px 0px 2px rgba(40, 182, 44, 0.5019607843137255);
+                    box-shadow: 0px -2px 0px 2px lighten($success, 5%); // rgba(40, 182, 44, 0.5019607843137255);
                 }
             }
         }
@@ -229,6 +231,16 @@ $enable-shadows: false !default;
                     }
                 }
             }
+        }
+    }
+}
+
+.navbar {
+    .dropdown-menu.show {
+        width: auto;
+        white-space: nowrap;
+        .menu-group {
+            display: inline-block;
         }
     }
 }
@@ -1056,7 +1068,6 @@ pre {
         .number {
             color: #0D86D1;
         }
-
     }
     .xml {
         .tag {
