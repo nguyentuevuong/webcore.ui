@@ -15,8 +15,9 @@
 
 <pre data-bind="code: '#sample_switch', type: 'xml'"></pre>
 <pre data-bind="code: '.tool-bar{color: #f00;>.btn{width: 300px;}}', type: 'scss'"></pre>
+<pre data-bind="code: 'function() { let array = [1,2,3,4,5];\nreturn _.find(array, x => x == 2); }', type: 'javascript'"></pre>
 
-<pre data-bind="code: 'class ViewModel { id: KnockoutObservable<string> = ko.observable(\'\') }', type: 'typescript'"></pre>
+<pre data-bind="code: '@component({url: \'/home/about\', name: \'home-view\'})\nexport class ViewModel { id: KnockoutObservable<string> = ko.observable(\'\'); model: {id: ko.observable(), name: ko.observable()} constructor() {let self = this;} }', type: 'typescript'"></pre>
 
 <div id="sample_class" class="abc">
     <div class="row">
