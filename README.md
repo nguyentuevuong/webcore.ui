@@ -4,9 +4,8 @@ Clone UK ui (using bootstrap).
 - nodejs
 ## Install
 1. Clone this repo
-2. Open command/terminal/shell and type 3 command (for first time)
+2. Open command/terminal/shell and type 2 command (for first time)
   - ```npm install```
   - ```npm run webpack:vendor```
-  - ```npm run webpack```
 3. Run server (and auto build)
   - ```npm run start:dev```
