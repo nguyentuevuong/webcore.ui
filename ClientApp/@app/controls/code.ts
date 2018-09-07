@@ -14,6 +14,8 @@ const beautify = {
         "break_chained_methods": false,
         "indent_scripts": "normal",
         "brace_style": "collapse",
+        "space_in_paren": false,
+        "space_in_empty_paren": false,
         "space_before_conditional": true,
         "unescape_strings": false,
         "jslint_happy": false,
@@ -37,13 +39,14 @@ import {
     Result,
     // import preferred languages
     TypeScript,
+    JavaScript,
     XML,
     CSS,
     SCSS,
     JSON
 } from 'highlight-ts';
 
-registerLanguages(XML, TypeScript, SCSS, CSS, JSON);
+registerLanguages(XML, JavaScript, TypeScript, SCSS, CSS, JSON);
 
 @handler({
     virtual: false,
@@ -51,6 +54,7 @@ registerLanguages(XML, TypeScript, SCSS, CSS, JSON);
 })
 export class I18nBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+        element.classList.add('pretty-print');
         ko.bindingHandlers.html.init!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
     }
     update = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
@@ -85,7 +89,11 @@ export class I18nBindingHandler implements KnockoutBindingHandler {
                         break;
                     case 'typescript':
                         type = "typescript";
-                        code = beautify.js(code, beautify.configs);
+                        code = beautify.js(code, beautify.configs).replace(/\s<\s[a-z0-9_\-$]+\s>/gi, (match: string) => match.replace(/\s+/g, ''));
+                        break;
+                    case 'javascript':
+                        type = "javascript";
+                        code = beautify.js(code, beautify.configs).replace(/\s<\s[a-z0-9_\-$]+\s>/gi, (match: string) => match.replace(/\s+/g, ''));
                         break;
                 }
             }
@@ -95,8 +103,6 @@ export class I18nBindingHandler implements KnockoutBindingHandler {
         }
 
         lang = process(highlighter, String(code), type);
-
-        console.log(code);
 
         ko.bindingHandlers.html.update!(element, () => `<code class='${type}'>${lang.value}</code>`, allBindingsAccessor, viewModel, bindingContext);
     }
