@@ -22,7 +22,7 @@ module.exports = (env) => {
                 { test: /\.css|\.html$/, use: 'raw-loader' },
                 { test: /\.ts$/, include: /ClientApp/, loader: 'ts-loader' },
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=100000' },
-                { test: /\.(sa|sc)ss$/, include: /views/, use: ['raw-loader', 'sass-loader'] },
+                { test: /\.(sa|sc)ss$/, include: /(views|components)/, use: ['raw-loader', 'sass-loader'] },
                 { test: /\.(sa|sc)ss$/, include: /styles/, use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'] }
             ]
         },
