@@ -14,12 +14,12 @@
     "history": "^4.7.2",
     "jquery": "^3.3.1",
     "jqueryui": "^1.11.1",
+    "js-beautify": "^1.8.4",
     "knockout": "^3.4.2",
     "knockout-mapping": "^2.6.0",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
-    "popper.js": "^1.14.3",
-    "pretty-js": "^0.2.0"
+    "popper.js": "^1.14.3"
   },
   "devDependencies": {
     "@types/core-js": "^2.5.0",

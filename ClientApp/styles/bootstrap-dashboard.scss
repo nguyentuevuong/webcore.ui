@@ -1035,6 +1035,29 @@ pre {
 /* pretty-print */
 
 pre {
+    .css {
+        .selector-class {
+            color: #00B050;
+        }
+        .attribute {
+            color: brown;
+        }
+        .number {
+            color: #0D86D1;
+        }
+    }
+    .scss {
+        .selector-class {
+            color: #00B050;
+        }
+        .attribute {
+            color: brown;
+        }
+        .number {
+            color: #0D86D1;
+        }
+
+    }
     .xml {
         .tag {
             color: #00B050;
@@ -1047,6 +1070,17 @@ pre {
             .string {
                 color: #4d4d4d;
             }
+        }
+    }
+    .json {
+        .attr {
+            color: #0D86D1;
+        }
+        .number {
+            color: chocolate;
+        }
+        .string {
+            color: #4d4d4d;
         }
     }
     .typescript {

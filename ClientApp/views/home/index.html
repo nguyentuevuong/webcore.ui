@@ -13,9 +13,10 @@
     </div>
 </div>
 
-<pre data-bind="code: '#sample_class'"></pre>
+<pre data-bind="code: '<div><div><div><input type=\'text\' value=\'100\' /></div></div></div>', type: 'xml'"></pre>
+<pre data-bind="code: '.tool-bar{color: #f00;>.btn{width: 300px;}}', type: 'scss'"></pre>
 
-<pre data-bind="code: 'function(){return {id: 1, name: \'xxx\'}}'"></pre>
+<pre data-bind="code: 'class ViewModel { id: KnockoutObservable<string> = ko.observable(\'\') }', type: 'typescript'"></pre>
 
 <div id="sample_class" class="abc">
     <div class="row">
