@@ -34,7 +34,7 @@ export class SwitchBindingHandler implements KnockoutBindingHandler {
                         $href.addClass('disabled');
                     } else {
                         $href.on('click', () => {
-                            click = !false;
+                            click = true;
                             if (ko.isObservable(options.selected)) {
                                 options.selected(tab);
                             }
@@ -42,7 +42,9 @@ export class SwitchBindingHandler implements KnockoutBindingHandler {
 
                         if (click && $selected == tab) {
                             click = false;
-                            $href.focus();
+                            setTimeout(() => {
+                                $href.focus();
+                            }, 10);
                         }
                     }
 
@@ -54,6 +56,6 @@ export class SwitchBindingHandler implements KnockoutBindingHandler {
 }
 
 interface IOptions {
-    selected: KnockoutObservable<any> | any;
-    disableds?: KnockoutObservableArray<any> | Array<any>;
+    selected: KnockoutObservable<string>;
+    disableds?: KnockoutObservableArray<string>;
 }

@@ -12,7 +12,8 @@ import { getText } from '@app/common/lang';
 export class WizardBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let $element = $(element),
-            accessor: any = valueAccessor(),
+            $step: KnockoutObservableArray<string> | Array<string> = valueAccessor(),
+            $allBinding: IBindings = allBindingsAccessor(),
             $header = $('<div>', { 'class': 'header' }).appendTo($element),
             $icon = $('<div>', { 'class': 'img' }).appendTo($header),
             $title = $('<h5>', {}).appendTo($header),
@@ -25,45 +26,43 @@ export class WizardBindingHandler implements KnockoutBindingHandler {
 
         $element.addClass('wizard noselect');
 
-        ko.bindingHandlers['i18n']!.init!($title[0], () => accessor.title, allBindingsAccessor, viewModel, bindingContext);
+        ko.bindingHandlers['i18n']!.init!($title[0], () => ($allBinding.configs || {title: '#no_title'}).title, allBindingsAccessor, viewModel, bindingContext);
         ko.bindingHandlers['i18n']!.init!($prevt[0], () => '#preview', allBindingsAccessor, viewModel, bindingContext);
         ko.bindingHandlers['i18n']!.init!($nextt[0], () => '#next', allBindingsAccessor, viewModel, bindingContext);
 
         ko.computed({
             read: () => {
-                let icon = ko.toJS(accessor.icon);
-
-                if (icon) {
-                    $icon.append($('<i>', { 'class': icon }));
-                }
+                $icon.append($('<i>', { 'class': ko.toJS(($allBinding.configs || { icon: 'd-none' }).icon) }));
             }
         });
 
         ko.computed({
             read: () => {
-                let step: number = ko.toJS(accessor.step),
-                    steps: string[] = ko.toJS(accessor.steps),
-                    selectable: boolean = ko.toJS(accessor.selectable);
+                let step: string = ko.toJS($allBinding.selected),
+                    steps: string[] = ko.toJS($step),
+                    selectable: boolean = ko.toJS(($allBinding.configs || {}).selectable);
 
                 $steps.empty();
                 _.each(steps, (s: string, i: number) => {
-                    $('<li>', { 'class': `list-group-item ${step == i ? 'active' : ''}`, text: getText(s) })
+                    $('<li>', { 'class': `list-group-item ${_.isEqual(step, s) ? 'active' : ''}`, text: getText(s) })
                         .appendTo($steps)
                         .on('click', () => {
                             if (selectable && _.size(steps) >= i + 1) {
-                                accessor.step(i);
+                                if (ko.isObservable($allBinding.selected)) {
+                                    $allBinding.selected!(s);
+                                }
                             }
                         });
                 });
 
-                $prev.prop('disabled', step <= 0);
-                $next.prop('disabled', step >= _.size(steps) - 1);
+                $prev.prop('disabled', _.indexOf(steps, step) <= 0);
+                $next.prop('disabled', _.indexOf(steps, step) >= _.size(steps) - 1);
             }
         });
 
         ko.computed({
             read: () => {
-                let showFooter: boolean = ko.toJS(accessor.showFooter);
+                let showFooter: boolean = ko.toJS(($allBinding.configs || {}).showFooter);
 
                 if (!showFooter) {
                     $footer.addClass('d-none');
@@ -74,17 +73,38 @@ export class WizardBindingHandler implements KnockoutBindingHandler {
         });
 
         ko.bindingHandlers.click.init!($prev[0], () => () => {
-            let step: number = ko.toJS(accessor.step);
+            let steps: Array<string> = ko.toJS($step),
+                selected: string = ko.toJS($allBinding.selected),
+                index = _.indexOf(steps, selected);
 
-            accessor.step(--step);
+            if (ko.isObservable($allBinding.selected)) {
+                $allBinding.selected(steps[--index]);
+            }
         }, allBindingsAccessor, viewModel, bindingContext);
 
         ko.bindingHandlers.click.init!($next[0], () => () => {
-            let step: number = ko.toJS(accessor.step);
+            let steps: Array<string> = ko.toJS($step),
+                selected: string = ko.toJS($allBinding.selected),
+                index = _.indexOf(steps, selected);
 
-            accessor.step(++step);
+            if (ko.isObservable($allBinding.selected)) {
+                $allBinding.selected!(steps[++index]);
+            }
         }, allBindingsAccessor, viewModel, bindingContext);
 
         return { controlsDescendantBindings: true };
     }
+}
+
+interface IBindings {
+    selected: KnockoutObservable<string> | string;
+    disableds?: KnockoutObservableArray<string> | Array<string>;
+    configs?: IConfigs
+}
+
+interface IConfigs {
+    icon?: KnockoutObservable<string> | string;
+    title?: KnockoutObservable<string> | string;
+    showFooter?: KnockoutObservable<boolean> | boolean;
+    selectable?: KnockoutObservable<boolean> | boolean;
 }

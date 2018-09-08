@@ -12,7 +12,7 @@ import { component } from '@app/common/ko';
     resources: require('./resources.json')
 })
 export class Cps002aViewModel {
-    step: KnockoutObservable<number> = ko.observable(1);
+    step: KnockoutObservable<string> = ko.observable('#step_1');
     listEmployee: KnockoutObservableArray<any> = ko.observableArray([]);
 
     constructor(params: any, private element: HTMLElement) {
@@ -26,12 +26,12 @@ export class Cps002aViewModel {
     preview() {
         let self = this;
 
-        self.step(self.step() - 1);
+        self.step('#step_2');
     }
 
     next() {
         let self = this;
 
-        self.step(self.step() + 1);
+        self.step('#step_1');
     }
 }
