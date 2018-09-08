@@ -26,7 +26,7 @@ export class SwitchBindingHandler implements KnockoutBindingHandler {
                     let $li = $('<li>', { 'class': 'nav-item' }),
                         $href = $('<a>', {
                             'text': tab,
-                            'href': 'javascript:0',
+                            'href': 'javascript:void(0)',
                             'class': `nav-link ${$selected == tab ? 'active' : ''}`
                         }).appendTo($li);
 

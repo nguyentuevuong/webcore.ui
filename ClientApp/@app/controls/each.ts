@@ -12,11 +12,10 @@ export class EachBindingHandler implements KnockoutBindingHandler {
         return ko.bindingHandlers.foreach.init!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
     }
     update = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let array = ko.utils.unwrapObservable(valueAccessor().data || valueAccessor()),
-            extendedContext = bindingContext.extend({
-                "$length": array.length
-            });
+        let array = ko.utils.unwrapObservable(valueAccessor().data || valueAccessor());
 
-        ko.bindingHandlers.foreach.update!(element, valueAccessor, allBindingsAccessor, viewModel, extendedContext);
+        ko.bindingHandlers.foreach.update!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext.extend({
+            "$length": array.length
+        }));
     }
 }
