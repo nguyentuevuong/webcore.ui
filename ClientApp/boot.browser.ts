@@ -17,6 +17,7 @@ import '@app/common/ajax-ext';
 
 import '@app/common';
 import '@app/controls';
+import '@app/extenders';
 import '@app/components';
 
 import './components';
