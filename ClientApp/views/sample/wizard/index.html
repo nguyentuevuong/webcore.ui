@@ -2,8 +2,9 @@
 <hr />
 <div id="wizard" class="row">
     <div class="col-md-3">
-        <div data-bind="init: { '$vm.step': '#step_4'}, wizard: ['#step_1', '#step_2', '#step_3', '#step_4', '#step_5', '#step_6', '#step_finish'],
-            selected: $vm.step,
+        <div data-bind="init: { '$step': ko.observable('#step_1') },
+            wizard: ['#step_1', '#step_2', '#step_3', '#step_4', '#step_5', '#step_6', '#step_finish'],
+            selected: $step,
             disableds: [],
             configs: {
                 icon: 'fa fa-users',
@@ -13,7 +14,7 @@
             }"></div>
     </div>
     <div class="col-md-9">
-        <!-- ko switch: $vm.step -->
+        <!-- ko switch: $step -->
         <!-- ko case: '#step_1'-->
         <h1>Step 1</h1>
         <hr />
@@ -50,8 +51,10 @@
     </div>
 </div>
 <hr />
-<!-- ko init: { $tab: ko.observable('#use') } -->
-<div data-bind="tabs: ['#use', '#API'], selected: $tab, disableds: []"></div>
+<div data-bind="init: { $tab: ko.observable('#use') }, 
+    tabs: ['#use', '#API'],
+    selected: $tab,
+    disableds: []"></div>
 <div class="tab-content">
     <!-- ko switch: $tab -->
     <!-- ko case: '#use' -->
@@ -67,65 +70,15 @@
                 <th>note</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Vũ Tiến Lâm</td>
-                <td>1</td>
-                <td>Đẹp trai, ga lăng, là leader tốt tính</td>
-            </tr>
-
-            <tr>
-                <td>2</td>
-                <td>Nguyễn Văn Vương</td>
-                <td>1</td>
-                <td>Có nhìn thấy gì đâu mà ghi chú</td>
-            </tr>
-
-            <tr>
-                <td>3</td>
-                <td>Trương Văn Lai</td>
-                <td>1</td>
-                <td>Nhây nhất team ccc</td>
-            </tr>
-
-            <tr>
-                <td>4</td>
-                <td>Lều Thị Lan</td>
-                <td>2</td>
-                <td>Trước thì xinh nhất, giờ thì...</td>
-            </tr>
-
-            <tr>
-                <td>5</td>
-                <td>Phạm Văn Dân</td>
-                <td>1</td>
-                <td>Đi Nhựt bổn rồi còn đâu</td>
-            </tr>
-
-            <tr>
-                <td>6</td>
-                <td>Lê Trung Hiếu</td>
-                <td>1</td>
-                <td>Lại Thằng Hiếu</td>
-            </tr>
-
-            <tr>
-                <td>7</td>
-                <td>Phạm Văn Thành</td>
-                <td>1</td>
-                <td>Thành Thất Tình</td>
-            </tr>
-
-            <tr>
-                <td>8</td>
-                <td>Nguyễn Hoàng Yến</td>
-                <td>2</td>
-                <td>Chưa ghi gì cả</td>
+        <tbody data-bind="each: { data: $vm.listEmployee, as: 'item' }">
+            <tr data-bind="init: { index: $index() }, css: {'table-success' : $length == index + 1 }">
+                <td data-bind="text: item.id"></td>
+                <td data-bind="text: item.name"></td>
+                <td data-bind="text: item.gender"></td>
+                <td data-bind="text: item.memo"></td>
             </tr>
         </tbody>
     </table>
     <!-- /ko -->
     <!-- /ko-->
 </div>
-<!-- /ko -->

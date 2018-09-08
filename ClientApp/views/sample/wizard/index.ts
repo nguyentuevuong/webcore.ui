@@ -1,4 +1,4 @@
-import { ko } from '@app/providers';
+import { $, ko } from '@app/providers';
 import { component } from '@app/common/ko';
 
 @component({
@@ -10,10 +10,13 @@ import { component } from '@app/common/ko';
     template: require('./index.html')
 })
 export class SampleWizardViewModel {
-    private step: KnockoutObservable<string> = ko.observable('#step_2');
-    private html: string = html;
-}
+    public html: string = html;
+    listEmployee: KnockoutObservableArray<any> = ko.observableArray([]);
 
+    constructor(params: any, private element: HTMLElement) {
+        $.getJSON('/json/employee.json', {}, this.listEmployee)
+    }
+}
 
 const html = `<div data-bind="wizard: ['#step_1', '#step_2', '#step_3', '#step_4', '#step_5', '#step_6', '#step_finish'],
     selected: $vm.step,
