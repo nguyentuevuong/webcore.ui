@@ -28,7 +28,7 @@ $(document)
 @component({
     name: 'nts-selection',
     template: `
-    <div class="row" data-bind="let: {
+    <div class="row" data-bind="init: {
             $label: ko.toJS($vm.configs.label),
             $columns: ko.toJS($vm.configs.columns),
             $type: ko.toJS($vm.configs.type),
@@ -44,7 +44,7 @@ $(document)
         <div data-bind="css: $columns.control">
             <!-- ko if: [$vm.$MODE.RADIO, $vm.$MODE.CHECKBOX].indexOf($mode) > -1 -->
                 <!-- ko foreach: { data: $vm.options, as: 'option' } -->
-                    <!-- ko let: { _id: $vm.$id() } -->
+                    <!-- ko init: { _id: $vm.$id() } -->
                         <div class="form-check" data-bind="css: {
                                 'disabled': !!option['disabled'],
                                 'form-check-inline checkbox-inline' : $inline
@@ -75,7 +75,7 @@ $(document)
             <!-- ko if: $vm.$MODE.BUTTON == $mode -->
                 <div class="btn-group btn-group-toggle">
                     <!-- ko foreach: { data: $vm.options, as: 'option' } -->
-                        <!-- ko let: { _id: $vm.$id() } -->
+                        <!-- ko init: { _id: $vm.$id() } -->
                             <label class="btn" data-bind="css: {
                                     'btn-secondary': ($vm.selectedOptions(), !$vm.checked(option)),
                                     'btn-primary active': ($vm.selectedOptions(), $vm.checked(option)),
@@ -143,7 +143,7 @@ $(document)
                         'height': (ko.toJS($vm.rows) * 36 + 1) + 'px' 
                     }">
                     <ul class="list-group" data-bind="foreach: { data: ($vm.keyword(), $vm.filter()), as: 'option' }">
-                        <!-- ko let: { _id: $vm.$id() } -->
+                        <!-- ko init: { _id: $vm.$id() } -->
                             <li class="list-group-item" data-bind="css: {
                                     'hover': ($vm.focus(), $vm.hover(option)),
                                     'active': ($vm.selectedOptions(), $vm.checked(option)),
@@ -206,7 +206,7 @@ $(document)
                             }"></i>
                             <!-- /ko -->
                             <div class="form-check-label" data-bind="with: $vm.selectedOptions">
-                                <!-- ko let: { option: $data } -->
+                                <!-- ko init: { option: $data } -->
                                     <content id="template"></content>
                                 <!-- /ko -->
                             </div>
@@ -258,7 +258,7 @@ $(document)
                                     'height': (ko.toJS($vm.rows) * 36 + 1) + 'px' 
                                 }">
                             <ul class="list-group" data-bind="foreach: { data: ($vm.keyword(), $vm.filter()), as: 'option' }">
-                                <!-- ko let: { _id: $vm.$id() } -->
+                                <!-- ko init: { _id: $vm.$id() } -->
                                     <li class="list-group-item" data-bind="css: {
                                             'hover': ($vm.focus(), $vm.hover(option)),
                                             'active': ($vm.selectedOptions(), $vm.checked(option)),

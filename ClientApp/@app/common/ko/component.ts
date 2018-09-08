@@ -125,7 +125,7 @@ export function component(params: IDecoratorComponent) {
                 }
             },
             template: `${params.styles || ''}
-                <!-- ko let: { $vm: $data, $afterRender: $data.afterRender || function() {} } -->
+                <!-- ko init: { $vm: $data, $afterRender: $data.afterRender || function() {} } -->
                     <!-- ko template: { afterRender: $afterRender.bind($vm) } -->
                     ${params.template}
                     <!-- /ko -->

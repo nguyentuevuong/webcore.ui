@@ -1,6 +1,6 @@
 import '@app/controls/i18n';
 
-import "@app/controls/let";
+import "@app/controls/init";
 import '@app/controls/switch';
 
 import "@app/controls/alert";

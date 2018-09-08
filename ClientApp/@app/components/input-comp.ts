@@ -15,7 +15,7 @@ import { BaseComponentControl } from "./_base-comp";
 @component({
     name: 'nts-input',
     template: `
-    <div class="row form-group" data-bind="let: {
+    <div class="row form-group" data-bind="init: {
         $label: ko.toJS($vm.configs.label),
         $columns: ko.toJS($vm.configs.columns)
     }">
