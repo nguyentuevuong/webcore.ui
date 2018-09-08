@@ -46,10 +46,7 @@
 </div>
 <hr />
 <!-- ko let: { $tab: ko.observable('#use') } -->
-<div data-bind="tabs:  {
-    selected: $tab,
-    dataSources: ['#use', '#API']
-}"></div>
+<div data-bind="tabs: ['#use', '#API'], selected: $tab, disableds: ['#API']"></div>
 <div class="tab-content">
     <!-- ko switch: $tab -->
     <!-- ko case: '#use' -->
