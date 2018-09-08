@@ -1007,7 +1007,7 @@ pre {
 
 .header-panel {
     border: 1px solid darken($secondary, 20%);
-    &:after {
+    &:before {
         content: '';
         display: block;
         border-bottom: 5px solid #00B050;
