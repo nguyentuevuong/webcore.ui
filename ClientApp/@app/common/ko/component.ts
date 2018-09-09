@@ -76,13 +76,14 @@ export function component(params: IDecoratorComponent) {
                 .replace(/((([a-z]|.[a-z])|(}[a-z]|}.[a-z]))(-|_|[a-z]|[0-9])*,)/gi, `$1${rid} `)
                 .replace(/}(?!$)/gi, `}${rid} `)
                 // add rid to first selector of @media group
-                .replace(/{([a-z]|.[a-z])(-|_|[a-z]|[0-9])*{/gi, (st: string) => `{${rid} ${st.replace(/{/g, '')}{`)
+                .replace(/\{([a-z]|.[a-z]|[a-z]\.[a-z])*(-|_|[a-z]|[0-9])*\{/gi, (st: string) => `{${rid} ${st.replace(/{/g, '')}{`)
                 // remove rid from last }
                 .replace(/\[role="([a-z0-9])+"\]\s}/gi, '}')
                 // replace rid from before @media by newline char*
                 .replace(/\[role="([a-z0-9])+"\]\s@media/gi, '\r@media')
                 // add newline (and) or tab to group 
                 .replace(/.+/gi, (st: string) => {
+                    debugger;
                     // add new line before rid
                     return st.replace(/(\[role=")/gi, '\r$1')
                         .replace(/(,\r\[role=")/gi, ',[role="')
