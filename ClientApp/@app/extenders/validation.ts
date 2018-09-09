@@ -1,6 +1,6 @@
 import { _, ko } from '@app/providers';
 
-export function extend(target: ValidationObservable<any>, rule?: IRule) {
+export function extend(target: ValidationObservable<any>) {
     // extend validations prop
     ko.utils.extend(target, {
         hasError: target.hasError || ko.observable(false),
@@ -20,21 +20,27 @@ export function extend(target: ValidationObservable<any>, rule?: IRule) {
             target.validationMessages!(msgs || {});
         },
         checkError: target.checkError || function () {
-            _.forIn(target.validationSubscribes, (subscribe: (value: any) => void, key: string) => {
-                subscribe(ko.toJS(target));
+            _.forIn(target.validationSubscribes, (subscribe: { callback: (value: any) => void }, key: string) => {
+                subscribe.callback(ko.toJS(target));
             });
         },
         validationMessage: target.validationMessage || ko.observable(''),
         validationMessages: target.validationMessages || ko.observable({}),
-        rules: target.rules || {},
         validationSubscribes: target.validationSubscribes || {},
-        removeValidate: target.removeValidate || function (key: string) {
-            if (target.validationSubscribes) {
-                let subscribe = target.validationSubscribes[key];
+        addValidate: target.addValidate || function (key: string, subscribe: any) {
+            target.removeValidate(key);
 
-                if (subscribe) {
-                    _.unset(target.validationSubscribes, key);
-                }
+            if (!target.hasSubscriptionsForEvent(subscribe)) {
+                let subscription = target.subscribe(subscribe);
+
+                _.set(target.validationSubscribes, key, subscription);
+            }
+        },
+        removeValidate: target.removeValidate || function (key: string) {
+            let subscription: { dispose: () => void } = target.validationSubscribes[key];
+
+            if (subscription) {
+                subscription.dispose();
             }
         }
     });
@@ -48,13 +54,6 @@ export function extend(target: ValidationObservable<any>, rule?: IRule) {
                 target.hasError!(true);
                 target.validationMessage!(_.first(_.values(msgs)) || '');
             }
-        });
-    }
-
-    // add rule
-    if (rule) {
-        _.forIn(rule, (v: boolean, k: string) => {
-            target.rules![k] = v;
         });
     }
 }
