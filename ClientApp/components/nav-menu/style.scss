@@ -11,10 +11,19 @@ div.sidebar-sticky {
             }
         }
     }
+    height: calc(100vh - 90px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-bottom: 15px;
+    background-color: #fff;
     @media screen and (min-width: 768px) {
-        height: calc(100vh - 90px);
-        overflow-x: hidden;
-        overflow-y: auto;
-        padding-bottom: 15px;
+        .collapse {
+            display: block;
+        }
+    }
+    @media screen and (max-width: 768px) {
+        .collapse {
+            display: none;
+        }
     }
 }

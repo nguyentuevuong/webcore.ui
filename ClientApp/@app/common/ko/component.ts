@@ -83,7 +83,6 @@ export function component(params: IDecoratorComponent) {
                 .replace(/\[role="([a-z0-9])+"\]\s@media/gi, '\r@media')
                 // add newline (and) or tab to group 
                 .replace(/.+/gi, (st: string) => {
-                    debugger;
                     // add new line before rid
                     return st.replace(/(\[role=")/gi, '\r$1')
                         .replace(/(,\r\[role=")/gi, ',[role="')
