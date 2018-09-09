@@ -1,15 +1,37 @@
-import { ko } from '@app/providers';
+import { _, ko } from '@app/providers';
+import { extend } from '@app/extenders/validation';
 
-export function extend(target: IValidateExtenders) {
-    ko.utils.extend(target, {
-        hasError: target.hasError || ko.observable(false),
-        clearError: target.clearError || function () { target.hasError(false); target.validationMessage(''); },
-        validationMessage: target.validationMessage || ko.observable('')
-    });
-}
+ko.utils.extend(ko.extenders, {
+    validate: (target: ValidationObservable<any>, params: () => string) => {
+        let subscribe = (value: string) => {
+            if (target.rules['validate']) {
+                let invalid = params.apply(target, [value]);
 
-export interface IValidateExtenders {
-    hasError: KnockoutObservable<boolean>;
-    clearError: () => void;
-    validationMessage: KnockoutObservable<string>;
-}
+                if (!!invalid) {
+                    target.addError('validate', invalid);
+                } else {
+                    target.removeError('validate');
+                }
+            }
+        };
+
+        //add some sub-observables to our observable
+        extend(target, {
+            validate: !!params
+        });
+        // remove old validate
+        target.removeValidate('validate');
+
+        //validate whenever the value changes
+        if (!target.hasSubscriptionsForEvent(subscribe)) {
+            target.subscribe(subscribe);
+            target.validationSubscribes["validate"] = subscribe;
+        }
+
+        // clear error for first binding time
+        target.removeError('validate');
+
+        //return the original observable
+        return target;
+    }
+});

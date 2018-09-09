@@ -12,8 +12,19 @@ import { component, IDispose, IView } from '@app/common/ko';
 })
 export class LoginViewModel implements IView, IDispose {
     model: any = {
-        userName: ko.observable('').extend({ required: '' }),
-        passWord: ko.observable('').extend({ required: '' })
+        userName: ko.observable('')
+            .extend({
+                required: true
+            }).extend({
+                validate: (v: any) => {
+                    if (v == 'admin') {
+                        return 'Ten dang nhap da ton tai';
+                    }
+
+                    return undefined;
+                }
+            }),
+        passWord: ko.observable('')
     }
 
     focus: any = {
@@ -23,10 +34,24 @@ export class LoginViewModel implements IView, IDispose {
 
     constructor(params: any, private element: HTMLElement) {
         let self = this;
-        self.model.userName.clearError();
+        self.model.userName.subscribe((v: any) => console.log(new Date().getTime()));
+    }
+
+    addValidate() {
+        let self = this;
+        self.model.userName.extend({
+            required: true
+        });
+    }
+
+    removeValidate() {
+        let self = this;
+        self.model.userName.extend({ required: false });
     }
 
     afterRender(): void {
+        let self = this;
+        self.model.userName.clearError();
     }
 
     dispose(): void {

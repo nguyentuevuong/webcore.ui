@@ -28,5 +28,6 @@
     <div class="forgot">
         <a href="/reset" data-bind="i18n: { text: '#login_forgot' }"></a>
     </div>
-    <button type="button" class="btn btn-primary btn-block" data-bind="i18n: '#login'"></button>
+    <button type="button" class="btn btn-primary btn-block" data-bind="i18n: '#login', click: $vm.removeValidate"></button>
+    <button type="button" class="btn btn-primary btn-block" data-bind="i18n: '#login', click: $vm.addValidate"></button>
 </div>
