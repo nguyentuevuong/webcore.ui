@@ -8,36 +8,42 @@ export function extend(target: ValidationObservable<any>) {
             let msgs: IMessages = ko.toJS(target.validationMessages);
 
             _.set(msgs, rule, message);
-            target.validationMessages!(msgs);
+            target.validationMessages(msgs);
         },
         clearError: target.clearError || function () {
-            target.validationMessages!({});
+            target.validationMessages({});
         },
         removeError: target.removeError || function (rule: string) {
             let msgs: IMessages = ko.toJS(target.validationMessages);
 
             _.unset(msgs, rule);
-            target.validationMessages!(msgs || {});
+            target.validationMessages(msgs || {});
         },
         checkError: target.checkError || function () {
-            _.forIn(target.validationSubscribes, (subscribe: { callback: (value: any) => void }, key: string) => {
-                subscribe.callback(ko.toJS(target));
+            _.each(_.get(target, "_subscriptions"), (subscribe: { validate: string, callback: (value: any) => void }) => {
+                if (subscribe.validate) {
+                    subscribe.callback(ko.toJS(target));
+                }
             });
+        },
+        hasSubscriptionsForValidation: target.hasSubscriptionsForValidation || function (key: string) {
+            return !!_.find(_.get(target, '_subscriptions'), (subc: { validate: string }) => _.isEqual(subc.validate, key));
         },
         validationMessage: target.validationMessage || ko.observable(''),
         validationMessages: target.validationMessages || ko.observable({}),
-        validationSubscribes: target.validationSubscribes || {},
         addValidate: target.addValidate || function (key: string, subscribe: any) {
             target.removeValidate(key);
 
-            if (!target.hasSubscriptionsForEvent(subscribe)) {
+            if (!target.hasSubscriptionsForValidation(key)) {
                 let subscription = target.subscribe(subscribe);
 
-                _.set(target.validationSubscribes, key, subscription);
+                ko.utils.extend(subscription, {
+                    validate: key
+                });
             }
         },
         removeValidate: target.removeValidate || function (key: string) {
-            let subscription: { dispose: () => void } = target.validationSubscribes[key];
+            let subscription: { dispose: () => void } | undefined = _.find(_.get(target, '_subscriptions'), (subc: { validate: string, dispose: () => void }) => _.isEqual(subc.validate, key));
 
             if (subscription) {
                 subscription.dispose();
@@ -45,9 +51,10 @@ export function extend(target: ValidationObservable<any>) {
         }
     });
 
-    if (!target.validationMessages!.getSubscriptionsCount()) {
-        target.validationMessages!.subscribe((msgs: IMessages) => {
-            if (_.isEqual(msgs, {})) {
+    // accept only subscibe for show or hide message error
+    if (!target.validationMessages.getSubscriptionsCount()) {
+        target.validationMessages.subscribe((msgs: IMessages) => {
+            if (_.isEmpty(msgs)) {
                 target.hasError!(false);
                 target.validationMessage!('');
             } else {
