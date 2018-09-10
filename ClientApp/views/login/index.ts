@@ -21,6 +21,8 @@ export class LoginViewModel implements IView, IDispose {
                 validate: (v: any) => {
                     if (v == 'admin') {
                         return 'Ten dang nhap da ton tai';
+                    } else if (v == 'vuong') {
+                        return 'Cai ten qua dep, khong danh cho ban';
                     }
 
                     return undefined;
