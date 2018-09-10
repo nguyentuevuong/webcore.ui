@@ -11,7 +11,14 @@
                     <i class="fa fa-vcard"></i>
                 </span>
             </div>
-            <input type="text" class="form-control" data-bind="value: $userName, css: { 'is-invalid': $userName.validationMessage }, i18n: { placeholder: '#username', 'aria-label': '#username'  }, hasFocus: $userName.$focus"
+            <input type="text" class="form-control" data-bind="value: $userName, 
+                css: { 'is-invalid': $userName.validationMessage }, 
+                i18n: { placeholder: $userName.$name, 'aria-label': $userName.$name  }, 
+                hasFocus: $userName.$focus,
+                enable: $userName.$enable,
+                attr: {
+                    tabindex: $userName.$tabindex
+                }"
                 aria-describedby="basic-addon1">
             <div class="invalid-feedback" data-bind="text: $userName.validationMessage"></div>
         </div>
@@ -29,5 +36,5 @@
         <a href="/reset" data-bind="i18n: { text: '#login_forgot' }"></a>
     </div>
     <button type="button" class="btn btn-primary btn-block" data-bind="i18n: '#login', click: $vm.checkValidate"></button>
-    <button type="button" class="btn btn-primary btn-block" data-bind="i18n: '#login', click: $vm.addValidate"></button>
+    <button type="button" class="btn btn-primary btn-block" data-bind="i18n: '#login', click: $vm.removeValidate"></button>
 </div>

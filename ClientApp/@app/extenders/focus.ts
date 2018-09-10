@@ -7,7 +7,7 @@ ko.utils.extend(ko.extenders, {
             target.$focus!(ko.toJS(focus));
         } else {
             ko.utils.extend(target, {
-                $focus: ko.isObservable(focus) ? focus : ko.observable(focus)
+                $focus: ko.observable(ko.toJS(focus))
             });
         }
 

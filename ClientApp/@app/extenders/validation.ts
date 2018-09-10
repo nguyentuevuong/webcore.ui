@@ -20,11 +20,13 @@ export function extend(target: ValidationObservable<any>) {
             target.validationMessages(msgs || {});
         },
         checkError: target.checkError || function () {
-            _.each(_.get(target, "_subscriptions.change"), (subscribe: { validate: string, callback: (value: any) => void }) => {
-                if (subscribe.validate) {
-                    subscribe.callback(ko.toJS(target));
-                }
-            });
+            if (!target.$disable) {
+                _.each(_.get(target, "_subscriptions.change"), (subscribe: { validate: string, callback: (value: any) => void }) => {
+                    if (subscribe.validate) {
+                        subscribe.callback(ko.toJS(target));
+                    }
+                });
+            }
         },
         hasSubscriptionsForValidation: target.hasSubscriptionsForValidation || function (key: string) {
             return !!_.find(_.get(target, '_subscriptions.change'), (subc: { validate: string }) => _.isEqual(subc.validate, key));

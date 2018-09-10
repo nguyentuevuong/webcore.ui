@@ -5,8 +5,11 @@ declare interface KnockoutObservable<T> {
     $focus?: KnockoutObservable<boolean>;
     /** Subscribe is require or not on view */
     $require?: KnockoutObservable<boolean>;
+    $enable: KnockoutObservable<boolean>;
     /** Subscribe is enable or disable on view */
-    $disabled?: KnockoutObservable<boolean>;
+    $disable?: KnockoutObservable<boolean>;
+    /** Tabindex of subscribe on view */
+    $tabindex?: KnockoutObservable<boolean>;
     /** Check subscribe has error or not */
     hasError?: KnockoutObservable<boolean>;
     /** Method clear error of subscibe */

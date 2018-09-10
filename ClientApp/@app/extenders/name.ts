@@ -7,7 +7,7 @@ ko.utils.extend(ko.extenders, {
             target.$name!(ko.toJS(name));
         } else {
             ko.utils.extend(target, {
-                $name: ko.isObservable(name) ? name : ko.observable(ko.toJS(name))
+                $name: ko.observable(ko.toJS(name))
             });
         }
 

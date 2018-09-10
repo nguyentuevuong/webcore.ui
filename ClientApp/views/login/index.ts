@@ -15,7 +15,9 @@ export class LoginViewModel implements IView, IDispose {
         userName: ko.observable('')
             .extend({
                 $name: '#username',
-                $focus: true
+                $focus: true,
+                $enable: true,
+                $tabindex: 10
             }).extend({
                 required: true,
                 validate: (v: any) => {
@@ -38,11 +40,13 @@ export class LoginViewModel implements IView, IDispose {
 
     checkValidate() {
         let self = this;
+        self.model.userName.extend({ $disable: false });
         self.model.userName.checkError();
     }
 
     removeValidate() {
         let self = this;
+        self.model.userName.extend({ $disable: true });
         self.model.userName.extend({ required: false });
     }
 
