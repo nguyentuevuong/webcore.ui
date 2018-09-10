@@ -16,8 +16,11 @@ export class LoginViewModel implements IView, IDispose {
             .extend({
                 $name: '#username',
                 $focus: true,
-                $enable: true,
-                $tabindex: 10
+                $attr: {
+                    tabindex: 100,
+                    ariaPlaceholder: 'I love you so much',
+                },
+                $enable: true
             }).extend({
                 required: true,
                 validate: (v: any) => {
@@ -40,7 +43,13 @@ export class LoginViewModel implements IView, IDispose {
 
     checkValidate() {
         let self = this;
-        self.model.userName.extend({ $disable: false });
+        self.model.userName.extend({
+            $disable: true,
+            $attr: {
+                tabindex: 101,
+                ariaPlaceholder: 'I love you so much',
+            }
+        });
         self.model.userName.checkError();
     }
 

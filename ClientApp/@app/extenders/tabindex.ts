@@ -1,7 +1,7 @@
 import { _, ko } from '@app/providers';
 
 ko.utils.extend(ko.extenders, {
-    $tabindex: (target: KnockoutObservable<number>, tabindex: KnockoutObservable<string> | string) => {
+    $tabindex: (target: KnockoutObservable<number>, tabindex: string) => {
         // extend tabindex prop of observable
         if (_.has(target, '$tabindex')) {
             target.$tabindex!(ko.toJS(tabindex));

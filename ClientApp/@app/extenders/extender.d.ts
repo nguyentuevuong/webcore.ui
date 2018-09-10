@@ -1,4 +1,5 @@
 declare interface KnockoutObservable<T> {
+    $attr?: KnockoutObservable<{ [key: string]: KnockoutObservable<any> }>;
     /** Name of control in view */
     $name?: KnockoutObservable<string>;
     /** Subscribe is focus or not in view */
@@ -33,6 +34,16 @@ declare interface ValidationObservable<T> extends KnockoutObservable<T> {
     removeValidate: (key: string) => void;
     /** Repository of errors message  */
     validationMessages: KnockoutObservable<IMessages>;
+}
+
+declare interface KnockoutExtenders {
+    $attr: (target: ValidationObservable<any>, attr: { [key: string]: any }) => ValidationObservable<any>;
+    $name: (target: ValidationObservable<any>, name: string) => ValidationObservable<any>;
+    $focus: (target: ValidationObservable<any>, focus: boolean) => ValidationObservable<any>;
+    $enable: (target: ValidationObservable<any>, enable: boolean) => ValidationObservable<any>;
+    $disbale: (target: ValidationObservable<any>, disbale: boolean) => ValidationObservable<any>;
+    $required: (target: ValidationObservable<any>, required: any | boolean) => ValidationObservable<any>;
+    $validate: (target: ValidationObservable<any>, validate: (value: any) => string) => ValidationObservable<any>;
 }
 
 declare interface IRule {

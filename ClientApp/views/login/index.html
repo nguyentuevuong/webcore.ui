@@ -16,9 +16,7 @@
                 i18n: { placeholder: $userName.$name, 'aria-label': $userName.$name  }, 
                 hasFocus: $userName.$focus,
                 enable: $userName.$enable,
-                attr: {
-                    tabindex: $userName.$tabindex
-                }"
+                attr: ko.toJS($userName.$attr)"
                 aria-describedby="basic-addon1">
             <div class="invalid-feedback" data-bind="text: $userName.validationMessage"></div>
         </div>
