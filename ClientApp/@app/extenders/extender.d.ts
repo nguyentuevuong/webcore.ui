@@ -1,5 +1,6 @@
 declare interface KnockoutObservable<T> {
-    name?: KnockoutObservable<string>;
+    $name?: KnockoutObservable<string>;
+    $focus?: KnockoutObservable<boolean>;
     hasError?: KnockoutObservable<boolean>;
     clearError?: () => void;
     checkError?: () => void;

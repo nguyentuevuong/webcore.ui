@@ -11,7 +11,7 @@
                     <i class="fa fa-vcard"></i>
                 </span>
             </div>
-            <input type="text" class="form-control" data-bind="value: $userName, css: { 'is-invalid': $userName.validationMessage }, i18n: { placeholder: '#username', 'aria-label': '#username'  }, hasFocus: focus.userName"
+            <input type="text" class="form-control" data-bind="value: $userName, css: { 'is-invalid': $userName.validationMessage }, i18n: { placeholder: '#username', 'aria-label': '#username'  }, hasFocus: $userName.$focus"
                 aria-describedby="basic-addon1">
             <div class="invalid-feedback" data-bind="text: $userName.validationMessage"></div>
         </div>
@@ -22,7 +22,7 @@
                 <i class="fa fa-key"></i>
             </span>
         </div>
-        <input type="text" class="form-control" data-bind="i18n: { placeholder: '#password', 'aria-label': '#password'  }, hasFocus: focus.passWord"
+        <input type="text" class="form-control" data-bind="i18n: { placeholder: '#password', 'aria-label': '#password'  }, hasFocus: model.passWord.$focus"
             aria-describedby="basic-addon1">
     </div>
     <div class="forgot">
