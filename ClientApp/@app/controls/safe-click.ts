@@ -21,7 +21,7 @@ export class SafeClickBindingHandler implements KnockoutBindingHandler {
 
                     if (time > (timeClick || 500)) {
                         //pass through the arguments
-                        originalFunction.apply(viewModel, _.concat([viewModel], arguments));
+                        originalFunction && originalFunction.apply(viewModel, _.concat([viewModel], arguments));
                     }
 
                     lastPreventTime = new Date().getTime();
