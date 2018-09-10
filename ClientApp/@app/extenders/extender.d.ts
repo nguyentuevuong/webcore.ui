@@ -1,4 +1,5 @@
 declare interface KnockoutObservable<T> {
+    name?: KnockoutObservable<string>;
     hasError?: KnockoutObservable<boolean>;
     clearError?: () => void;
     checkError?: () => void;
