@@ -5,10 +5,16 @@ export function extend(target: ValidationObservable<any>) {
     ko.utils.extend(target, {
         hasError: target.hasError || ko.observable(false),
         addError: target.addError || function (rule: string, message: string) {
-            let msgs: IMessages = ko.toJS(target.validationMessages);
+            let $disable: boolean = ko.toJS(target.$disable) || (ko.toJS(target.$attr) || {})['disabled'];
 
-            _.set(msgs, rule, message);
-            target.validationMessages(msgs);
+            if (!$disable) {
+                let msgs: IMessages = ko.toJS(target.validationMessages);
+
+                _.set(msgs, rule, message);
+                target.validationMessages(msgs);
+            } else {
+                target.clearError!();
+            }
         },
         clearError: target.clearError || function () {
             target.validationMessages({});

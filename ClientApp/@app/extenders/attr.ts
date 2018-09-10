@@ -1,7 +1,10 @@
 import { _, ko } from '@app/providers';
+import { extend } from '@app/extenders/validation';
 
 ko.utils.extend(ko.extenders, {
-    $attr: (target: KnockoutObservable<number>, attr: { [key: string]: any }) => {
+    $attr: (target: ValidationObservable<number>, attr: { [key: string]: any }) => {
+        extend(target);
+
         // init attr object
         if (!target.$attr) {
             target.$attr = ko.observable({});
@@ -24,7 +27,7 @@ ko.utils.extend(ko.extenders, {
                 }
             });
         }
-        
+
         target.$attr($attr);
 
         return target;

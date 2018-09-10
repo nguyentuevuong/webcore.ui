@@ -1,7 +1,10 @@
 import { _, ko } from '@app/providers';
+import { extend } from '@app/extenders/validation';
 
 ko.utils.extend(ko.extenders, {
-    $enable: (target: KnockoutObservable<number>, enable: boolean) => {
+    $enable: (target: ValidationObservable<number>, enable: boolean) => {
+        extend(target);
+        
         // extend disabled prop of observable
         if (_.has(target, '$disable')) {
             target.$disable!(!ko.toJS(enable));
