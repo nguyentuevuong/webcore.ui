@@ -20,14 +20,14 @@ export function extend(target: ValidationObservable<any>) {
             target.validationMessages(msgs || {});
         },
         checkError: target.checkError || function () {
-            _.each(_.get(target, "_subscriptions.validate"), (subscribe: { validate: string, callback: (value: any) => void }) => {
+            _.each(_.get(target, "_subscriptions.change"), (subscribe: { validate: string, callback: (value: any) => void }) => {
                 if (subscribe.validate) {
                     subscribe.callback(ko.toJS(target));
                 }
             });
         },
         hasSubscriptionsForValidation: target.hasSubscriptionsForValidation || function (key: string) {
-            return !!_.find(_.get(target, '_subscriptions.validate'), (subc: { validate: string }) => _.isEqual(subc.validate, key));
+            return !!_.find(_.get(target, '_subscriptions.change'), (subc: { validate: string }) => _.isEqual(subc.validate, key));
         },
         validationMessage: target.validationMessage || ko.observable(''),
         validationMessages: target.validationMessages || ko.observable({}),
@@ -35,7 +35,7 @@ export function extend(target: ValidationObservable<any>) {
             target.removeValidate(key);
 
             if (!target.hasSubscriptionsForValidation(key)) {
-                let subscription = target.subscribe(subscribe, null, 'validate');
+                let subscription = target.subscribe(subscribe);
 
                 ko.utils.extend(subscription, {
                     validate: key
@@ -43,7 +43,7 @@ export function extend(target: ValidationObservable<any>) {
             }
         },
         removeValidate: target.removeValidate || function (key: string) {
-            let subscription: { dispose: () => void } | undefined = _.find(_.get(target, '_subscriptions.validate'), (subc: { validate: string, dispose: () => void }) => _.isEqual(subc.validate, key));
+            let subscription: { dispose: () => void } | undefined = _.find(_.get(target, '_subscriptions.change'), (subc: { validate: string, dispose: () => void }) => _.isEqual(subc.validate, key));
 
             if (subscription) {
                 subscription.dispose();

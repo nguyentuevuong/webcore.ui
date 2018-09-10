@@ -15,7 +15,7 @@ export class LoginViewModel implements IView, IDispose {
         userName: ko.observable('')
             .extend({
                 $name: '#username',
-                $focus: false
+                $focus: true
             }).extend({
                 required: true,
                 validate: (v: any) => {
@@ -33,26 +33,21 @@ export class LoginViewModel implements IView, IDispose {
 
     constructor(params: any, private element: HTMLElement) {
         let self = this;
-        self.model.userName.$focus(true);
         self.model.userName.subscribe((v: any) => console.log(new Date().getTime()));
     }
 
-    addValidate() {
+    checkValidate() {
         let self = this;
-        self.model.userName.extend({
-            required: true
-        });
+        self.model.userName.checkError();
     }
 
     removeValidate() {
         let self = this;
-        self.model.passWord.$focus(true);
-        //self.model.userName.extend({ required: false });
+        self.model.userName.extend({ required: false });
     }
 
     afterRender(): void {
         let self = this;
-        self.model.userName.clearError();
     }
 
     dispose(): void {
