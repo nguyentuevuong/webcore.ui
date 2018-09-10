@@ -1,16 +1,16 @@
-import { ko } from '@app/providers';
+import { _, ko } from '@app/providers';
 import { extend } from '@app/extenders/validation';
 
 ko.utils.extend(ko.extenders, {
-    $focus: (target: ValidationObservable<number>, focus: boolean) => {
+    length: (target: ValidationObservable<number>, length: { min: number, max: number }) => {
         extend(target);
 
         // extend name prop of observable
-        if (ko.isObservable(target.$focus)) {
-            target.$focus(ko.toJS(focus));
+        if (_.has(target, '$name')) {
+            target.$name!(ko.toJS(name));
         } else {
             ko.utils.extend(target, {
-                $focus: ko.observable(ko.toJS(focus))
+                $name: ko.observable(ko.toJS(name))
             });
         }
 

@@ -5,6 +5,7 @@
     </div>
     <hr />
     <div class="form-group" data-bind="init: { $userName: $vm.model.userName }, css: { 'has-danger': $userName.hasError }">
+        <label class="control-label" data-bind="i18n: $userName.$name"></label>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">
@@ -12,14 +13,17 @@
                 </span>
             </div>
             <input type="text" class="form-control" data-bind="value: $userName, 
-                css: { 'is-invalid': $userName.validationMessage }, 
-                i18n: { placeholder: $userName.$name, 'aria-label': $userName.$name  }, 
+                css: { 'is-invalid': $userName.hasError }, 
+                i18n: { 
+                    placeholder: $userName.$name, 
+                    'aria-label': $userName.$name
+                }, 
                 hasFocus: $userName.$focus,
-                attr: ko.toJS($userName.$attr)"
-                aria-describedby="basic-addon1">
+                attr: ko.toJS($userName.$attr)">
             <div class="invalid-feedback" data-bind="text: $userName.validationMessage"></div>
         </div>
     </div>
+    <label class="control-label" data-bind="i18n: $userName.$name"></label>
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text">

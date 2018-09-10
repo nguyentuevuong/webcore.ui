@@ -6,7 +6,7 @@ ko.utils.extend(ko.extenders, {
         extend(target);
 
         // init attr object
-        if (!target.$attr) {
+        if (!ko.isObservable(target.$attr)) {
             target.$attr = ko.observable({});
         }
 
