@@ -1,7 +1,7 @@
 import * as ko from 'knockout';
 
-import { component, IDispose, IView } from '@app/common/ko';
 import { route } from '@app/common/router';
+import { component, IDispose, IView } from '@app/common/ko';
 
 @component({
     url: '/access/signin',
