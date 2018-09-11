@@ -45,7 +45,7 @@ export class LoginViewModel implements IView, IDispose {
 
     checkValidate() {
         let self = this;
-        route.url!.goto('/', [{ id: 100, name: 'goto' }]);
+        route.router!.goto('/', { id: 100, name: 'goto' });
         //self.model.userName.checkError();
     }
 

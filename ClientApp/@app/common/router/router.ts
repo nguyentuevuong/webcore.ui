@@ -71,7 +71,7 @@ export class Router {
 
         // Make history.js watch for navigation and notify Crossroads
         this.disposeHistory = history.listen(location => {
-            crossroads.parse(location.pathname, location.state);
+            crossroads.parse(location.pathname, [location.state]);
         });
 
         this.clickEventListener = (evt: JQuery.Event<Document, null>) => {
@@ -124,8 +124,8 @@ export class Router {
     }
 }
 
-export const route: IRoute = { url: undefined };
+export const route: IRoute = { router: undefined };
 
 export interface IRoute {
-    url?: Router
+    router?: Router
 }
