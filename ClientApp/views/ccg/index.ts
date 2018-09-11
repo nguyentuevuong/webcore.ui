@@ -1,1 +1,1 @@
-import './001';
+import '@views/ccg/001';

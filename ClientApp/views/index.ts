@@ -1,9 +1,9 @@
-import './home';
-import './login';
-import './counter';
-import './fetch-data';
+import '@views/home';
+import '@views/login';
+import '@views/counter';
+import '@views/fetch-data';
 
-import './cps';
-import './ccg';
+import '@views/cps';
+import '@views/ccg';
 
-import './sample';
+import '@views/sample';
