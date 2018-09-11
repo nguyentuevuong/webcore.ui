@@ -15,6 +15,12 @@
     "paths": {
       "@app": [
         "@app/*"
+      ],
+      "@views": [
+        "views/*"
+      ],
+      "@components": [
+        "components/*"
       ]
     }
   },

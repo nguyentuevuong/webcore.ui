@@ -15,13 +15,15 @@ import 'bootstrap';
 // import components
 import '@app/common/ajax-ext';
 
+// import common control
 import '@app/common';
 import '@app/controls';
 import '@app/extenders';
 import '@app/components';
 
-import './components';
-import './views';
+// import views & components
+import '@views';
+import '@components';
 
 // History component needs no trailing slash
 const base = document.querySelector('base'),
