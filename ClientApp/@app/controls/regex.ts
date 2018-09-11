@@ -6,26 +6,23 @@ import { handler } from '@app/common/ko';
     bindingName: 'regex'
 })
 export class RegexBindingHandler implements KnockoutBindingHandler {
-    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+    init = (element: HTMLInputElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let accessor = valueAccessor(),
             value = accessor.value,
             pattern: RegExp = accessor.pattern;
 
-        allBindingsAccessor = () => ko.utils.extend(allBindingsAccessor(), {
-            valueUpdate: "afterkeydown"
-        });
+        element.onkeyup = (evt: KeyboardEvent) => {
+            let origt: string = element.value || '',
+                replt: RegExpExecArray | null = pattern.exec(origt);
 
-        ko.computed({
-            read: () => {
-                let origt: string = ko.toJS(value),
-                    replt: RegExpExecArray | null = pattern.exec(origt);
-                debugger;
-                if (!replt) {
-                    value('');
-                } else {
-                    value(replt[0]);
-                }
+            if (!replt) {
+                value('');
+            } else {
+                value(replt[0]);
             }
-        });
+
+            // rebind value to input
+            element.value = ko.toJS(value);
+        };
     }
 }
