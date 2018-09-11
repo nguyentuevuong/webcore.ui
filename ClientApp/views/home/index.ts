@@ -15,7 +15,8 @@ export class HomeViewModel implements IView, IDispose {
     status: KnockoutObservable<string | undefined> = ko.observable('pending');
     listEmployee: KnockoutObservableArray<any> = ko.observableArray([]);
 
-    constructor() {
+    constructor(params: any) {
+        debugger;
         $.getJSON('/json/employee.json', {}, this.listEmployee);
     }
 

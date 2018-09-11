@@ -70,7 +70,9 @@ export class Router {
         });
 
         // Make history.js watch for navigation and notify Crossroads
-        this.disposeHistory = history.listen(location => crossroads.parse(location.pathname));
+        this.disposeHistory = history.listen(location => {
+            crossroads.parse(location.pathname, location.state);
+        });
 
         this.clickEventListener = (evt: JQuery.Event<Document, null>) => {
             let target: any = evt.currentTarget;
@@ -107,6 +109,12 @@ export class Router {
 
     public link = (url: string): string => this.history.createHref({ pathname: url.replace(/([\/|\-|\_]:\w+:)+/g, '') });
 
+    goto = (url: string, params: any) => {
+        let self = this;
+
+        self.history.push(url, params);
+    }
+
     public dispose() {
         let self = this;
 
@@ -114,4 +122,10 @@ export class Router {
 
         $(document).off('click', 'a', self.clickEventListener);
     }
+}
+
+export const route: IRoute = { url: undefined };
+
+export interface IRoute {
+    url?: Router
 }

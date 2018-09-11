@@ -1,6 +1,7 @@
 import * as ko from 'knockout';
 
 import { component, IDispose, IView } from '@app/common/ko';
+import { route } from '@app/common/router';
 
 @component({
     url: '/access/signin',
@@ -44,7 +45,8 @@ export class LoginViewModel implements IView, IDispose {
 
     checkValidate() {
         let self = this;
-        self.model.userName.checkError();
+        route.url!.goto('/', [{ id: 100, name: 'goto' }]);
+        //self.model.userName.checkError();
     }
 
     removeValidate() {

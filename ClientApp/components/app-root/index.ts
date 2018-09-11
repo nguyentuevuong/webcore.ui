@@ -2,7 +2,7 @@ import * as ko from 'knockout';
 import * as _ from 'lodash';
 import { History } from 'history';
 
-import { Router } from '@app/common/router';
+import { Router, route } from '@app/common/router';
 import { component, IComponent, Components, IView, IDispose } from '@app/common/ko';
 
 @component({
@@ -19,6 +19,10 @@ export class AppRootViewModel implements IView, IDispose {
     constructor(params: { history: History, baseName: string }) {
         // Activate the client-side router
         this.router = new Router(params.history, params.baseName);
+
+        ko.utils.extend(route, {
+            url: this.router
+        });
 
         ko.computed({
             read: () => {
