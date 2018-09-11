@@ -26,7 +26,8 @@ export class LoginViewModel implements IView, IDispose {
                     }
 
                     return undefined;
-                }
+                },
+                regex: /[^0-9]+/g
             }),
         passWord: ko.observable('').extend({
             $focus: false

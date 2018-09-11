@@ -12,11 +12,7 @@
                     <i class="fa fa-vcard"></i>
                 </span>
             </div>
-            <input type="text" class="form-control" data-bind="
-                regex: {
-                    value: $userName,
-                    pattern: /[0-9.]+/g
-                },                 
+            <input type="text" class="form-control" data-bind="value: $userName,
                 css: { 'is-invalid': $userName.hasError }, 
                 i18n: { 
                     placeholder: $userName.$name, 

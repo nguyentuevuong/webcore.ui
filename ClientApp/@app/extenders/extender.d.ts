@@ -19,6 +19,7 @@ declare interface KnockoutObservable<T> {
     checkError?: () => void;
     /** Error message of subscibe on view */
     validationMessage?: KnockoutObservable<string>;
+    regex?: KnockoutObservable<RegExp>; 
 }
 
 declare interface ValidationObservable<T> extends KnockoutObservable<T> {
