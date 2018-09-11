@@ -13,6 +13,7 @@ import "@app/controls/label";
 import '@app/controls/safe-click';
 
 import "@app/controls/sortable";
+import '@app/controls/text';
 
 import '@app/controls/modal';
 import '@app/controls/wizard';

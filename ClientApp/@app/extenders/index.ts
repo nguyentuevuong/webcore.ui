@@ -8,3 +8,6 @@ import '@app/extenders/disabled';
 import '@app/extenders/tabindex';
 import '@app/extenders/required';
 import '@app/extenders/validate';
+
+import '@app/extenders/columns';
+import '@app/extenders/multiline';
