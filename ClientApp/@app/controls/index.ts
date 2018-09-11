@@ -1,4 +1,5 @@
 import '@app/controls/i18n';
+import '@app/controls/regex';
 
 import "@app/controls/init";
 import '@app/controls/switch';
