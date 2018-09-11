@@ -14,6 +14,13 @@ ko.utils.extend(ko.extenders, {
             });
         }
 
+        // extends tabindex attr
+        target.extend({
+            $attr: {
+                tabindex: ko.toJS(target.$tabindex) || (ko.toJS(target.$attr) || {}).tabindex || 0
+            }
+        })
+
         return target;
     }
 });
