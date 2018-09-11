@@ -57,7 +57,7 @@ export class Router {
                         .filter(k => _.isNumber(k))
                         .map(k => String(k))
                         .value();
-                        
+
                     // remove request, vals, number params;
                     self.currentRoute(ko.utils.extend({ component: route }, _.omit(requestParams, _.concat(rmk, ['request_', 'vals_']))));
 
@@ -124,8 +124,8 @@ export class Router {
     }
 }
 
-export const route: IRoute = { router: undefined };
+export const route: IRoute = { goto: (url: string, params: any) => { } };
 
 export interface IRoute {
-    router?: Router
+    goto: (url: string, params: any) => void
 }

@@ -18,7 +18,7 @@ export class AppRootViewModel implements IView, IDispose {
 
     constructor(params: { history: History, baseName: string }) {
         // Activate the client-side router
-        route.router = (this.router = new Router(params.history, params.baseName));
+        route.goto = (this.router = new Router(params.history, params.baseName)).goto;
 
         ko.computed({
             read: () => {
