@@ -27,7 +27,10 @@ export class LoginViewModel implements IView, IDispose {
 
                     return undefined;
                 },
-                regex: /[^0-9]+/g
+                regex: {
+                    pattern: /[^0-9]+/g,
+                    message: 'Gia tri nhap khong khop voi regex: \/[^0-9]+\/g'
+                }
             }),
         passWord: ko.observable('').extend({
             $focus: false

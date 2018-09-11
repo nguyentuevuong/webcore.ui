@@ -1,8 +1,8 @@
-import { ko } from '@app/providers';
+import { _, ko } from '@app/providers';
 import { extend } from '@app/extenders/validation';
 
 ko.utils.extend(ko.extenders, {
-    regex: (target: ValidationObservable<number>, pattern: RegExp) => {
+    regex: (target: ValidationObservable<number>, pattern: RegExp | IRegex) => {
         extend(target);
 
         // extend name prop of observable
@@ -10,11 +10,28 @@ ko.utils.extend(ko.extenders, {
             target.removeValidate('regex');
         } else {
             target.addValidate('regex', (value: any) => {
-                console.log(value);
-                if (!pattern.test(value)) {
-                    target.removeError('regex');
+
+                if (_.has(pattern, 'test')) {
+                    pattern = <RegExp>pattern;
+
+                    if (!pattern.test(value)) {
+                        target.removeError('regex');
+                    } else {
+                        let g = pattern.global ? 'g' : '',
+                            i = pattern.ignoreCase ? 'i' : '',
+                            m = pattern.multiline ? 'm' : '';
+
+                        target.addError('regex', `This value is not match with pattern: \/${pattern.source}\/${g}${m}${i}`);
+                    }
                 } else {
-                    target.addError('regex', `This value is not match with pattern: \/${pattern.source}\/${pattern.global ? 'g' : ''}${pattern.ignoreCase ? 'i' : ''}${pattern.multiline ? 'm' : ''}`);
+                    let param: IRegex = <IRegex>pattern,
+                        regex: RegExp = param.pattern;
+
+                    if (!regex.test(value)) {
+                        target.removeError('regex');
+                    } else {
+                        target.addError('regex', param.message);
+                    }
                 }
             });
         }
@@ -22,3 +39,8 @@ ko.utils.extend(ko.extenders, {
         return target;
     }
 });
+
+interface IRegex {
+    pattern: RegExp;
+    message: string;
+}
