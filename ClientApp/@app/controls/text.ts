@@ -29,6 +29,19 @@ export class TextEditorBindingHandler implements KnockoutBindingHandler {
             $ipc = $(`<${ko.toJS(value.multiline) ? 'textarea' : 'input'}>`, { 'class': 'form-control' }),
             subscribe: KnockoutObservable<string> = ko.observable(ko.toJS(value));
 
+        if (value.$require) {
+            ko.computed({
+                read: () => {
+                    let require = ko.toJS(value.$require);
+                    if (require) {
+                        $lbl.addClass('control-label-danger');
+                    } else {
+                        $lbl.removeClass('control-label-danger');
+                    }
+                },
+                disposeWhen: () => !value
+            })
+        }
 
         $element
             .empty()

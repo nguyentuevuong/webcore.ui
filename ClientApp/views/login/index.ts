@@ -18,6 +18,8 @@ export class LoginViewModel implements IView, IDispose {
                 $name: '#username',
                 $focus: true
             }).extend({
+                multiline: true
+            }).extend({
                 required: true,
                 validate: (v: any) => {
                     if (v == 'admin') {
