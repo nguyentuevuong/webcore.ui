@@ -19,7 +19,7 @@ ko.utils.extend(ko.extenders, {
             $attr: {
                 tabindex: ko.toJS(target.$tabindex) || (ko.toJS(target.$attr) || {}).tabindex || 0
             }
-        })
+        });
 
         return target;
     }
