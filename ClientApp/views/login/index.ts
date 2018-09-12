@@ -15,10 +15,10 @@ export class LoginViewModel implements IView, IDispose {
     model: any = {
         userName: ko.observable('')
             .extend({
+                $focus: true,
                 $name: '#username',
-                $focus: true
-            }).extend({
-                multiline: true
+                $multiline: false,
+                $constraint: '#noconstraint'
             }).extend({
                 required: true,
                 validate: (v: any) => {

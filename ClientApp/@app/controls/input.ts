@@ -9,53 +9,14 @@ import { handler } from '@app/common/ko';
 })
 export class TextEditorBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let $element = $(element);
-
-        if (element.tagName != 'DIV') {
-            throw 'Only binding this control to DIV.';
-        }
+        let $element = $(element),
+            control: KnockoutObservable<any> = valueAccessor();
 
         $element
             .addClass('form-group row');
 
+        ko.bindingHandlers.component.init!(element, () => ({ name: 'input', params: { control: valueAccessor() } }), allBindingsAccessor, viewModel, bindingContext);
+
         return { controlsDescendantBindings: true };
-    }
-    update = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let $element = $(element),
-            value: InputObservable<string> = valueAccessor(),
-            columns: Array<string> = _.map(ko.toJS(value.columns), m => m) || ['col-md-12', 'col-md-12'],
-            $clb = $('<div>', { 'class': columns[0] || 'col-md-12' }),
-            $cip = $('<div>', { 'class': columns[1] || 'col-md-12' }),
-            $lbl = $('<label>', { 'class': 'control-label' }),
-            $ipc = $(`<${ko.toJS(value.multiline) ? 'textarea' : 'input'}>`, { 'class': 'form-control' }),
-            subscribe: KnockoutObservable<string> = ko.observable(ko.toJS(value));
-
-        if (value.$require) {
-            ko.computed({
-                read: () => {
-                    let require = ko.toJS(value.$require);
-                    if (require) {
-                        $lbl.addClass('control-label-danger');
-                    } else {
-                        $lbl.removeClass('control-label-danger');
-                    }
-                },
-                disposeWhen: () => !value
-            })
-        }
-
-        $element
-            .empty()
-            .append($clb)
-            .append($cip);
-
-        ko.bindingHandlers.label.init!($clb[0], valueAccessor, allBindingsAccessor, viewModel, bindingContext);
-
-        $cip.append($ipc);
-
-        ko.bindingHandlers.i18n.init!($lbl[0], () => value.$name, allBindingsAccessor, viewModel, bindingContext);
-
-        ko.bindingHandlers.value.init!($ipc[0], () => subscribe, allBindingsAccessor, viewModel, bindingContext);
-        ko.bindingHandlers.value.update!($ipc[0], () => subscribe, allBindingsAccessor, viewModel, bindingContext);
     }
 }

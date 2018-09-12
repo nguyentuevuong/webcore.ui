@@ -9,9 +9,11 @@ declare interface KnockoutObservable<T> {
     $enable: KnockoutObservable<boolean>;
     /** Subscribe is enable or disable on view */
     $disable?: KnockoutObservable<boolean>;
+    $columns?: KnockoutObservableArray<string>;
     /** Tabindex of subscribe on view */
     $tabindex?: KnockoutObservable<boolean>;
     $constraint?: KnockoutObservable<string>;
+    $multiline?: KnockoutObservable<boolean>;
     /** Check subscribe has error or not */
     hasError?: KnockoutObservable<boolean>;
     /** Method clear error of subscibe */
@@ -21,8 +23,6 @@ declare interface KnockoutObservable<T> {
     /** Error message of subscibe on view */
     validationMessage?: KnockoutObservable<string>;
     regex?: KnockoutObservable<RegExp>;
-    multiline?: KnockoutObservable<boolean>;
-    columns?: KnockoutObservableArray<string>;
 }
 
 declare interface ValidationObservable<T> extends KnockoutObservable<T> {

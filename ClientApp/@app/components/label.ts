@@ -13,7 +13,7 @@ import {
 @component({
     name: 'label',
     template: `
-    <label class="control-label control-label-block mb-1">
+    <label class="control-label control-label-block mb-1" data-bind="css: { 'control-label-danger': ko.toJS($vm.control.$require) }">
         <!-- ko if: ko.toJS($vm.control.$name) -->
         <span data-bind="i18n: $vm.control.$name"></span>
         <!-- /ko -->

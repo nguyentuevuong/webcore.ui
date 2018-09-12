@@ -7,8 +7,8 @@ import { handler } from '@app/common/ko';
 })
 export class LabelControlBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        ko.bindingHandlers.component.init!(element, () => ({ name: 'label', params: valueAccessor() }), allBindingsAccessor, viewModel, bindingContext);
-        
+        ko.bindingHandlers.component.init!(element, () => ({ name: 'label', params: { control: valueAccessor() } }), allBindingsAccessor, viewModel, bindingContext);
+
         return { controlsDescendantBindings: true };
     }
 }
