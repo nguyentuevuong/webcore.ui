@@ -23,6 +23,8 @@ declare interface KnockoutObservable<T> {
     /** Error message of subscibe on view */
     validationMessage?: KnockoutObservable<string>;
     regex?: KnockoutObservable<RegExp>;
+    $width: KnockoutObservable<number>;
+    $icons?: KnockoutObservable<{ before: string, after: string }>;
 }
 
 declare interface ValidationObservable<T> extends KnockoutObservable<T> {

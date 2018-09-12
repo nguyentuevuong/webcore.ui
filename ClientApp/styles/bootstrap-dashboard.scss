@@ -400,19 +400,6 @@ $enable-shadows: false !default;
     }
 }
 
-.input-group {
-    .btn {
-        &.btn-secondary {
-            border-color: $input-border-color;
-            &.focus,
-            &:focus {
-                box-shadow: $input-focus-box-shadow;
-                border-color: $input-focus-border-color;
-            }
-        }
-    }
-}
-
 .radio,
 .radio-inline,
 .checkbox,
@@ -583,6 +570,31 @@ input[type="checkbox"],
 }
 
 .input-group {
+    &-transparent {
+        .input-group-prepend,
+        .input-group-append {
+            z-index: 9;
+            position: absolute;
+            border-color: transparent;
+            background-color: transparent;
+            .input-group-text {
+                border-color: transparent;
+                background-color: transparent;
+            }
+        }
+        .input-group-prepend {
+            left: 0;
+            +.form-control {
+                padding-left: 32px;
+            }
+        }
+        .input-group-append {
+            right: 0;
+            +.form-control {
+                padding-right: 32px;
+            }
+        }
+    }
     .form-check {
         label,
         .form-check {
@@ -593,6 +605,16 @@ input[type="checkbox"],
             &-input {
                 width: 18px;
                 margin-top: -3px;
+            }
+        }
+    }
+    .btn {
+        &.btn-secondary {
+            border-color: $input-border-color;
+            &.focus,
+            &:focus {
+                box-shadow: $input-focus-box-shadow;
+                border-color: $input-focus-border-color;
             }
         }
     }

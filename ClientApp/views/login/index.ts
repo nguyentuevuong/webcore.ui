@@ -16,9 +16,16 @@ export class LoginViewModel implements IView, IDispose {
         userName: ko.observable('')
             .extend({
                 $focus: true,
-                $name: '#username',
                 $multiline: false,
-                $constraint: '#noconstraint'
+                $name: '#username',
+                $constraint: '#noconstraint',
+                $icons: {
+                    before: 'fas fa-user'
+                },
+                //$width: 200,
+                $columns: [
+                    'col-md-4', 'col-md-12'
+                ]
             }).extend({
                 required: true,
                 validate: (v: any) => {
@@ -36,7 +43,16 @@ export class LoginViewModel implements IView, IDispose {
                 }
             }),
         passWord: ko.observable('').extend({
-            $focus: false
+            $focus: false,
+            $name: '#password',
+            $attr: {
+                type: 'password'
+            },
+            $icons: {
+                before: 'far fa-address-card'
+            }
+        }).extend({
+            required: true
         })
     }
 

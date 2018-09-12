@@ -11,5 +11,7 @@ import '@app/extenders/tabindex';
 import '@app/extenders/required';
 import '@app/extenders/validate';
 
+import '@app/extenders/icons';
+import '@app/extenders/width';
 import '@app/extenders/columns';
 import '@app/extenders/multiline';

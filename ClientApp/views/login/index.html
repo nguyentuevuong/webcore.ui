@@ -5,19 +5,9 @@
     </div>
     <hr />
     <div data-bind="input: $vm.model.userName"></div>
-    <label class="control-label" data-bind="init: { $userName: $vm.model.userName }, i18n: $userName.$name"></label>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text">
-                <i class="fa fa-key"></i>
-            </span>
-        </div>
-        <input type="text" class="form-control" data-bind="i18n: { placeholder: '#password', 'aria-label': '#password'  }, hasFocus: model.passWord.$focus"
-            aria-describedby="basic-addon1">
-    </div>
+    <div data-bind="input: $vm.model.passWord"></div>
     <div class="forgot">
         <a href="/reset" data-bind="i18n: { text: '#login_forgot' }"></a>
     </div>
     <button type="button" class="btn btn-primary btn-block" data-bind="i18n: '#login', click: $vm.checkValidate"></button>
-    <button type="button" class="btn btn-primary btn-block" data-bind="i18n: '#login', click: $vm.removeValidate"></button>
 </div>
