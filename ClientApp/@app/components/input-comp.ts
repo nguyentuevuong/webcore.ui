@@ -1,19 +1,8 @@
+import { _, ko } from '@app/providers';
 import { component } from "@app/common/ko";
-import * as ko from 'knockout';
-import * as _ from 'lodash';
-
-import {
-    INumberConstraint,
-    IStringConstraint,
-    TypeOfConstraint,
-    TypeOfNumber,
-    TypeOfString
-} from '@app/common';
-
-import { BaseComponentControl } from "./_base-comp";
 
 @component({
-    name: 'nts-input',
+    name: 'input',
     template: `
     <div class="row form-group" data-bind="init: {
         $label: ko.toJS($vm.configs.label),
@@ -36,16 +25,14 @@ import { BaseComponentControl } from "./_base-comp";
     </div>
     `
 })
-export class InputComponent extends BaseComponentControl {
-    value: KnockoutObservable<string | number | Date | undefined> = ko.observable();
+export class InputComponent {
+    value: KnockoutObservable<string> = ko.observable('');
 
-    constructor(params: any, element?: HTMLElement) {
-        super(params, element);
-
+    constructor(params: ValidationObservable<any>, element?: HTMLElement) {
         let self = this;
 
         ko.utils.extend(self, {
-            value: params.value
+            value: params
         });
     }
 }

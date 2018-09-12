@@ -10,10 +10,10 @@ import "./check-ko-ext";
 
 import '@app/controls/each';
 import "@app/controls/label";
+import '@app/controls/input';
 import '@app/controls/safe-click';
 
 import "@app/controls/sortable";
-import '@app/controls/text';
 
 import '@app/controls/modal';
 import '@app/controls/wizard';

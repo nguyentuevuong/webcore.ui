@@ -11,6 +11,7 @@ declare interface KnockoutObservable<T> {
     $disable?: KnockoutObservable<boolean>;
     /** Tabindex of subscribe on view */
     $tabindex?: KnockoutObservable<boolean>;
+    $constraint?: KnockoutObservable<string>;
     /** Check subscribe has error or not */
     hasError?: KnockoutObservable<boolean>;
     /** Method clear error of subscibe */

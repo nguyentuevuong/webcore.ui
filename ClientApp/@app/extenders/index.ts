@@ -1,6 +1,8 @@
 import '@app/extenders/number';
 import '@app/extenders/attr';
 import '@app/extenders/name';
+import '@app/extenders/constraint';
+
 import '@app/extenders/focus';
 import '@app/extenders/regex';
 import '@app/extenders/enable';
