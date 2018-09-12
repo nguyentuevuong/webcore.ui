@@ -1,5 +1,10 @@
 import { _, ko } from '@app/providers';
-import { component } from "@app/common/ko";
+import { component, IView } from "@app/common/ko";
+import { randomId } from '@app/common/id';
+
+var Cleave = require('cleave.js');
+
+//require('cleave.js/dist/addons/cleave-phone.vn');
 
 @component({
     name: 'input',
@@ -55,18 +60,46 @@ import { component } from "@app/common/ko";
         </div>
         <!-- /ko -->`
 })
-export class InputComponent {
+export class InputComponent implements IView {
     control: KnockoutObservable<string> = ko.observable('')
         .extend({
             $name: '#noname',
             $constraint: '#noconstraint'
         });
 
-    constructor(params: { control: KnockoutObservable<any> }, element?: HTMLElement) {
+    constructor(params: { control: KnockoutObservable<any> }, private element: HTMLElement) {
         let self = this;
 
         if (params.control) {
             self.control = params.control;
         }
+
+        if (!(ko.toJS(self.control.$attr) || {}).id) {
+            self.control.extend({
+                $attr: {
+                    id: randomId()
+                }
+            })
+        }
+    }
+
+    afterRender(): void {
+        let self = this,
+            input: HTMLElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id);
+
+        var cleave = new Cleave(input, {
+            //date: true,
+            //datePattern: ['m', 'Y']
+
+            //time: true,
+            //timePattern: ['h', 'm']
+
+            prefix: '$',
+            delimiter: ':',
+            //numeral: true,
+            blocks: [3, 2]
+            //numeralThousandsGroupStyle: 'thousand'
+        });
+        debugger;
     }
 }
