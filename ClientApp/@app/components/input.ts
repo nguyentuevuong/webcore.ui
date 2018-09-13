@@ -2,9 +2,7 @@ import { _, ko } from '@app/providers';
 import { component, IView } from "@app/common/ko";
 import { randomId } from '@app/common/id';
 
-var Cleave = require('cleave.js');
-
-//require('cleave.js/dist/addons/cleave-phone.vn');
+var imask = require('imask');
 
 @component({
     name: 'input',
@@ -87,19 +85,15 @@ export class InputComponent implements IView {
         let self = this,
             input: HTMLElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id);
 
-        var cleave = new Cleave(input, {
-            //date: true,
-            //datePattern: ['m', 'Y']
 
-            //time: true,
-            //timePattern: ['h', 'm']
-
-            prefix: '$',
-            delimiter: ':',
-            //numeral: true,
-            blocks: [3, 2]
-            //numeralThousandsGroupStyle: 'thousand'
+        var mask = new imask(input, {
+            mask: Date,
+            min: new Date(1990, 0, 1),
+            max: new Date(2020, 0, 1),
+            lazy: false
+        }).on('complete', () => {
+            let value = mask.unmaskedValue;
+            debugger;
         });
-        debugger;
     }
 }

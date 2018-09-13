@@ -20,7 +20,7 @@ export class LoginViewModel implements IView, IDispose {
                 $name: '#username',
                 $constraint: '#noconstraint',
                 $icons: {
-                    before: 'fas fa-user'
+                    before: 'fa fa-calendar'
                 },
                 //$width: 200,
                 $columns: [
