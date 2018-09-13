@@ -1,4 +1,5 @@
-export * from '@app/components/label';
-export * from '@app/components/input';
-export * from '@app/components/wizard';
+import '@app/components/label';
+import '@app/components/input';
+import '@app/components/tabs';
+import '@app/components/wizard';
 //export * from '@app/components/selection';

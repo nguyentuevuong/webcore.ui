@@ -51,10 +51,10 @@
     </div>
 </div>
 <hr />
-<div data-bind="init: { $tab: ko.observable('#use') }, 
+<ul data-bind="init: { $tab: ko.observable('#use') }, 
     tabs: ['#use', '#API'],
     selected: $tab,
-    disableds: []"></div>
+    disableds: []"></ul>
 <div class="tab-content">
     <!-- ko switch: $tab -->
     <!-- ko case: '#use' -->

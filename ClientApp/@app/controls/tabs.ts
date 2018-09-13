@@ -1,26 +1,25 @@
-
 import { ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 
 @handler({
-    virtual: false,
-    bindingName: 'wizard'
+    virtual: true,
+    bindingName: 'tabs'
 })
-export class WizardBindingHandler implements KnockoutBindingHandler {
+export class SwitchBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let bindings = allBindingsAccessor();
 
         ko.bindingHandlers.component.init!(element, () => ({
-            name: 'wizard',
+            name: 'tabs',
             params: {
-                steps: valueAccessor(),
+                tabs: valueAccessor(),
                 selected: bindings.selected,
-                disableds: bindings.disableds,
-                configs: bindings.configs
+                disableds: bindings.disableds
             }
         }), allBindingsAccessor, viewModel, bindingContext);
 
-        element.className = 'wizard noselect';
+        element.attributes.removeNamedItem('role');
+        element.className = 'nav nav-tabs noselect';
 
         return { controlsDescendantBindings: true };
     }
