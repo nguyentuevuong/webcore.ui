@@ -23,6 +23,8 @@ export class WizardBindingHandler implements KnockoutBindingHandler {
             }
         }), allBindingsAccessor, viewModel, bindingContext);
 
+        element.className = 'wizard noselect';
+
         return { controlsDescendantBindings: true };
     }
 }

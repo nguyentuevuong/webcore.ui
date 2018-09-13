@@ -3,31 +3,29 @@ import { component } from "@app/common/ko";
 
 @component({
     name: 'wizard',
-    template: `<div class="wizard noselect" data-bind="init: {
-                $config: ko.toJS($vm.configs)
-            }">
-        <div class="header">
-            <div class="img">
-                <i data-bind="css: $config.icon || 'fas fa-cogs'"></i>
-            </div>
-            <h5 data-bind="i18n:$config.title"></h5>
+    template: `<!-- ko init: { $config: ko.toJS($vm.configs) } -->
+    <div class="header">
+        <div class="img">
+            <i data-bind="css: $config.icon || 'fas fa-cogs'"></i>
         </div>
-        <ul class="step-list list-group" data-bind="foreach: $vm.steps">
-            <li class="list-group-item" data-bind="i18n: $data, css: { 'active': ko.toJS($vm.selected) == $data }, click: $vm.selectStep.bind($vm, $data)"></li>
-        </ul>
-        <!-- ko if: ko.toJS($config.showFooter) -->
-        <div class="footer btn-group">
-            <button class="btn btn-link" data-bind="click: $vm.previewStep.bind($vm), enable: $vm.previewStep.enable">
-                <i class="fas fa-arrow-circle-left"></i>
-                <span data-bind="i18n: '#wizard_back'"></span>
-            </button>
-            <button class="btn btn-link" data-bind="click: $vm.forwardStep.bind($vm), enable: $vm.forwardStep.enable">
-                <span data-bind="i18n: '#wizard_forward'"></span>
-                <i class="fas fa-arrow-circle-right"></i>
-            </button>
-        </div>
-        <!-- /ko -->
-    </div>`
+        <h5 data-bind="i18n:$config.title"></h5>
+    </div>
+    <ul class="step-list list-group" data-bind="foreach: $vm.steps">
+        <li class="list-group-item" data-bind="i18n: $data, css: { 'active': ko.toJS($vm.selected) == $data }, click: $vm.selectStep.bind($vm, $data)"></li>
+    </ul>
+    <!-- ko if: ko.toJS($config.showFooter) -->
+    <div class="footer btn-group">
+        <button class="btn btn-link" data-bind="click: $vm.previewStep.bind($vm), enable: $vm.previewStep.enable">
+            <i class="fas fa-arrow-circle-left"></i>
+            <span data-bind="i18n: '#wizard_back'"></span>
+        </button>
+        <button class="btn btn-link" data-bind="click: $vm.forwardStep.bind($vm), enable: $vm.forwardStep.enable">
+            <span data-bind="i18n: '#wizard_forward'"></span>
+            <i class="fas fa-arrow-circle-right"></i>
+        </button>
+    </div>
+    <!-- /ko -->
+    <!-- /ko -->`
 })
 export class WizardComponent {
     selected: KnockoutObservable<string> = ko.observable('#step_1');
