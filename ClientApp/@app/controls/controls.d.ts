@@ -9,3 +9,7 @@ declare interface KnockoutBindingHandlers {
 
 declare interface KnockoutComponents {
 }
+
+declare interface JQuery<TElement = HTMLElement> {
+    modal: (value: any) => JQuery<TElement>
+}

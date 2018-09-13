@@ -85,12 +85,8 @@ export class InputComponent implements IView {
         let self = this,
             input: HTMLElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id);
 
-
         var mask = new imask(input, {
-            mask: Date,
-            min: new Date(1990, 0, 1),
-            max: new Date(2020, 0, 1),
-            lazy: false
+            mask: String
         }).on('complete', () => {
             let value = mask.unmaskedValue;
             debugger;

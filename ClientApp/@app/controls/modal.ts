@@ -45,7 +45,7 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
 
                 $('body').append($modal);
 
-                (<any>$modal).modal({
+                $modal.modal({
                     show: true,
                     focus: true,
                     backdrop: !!ko.toJS(configs.backdrop),
