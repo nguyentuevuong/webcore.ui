@@ -1,14 +1,5 @@
+import { _, ko } from '@app/providers';
 import { component } from "@app/common/ko";
-import * as ko from 'knockout';
-import * as _ from 'lodash';
-
-import {
-    INumberConstraint,
-    IStringConstraint,
-    TypeOfConstraint,
-    TypeOfNumber,
-    TypeOfString
-} from '@app/common';
 
 @component({
     name: 'label',
@@ -39,16 +30,4 @@ export class LabelComponent {
         // remove attr role (no need display)
         element.removeAttribute('role');
     }
-}
-
-export interface IParam {
-    configs: IConfigs | undefined;
-    text: KnockoutObservable<string> | undefined;
-    constraint?: KnockoutObservable<string> | undefined;
-}
-
-export interface IConfigs {
-    css?: KnockoutObservable<string> | undefined;
-    inline?: KnockoutObservable<boolean> | undefined;
-    require?: KnockoutObservable<boolean> | undefined;
 }
