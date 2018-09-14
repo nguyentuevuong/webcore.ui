@@ -41,7 +41,7 @@ module.exports = (env) => {
             filename: '[name].js'
         },
         optimization: {
-            //minimize: env && env.prod,
+            minimize: env && env.prod,
             splitChunks: {
                 chunks: 'async',
                 minSize: 30000,
@@ -64,8 +64,22 @@ module.exports = (env) => {
                 }
             },
             minimizer: [
-                //new UglifyJsPlugin({}),
-                //new OptimizeCSSAssetsPlugin({})
+                new UglifyJsPlugin({
+                    uglifyOptions: {
+                      compress: true,
+                      output: {
+                        comments: false,
+                        beautify: false
+                      },
+                      mangle: {
+                          inline: true
+                      }
+                    },
+                    cache: true,
+                    sourceMap: true,
+                    extractComments: false
+                  }),
+                new OptimizeCSSAssetsPlugin({})
             ]
         },
         plugins: [
