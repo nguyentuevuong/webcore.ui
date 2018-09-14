@@ -21,15 +21,26 @@ export class ModalComponent implements IView, IDispose {
 
         // remove attr role (no need display)
         element.removeAttribute('role');
+
+        self.element.addEventListener("", (evt: Event) => {
+            //evt.data;
+        });
+
+        // dispatch opening event
+        self.element.dispatchEvent(new CustomEvent('dialog.opening', {}));
     }
 
     afterRender(): void {
+        let self = this;
 
+        // dispatch opened event
+        self.element.dispatchEvent(new CustomEvent('dialog.opened'));
     }
 
     dispose(): void {
         let self = this;
 
-        self.element.dispatchEvent(new Event('dialog.close'));
+        // dispatch closed event
+        self.element.dispatchEvent(new CustomEvent('dialog.closed'));
     }
 }

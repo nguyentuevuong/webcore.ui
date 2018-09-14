@@ -4,7 +4,7 @@
 // Definitions by: Bleser92 <https://github.com/Bleser92>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
-export interface MaskOptions {
+declare interface MaskOptions {
     mask?: string | Number | RegExp | MaskOptions[],
     min?: number,
     max?: number,
@@ -25,12 +25,11 @@ export interface MaskOptions {
     validate?: () => boolean,
 }
 
-
-export declare class IMask {
+declare class IMask {
     new(el: Element, opts?: MaskOptions): InputMask
 }
 
-export declare class InputMask {
+declare class InputMask {
     public readonly mask: string;
     public value: string;
     public unmaskedValue: string;
@@ -52,7 +51,7 @@ export declare class InputMask {
 }
 
 
-export declare class Masked {
+declare class Masked {
     public value: any;
     public unmaskedValue: string;
     public typedValue: any;
@@ -69,23 +68,29 @@ export declare class Masked {
 }
 
 
-export declare class MaskedPattern extends Masked {
+declare class MaskedPattern extends Masked {
 }
 
-export declare class MaskedNumber extends Masked {
+declare class MaskedNumber extends Masked {
 }
 
-export declare class MaskedDate extends Masked {
+declare class MaskedDate extends Masked {
 }
 
-export declare class MaskedRegExp extends Masked {
+declare class MaskedRegExp extends Masked {
 }
 
-export declare class MaskedFunction extends Masked {
+declare class MaskedFunction extends Masked {
 }
 
-export declare class MaskedDynamic extends Masked {
+declare class MaskedDynamic extends Masked {
 }
-
 
 export function createMask(opts: MaskOptions): Masked;
+
+
+declare interface Event {
+    data: {
+        [key: string]: any
+    }
+}
