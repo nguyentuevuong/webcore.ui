@@ -101,7 +101,7 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
                     })
                     .on('hidden.bs.modal', () => {
                         // remove modal when hide
-                        (<any>$modal).modal('dispose').remove();
+                        $modal.modal('dispose').remove();
 
                         // restore all tabindex
                         $('body').find('[tabindex]').each((i, tab) => {
