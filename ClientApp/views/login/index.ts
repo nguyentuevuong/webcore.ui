@@ -59,6 +59,12 @@ export class LoginViewModel implements IView, IDispose {
     constructor(params: any, private element: HTMLElement) {
         let self = this;
         self.model.userName.subscribe((v: any) => console.log(new Date().getTime()));
+
+        element.addEventListener('clickok', () => {
+            console.log('clickok');
+        });
+
+        element.dispatchEvent(new Event('clickok'));
     }
 
     checkValidate() {
