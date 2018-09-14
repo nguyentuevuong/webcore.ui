@@ -60,11 +60,18 @@ export class LoginViewModel implements IView, IDispose {
         let self = this;
         self.model.userName.subscribe((v: any) => console.log(new Date().getTime()));
 
-        element.addEventListener('clickok', () => {
-            console.log('clickok');
+        self.element.addEventListener("dialog.opening", (evt: Event) => {
+            let data = (<CustomEvent>evt).detail;
+            console.log(data);
         });
 
-        element.dispatchEvent(new Event('clickok'));
+        // dispatch opening event
+        self.element.dispatchEvent(new CustomEvent('dialog.opening', {
+            detail: {
+                id: 1,
+                name: 'xxx'
+            }
+        }));
     }
 
     checkValidate() {

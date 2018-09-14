@@ -87,10 +87,3 @@ declare class MaskedDynamic extends Masked {
 }
 
 export function createMask(opts: MaskOptions): Masked;
-
-
-declare interface Event {
-    data: {
-        [key: string]: any
-    }
-}
