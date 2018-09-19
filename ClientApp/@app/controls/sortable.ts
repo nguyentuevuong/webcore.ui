@@ -12,7 +12,7 @@ const ITEMKEY = "ko_sortItem",
     dataSet = ko.utils.domData.set,
     dataGet = ko.utils.domData.get,
     addMetaDataAfterRender = (elements: any, data: any) => {
-        ko.utils.arrayForEach(elements, function (element: any) {
+        ko.utils.arrayForEach(elements, (element: any) => {
             if (element.nodeType === 1) {
                 dataSet(element, ITEMKEY, data);
                 dataSet(element, PARENTKEY, dataGet(element.parentNode, LISTKEY));
@@ -98,7 +98,13 @@ const ITEMKEY = "ko_sortItem",
     bindingName: 'sortable'
 })
 export class SortableBindingHandler implements KnockoutBindingHandler {
-    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+    connectClass = 'ko_container';
+    allowDrop = true;
+    afterMove = null;
+    beforeMove = null;
+    options = {};
+
+    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let self = this,
             $element = $(element),
             value = ko.unwrap(valueAccessor()) || {},
@@ -124,6 +130,7 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
         }
 
         ko.utils.extend(sortable, value);
+
         //if allowDrop is an observable or a function, then execute it in a computed observable
         if (sortable.connectClass && (ko.isObservable(sortable.allowDrop) || typeof sortable.allowDrop == "function")) {
             ko.computed({
@@ -139,14 +146,12 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
         }
 
         //wrap the template binding
-        if (ko.bindingHandlers.template.init) {
-            ko.bindingHandlers.template.init(element, function () {
-                return templateOptions;
-            }, allBindingsAccessor, viewModel, bindingContext);
-        }
+        ko.bindingHandlers.template.init!(element, () => templateOptions, allBindingsAccessor, viewModel, bindingContext);
+
         //keep a reference to start/update functions that might have been passed in
         startActual = sortable.options.start;
         updateActual = sortable.options.update;
+
         //ensure draggable table row cells maintain their width while dragging (unless a helper is provided)
         if (!sortable.options.helper) {
             sortable.options.helper = function (e: JQueryEventObject, ui: JQuery<Element>) {
@@ -155,50 +160,66 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
                         $(this).width(this.clientWidth);
                     });
                 }
+
                 return ui;
             };
         }
+
         //initialize sortable binding after template binding has rendered in update function
-        var createTimeout = setTimeout(function () {
-            var dragItem: any;
-            var originalReceive = sortable.options.receive;
+        let createTimeout = setTimeout(function () {
+            let dragItem: any,
+                originalReceive = sortable.options.receive;
+
             $element.sortable(ko.utils.extend(sortable.options, {
-                start: function (event: any, ui: any) {
+                start: function (event: JQuery.Event<HTMLElement, null>, ui: any) {
                     //track original index
-                    var el = ui.item[0];
+                    let el = ui.item[0];
+
                     dataSet(el, INDEXKEY, ko.utils.arrayIndexOf(ui.item.parent().children(), el));
+
                     //make sure that fields have a chance to update model
                     ui.item.find("input:focus").change();
+
                     if (startActual) {
                         startActual.apply(this, arguments);
                     }
                 },
-                receive: function (event: any, ui: any) {
+                receive: function (event: JQuery.Event<HTMLElement, null>, ui: any) {
                     //optionally apply an existing receive handler
                     if (typeof originalReceive === "function") {
                         originalReceive.call(this, event, ui);
                     }
+
                     dragItem = dataGet(ui.item[0], DRAGKEY);
+
                     if (dragItem) {
                         //copy the model item, if a clone option is provided
                         if (dragItem.clone) {
                             dragItem = dragItem.clone();
                         }
+
                         //configure a handler to potentially manipulate item before drop
                         if (sortable.dragged) {
                             dragItem = sortable.dragged.call(this, dragItem, event, ui) || dragItem;
                         }
                     }
                 },
-                update: function (event: any, ui: any) {
-                    var sourceParent, targetParent, sourceIndex, targetIndex, arg,
+                update: function (event: JQuery.Event<HTMLElement, null>, ui: any) {
+                    let sourceParent,
+                        targetParent,
+                        sourceIndex,
+                        targetIndex,
+                        arg,
                         el = ui.item[0],
                         parentEl = ui.item.parent()[0],
                         item = dataGet(el, ITEMKEY) || dragItem;
+
                     if (!item) {
                         $(el).remove();
                     }
+
                     dragItem = null;
+
                     //make sure that moves only run once, as update fires on multiple containers
                     if (item && ($element[0] === parentEl) || $.contains(<any>this, parentEl)) {
                         //identify parents
@@ -206,11 +227,13 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
                         sourceIndex = dataGet(el, INDEXKEY);
                         targetParent = dataGet(el.parentNode, LISTKEY);
                         targetIndex = ko.utils.arrayIndexOf(ui.item.parent().children(), el);
+
                         //take destroyed items into consideration
                         if (!templateOptions.includeDestroyed) {
                             sourceIndex = updateIndexFromDestroyedItems(sourceIndex, sourceParent);
                             targetIndex = updateIndexFromDestroyedItems(targetIndex, targetParent);
                         }
+
                         //build up args for the callbacks
                         if (sortable.beforeMove || sortable.afterMove) {
                             arg = {
@@ -222,15 +245,18 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
                                 targetIndex: targetIndex,
                                 cancelDrop: false
                             };
+
                             //execute the configured callback prior to actually moving items
                             if (sortable.beforeMove) {
                                 sortable.beforeMove.call(this, arg, event, ui);
                             }
                         }
+
                         //call cancel on the correct list, so KO can take care of DOM manipulation
                         if (sourceParent) {
                             $(sourceParent === targetParent ? this : ui.sender || this).sortable("cancel");
                         }
+
                         //for a draggable item just remove the element
                         else {
                             $(el).remove();
@@ -239,6 +265,7 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
                         if (arg && arg.cancelDrop) {
                             return;
                         }
+
                         //if the strategy option is unset or false, employ the order strategy involving removal and insertion of items
                         if (!sortable.hasOwnProperty("strategyMove") || sortable.strategyMove === false) {
                             //do the actual move
@@ -293,21 +320,25 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
                                 }
                             }
                         }
+
                         //if using deferred updates plugin, force updates
                         if ((<any>ko)['processAllDeferredBindingUpdates']) {
                             (<any>ko)['processAllDeferredBindingUpdates']();
                         }
+
                         //allow binding to accept a function to execute after moving the item
                         if (sortable.afterMove) {
                             sortable.afterMove.call(this, arg, event, ui);
                         }
                     }
+
                     if (updateActual) {
                         updateActual.apply(this, arguments);
                     }
                 },
-                connectWith: false
+                connectWith: sortable.connectClass ? "." + sortable.connectClass : false
             }));
+
             //handle enabling/disabling sorting
             if (sortable.isEnabled !== undefined) {
                 ko.computed({
@@ -325,23 +356,24 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
             if ($element.data("ui-sortable") || $element.data("sortable")) {
                 $element.sortable("destroy");
             }
+
             ko.utils.toggleDomNodeCssClass(element, sortable.connectClass, false);
+
             //do not create the sortable if the element has been removed from DOM
             clearTimeout(createTimeout);
         });
 
-        return {
-            'controlsDescendantBindings': true
-        };
+        return { controlsDescendantBindings: true };
     }
 
-    update = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+    update = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let templateOptions = prepareTemplateOptions(valueAccessor, "foreach");
 
         //attach meta-data
         dataSet(element, LISTKEY, templateOptions.foreach);
+
         //call template binding's update with correct options
-        ko.bindingHandlers.template.update!(element, function () { return templateOptions; }, allBindingsAccessor, viewModel, bindingContext);
+        ko.bindingHandlers.template.update!(element, () => templateOptions, allBindingsAccessor, viewModel, bindingContext);
     }
 }
 
@@ -353,7 +385,7 @@ export class DragableBindingHandler implements KnockoutBindingHandler {
     options = { helper: "clone" };
     connectClass = ko.bindingHandlers.sortable.connectClass;
 
-    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let value = ko.unwrap(valueAccessor()) || {},
             options = value.options || {},
             draggableOptions: any = ko.utils.extend({}, ko.bindingHandlers.draggable.options),
@@ -386,17 +418,15 @@ export class DragableBindingHandler implements KnockoutBindingHandler {
         }
 
         //handle disposal
-        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-            $(element).draggable("destroy");
-        });
+        ko.utils.domNodeDisposal.addDisposeCallback(element, () => $(element).draggable("destroy"));
 
-        return ko.bindingHandlers.template.init!(element, function () { return templateOptions; }, allBindingsAccessor, viewModel, bindingContext);
+        return ko.bindingHandlers.template.init!(element, () => templateOptions, allBindingsAccessor, viewModel, bindingContext);
     }
 
-    update = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        var templateOptions = prepareTemplateOptions(valueAccessor, "data");
+    update = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
+        let templateOptions = prepareTemplateOptions(valueAccessor, "data");
 
-        return ko.bindingHandlers.template.update!(element, function () { return templateOptions; }, allBindingsAccessor, viewModel, bindingContext);
+        return ko.bindingHandlers.template.update!(element, () => templateOptions, allBindingsAccessor, viewModel, bindingContext);
     }
 }
 

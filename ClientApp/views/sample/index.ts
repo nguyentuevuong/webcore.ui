@@ -24,3 +24,5 @@ import './selections/dropdown/dropdown';
 import './selections/listbox/listbox';
 import './color';
 import './wizard';
+import './tree';
+import './sortable';

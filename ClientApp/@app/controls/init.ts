@@ -6,7 +6,7 @@ import { handler } from '@app/common/ko';
     bindingName: 'init'
 })
 export class InitBindingHandler implements KnockoutBindingHandler {
-    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let accessor: IInit = valueAccessor();
 
         _.each(_.keys(accessor), (key: string) => {
