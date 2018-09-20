@@ -371,6 +371,7 @@ $enable-shadows: false !default;
                     padding-right: 5px;
                     &:before,
                     &:after {
+                        font-size: 1rem;
                         position: relative;
                         display: inline-block;
                     }

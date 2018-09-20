@@ -6,12 +6,15 @@ import { component } from "@app/common/ko";
     template: `
     <ul class="list-group tree-list-group noselect" id="people" data-bind='sortable: { template: "personTmpl", data: dataSources, beforeMove: $vm.beforeMove.bind($vm)}'></ul>
     <script id="personTmpl" type="text/html">
-        <li class="list-group-item" data-bind="init: { '$data.$expand': ko.observable(true), hcz: !!_.size(ko.toJS($data.children)) }">
+        <li class="list-group-item" data-bind="init: { '$data.$expand': ko.observable(true), hcz: !!_.size(ko.toJS($data.children)), '$data.$checked': ko.observable(false) }">
             <section data-bind="click: $vm.selectItem.bind($vm, $data), css: { active: _.isEqual(ko.toJS($data), ko.toJS($vm.active))}">
-                <i class="fa" data-bind="css: { 'fa-folder-open-o': hcz, 'fa-file-o': !hcz }, click: function() { $data.$expand(!ko.toJS($data.$expand)); }"></i>
+                <i class="fa" data-bind="css: { 'fa-folder-o': hcz && !ko.toJS($data.$expand), 'fa-folder-open-o': hcz && ko.toJS($data.$expand), 'fa-file-o': !hcz }, click: function() { $data.$expand(!ko.toJS($data.$expand)); }"></i>
+                <i class="fa" data-bind="css: { 'fa-check-square-o': ko.toJS($data.$checked), 'fa-square-o': !ko.toJS($data.$checked) }, click: function() { $data.$checked(!ko.toJS($data.$checked)); }"></i>
                 <span data-bind="i18n: name"></span>
             </section>
+            <!-- ko if: ko.toJS($data.$expand) -->
             <ul class="list-group" data-bind='sortable: { template: "personTmpl", data: $data.children}'></ul>
+            <!-- /ko -->
         </li>
     </script>`
 })
