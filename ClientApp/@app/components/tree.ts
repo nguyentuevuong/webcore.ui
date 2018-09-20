@@ -7,9 +7,10 @@ import { component } from "@app/common/ko";
     <ul class="list-group tree-list-group noselect" id="people" data-bind='sortable: { template: "personTmpl", data: dataSources, beforeMove: $vm.beforeMove.bind($vm)}'></ul>
     <script id="personTmpl" type="text/html">
         <li class="list-group-item" data-bind="init: { '$data.$expand': ko.observable(true), hcz: !!_.size(ko.toJS($data.children)) }">
-            <span class="colorexp" data-bind="click: function() { $data.$expand(!ko.toJS($data.$expand)) }"></span>
-            <i class="fa" data-bind="css: { 'fa-folder-o': hcz, 'fa-file-o': !hcz }"></i>
-            <section data-bind="i18n: name, click: $vm.selectItem.bind($vm, $data), css: { active: _.isEqual(ko.toJS($data), ko.toJS($vm.active))}"></section>
+            <section data-bind="click: $vm.selectItem.bind($vm, $data), css: { active: _.isEqual(ko.toJS($data), ko.toJS($vm.active))}">
+                <i class="fa" data-bind="css: { 'fa-folder-open-o': hcz, 'fa-file-o': !hcz }, click: function() { $data.$expand(!ko.toJS($data.$expand)); }"></i>
+                <span data-bind="i18n: name"></span>
+            </section>
             <ul class="list-group" data-bind='sortable: { template: "personTmpl", data: $data.children}'></ul>
         </li>
     </script>`

@@ -319,6 +319,7 @@ $enable-shadows: false !default;
         border: 0;
         cursor: pointer;
         position: relative;
+        padding-top: 15px;
         :before,
         :after,
         &:before,
@@ -336,24 +337,20 @@ $enable-shadows: false !default;
             left: -4px;
             z-index: 9;
         }
-        .colorexp {
-            position: absolute;
-            width: 15px;
+        &:after {
+            top: 0;
+            width: 1px;
             height: 15px;
-            top: 8px;
-            left: -8px; //border: 1px dashed #0D86D1;
-            border-radius: 50%;
-            z-index: 9;
+            border-left: 1px dotted #0D86D1;
         }
         section {
             display: block;
             cursor: pointer;
-            padding: 5px 0 5px 10px;
+            padding: 5px 0 5px 2px;
         }
         .list-group {
             padding-left: 10px;
             position: relative;
-            min-height: 15px;
             &-item {
                 border: 0;
                 margin: 0;
@@ -369,6 +366,14 @@ $enable-shadows: false !default;
                     left: -1px;
                     top: 12px;
                     border-bottom: 1px dotted #0D86D1;
+                }
+                .fa {
+                    padding-right: 5px;
+                    &:before,
+                    &:after {
+                        position: relative;
+                        display: inline-block;
+                    }
                 }
                 &:not(.ui-sortable-helper),
                 &:not(.ui-sortable-placeholder) {
