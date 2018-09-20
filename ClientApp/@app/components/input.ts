@@ -41,15 +41,13 @@ var imask = require('imask');
                 <!-- /ko -->
                 <!-- ko if: !ko.toJS($vm.control.$multiline) -->
                 <input type="text" class="form-control"
-                    data-bind=" value: $vm.control,
-                                hasFocus: $vm.control.$focus,
+                    data-bind=" hasFocus: $vm.control.$focus,
                                 css: { 'is-invalid': $vm.control.hasError },
                                 attr: ko.toJS($vm.control.$attr)" />
                 <!-- /ko -->
                 <!-- ko ifnot: !ko.toJS($vm.control.$multiline) -->
                     <textarea class="form-control"
-                        data-bind=" value: $vm.control,
-                                    hasFocus: $vm.control.$focus,
+                        data-bind=" hasFocus: $vm.control.$focus,
                                     css: { 'is-invalid': $vm.control.hasError }, 
                                     attr: ko.toJS($vm.control.$attr)"></textarea>
                 <!-- /ko -->
@@ -79,17 +77,37 @@ export class InputComponent implements IView {
                 }
             })
         }
+
+        if (!ko.toJS(self.control.$value)) {
+            self.control.extend({
+                $value: ko.toJS(self.control)
+            })
+        }
     }
 
     afterRender(): void {
         let self = this,
-            input: HTMLElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id);
+            input: HTMLElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id),
+            mask = new imask(input, ko.toJS(self.control.$type) || {
+                mask: String
+            }).on('complete', () => {
+                self.control(mask.typedValue);
+                self.control.$value!(mask.typedValue);
+            });
 
-        var mask = new imask(input, {
-            mask: String
-        }).on('complete', () => {
-            let value = mask.unmaskedValue;
-            debugger;
+        ko.computed({
+            read: () => {
+                let value: any = ko.toJS(self.control.$value),
+                    unmaskedValue: string = String(value);
+
+                if (unmaskedValue != mask.unmaskedValue) {
+                    mask.unmaskedValue = unmaskedValue;
+                }
+
+                self.control(mask.typedValue);
+            },
+            owner: self,
+            disposeWhen: () => !input
         });
     }
 }

@@ -1,5 +1,6 @@
 declare interface KnockoutObservable<T> {
     $attr?: KnockoutObservable<{ [key: string]: KnockoutObservable<any> }>;
+    $type?: KnockoutObservable<{ [key: string]: KnockoutObservable<any> }>;
     $id?: KnockoutObservable<string>;
     /** Name of control in view */
     $name?: KnockoutObservable<string>;
@@ -11,6 +12,7 @@ declare interface KnockoutObservable<T> {
     /** Subscribe is enable or disable on view */
     $disable?: KnockoutObservable<boolean>;
     $columns?: KnockoutObservableArray<string>;
+    $value?: KnockoutObservable<string>;
     $constraint?: KnockoutObservable<string>;
     $multiline?: KnockoutObservable<boolean>;
     /** Check subscribe has error or not */

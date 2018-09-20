@@ -20,15 +20,30 @@ export class LoginViewModel implements IView, IDispose {
                 $name: '#username',
                 $constraint: '#noconstraint',
                 $icons: {
-                    before: 'fa fa-calendar'
+                    before: 'fa fa-user'
                 },
                 //$width: 200,
                 $columns: [
                     'col-md-4', 'col-md-12'
                 ]
-            }).extend({
+            })
+            .extend({
+                $type: {
+                    mask: '$num',
+                    blocks: {
+                        num: {
+                            // nested masks are available!
+                            mask: Number,
+                            thousandsSeparator: ',',
+                            min: 0,
+                            max: 9999
+                        }
+                    }
+                }
+            })
+            .extend({
                 required: true,
-                validate: (v: any) => {
+                /*validate: (v: any) => {
                     if (v == 'admin') {
                         return 'Ten dang nhap da ton tai';
                     } else if (v == 'vuong') {
@@ -39,8 +54,8 @@ export class LoginViewModel implements IView, IDispose {
                 },
                 regex: {
                     pattern: /[^0-9]+/g,
-                    message: 'Gia tri nhap khong khop voi regex: \/[^0-9]+\/g'
-                }
+                    message: 'Gia tri nhap khong khop voi regex: ${pattern}'
+                }*/
             }),
         passWord: ko.observable('').extend({
             $focus: false,
@@ -76,8 +91,11 @@ export class LoginViewModel implements IView, IDispose {
 
     checkValidate() {
         let self = this;
-        route.goto('/', { id: 100, name: 'goto' });
+        //route.goto('/', { id: 100, name: 'goto' });
         //self.model.userName.checkError();
+        self.model.userName.extend({
+            $value: '9999'
+        });
     }
 
     removeValidate() {

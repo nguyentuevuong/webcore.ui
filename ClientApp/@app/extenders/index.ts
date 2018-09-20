@@ -1,7 +1,8 @@
 import '@app/extenders/number';
 import '@app/extenders/attr';
-import '@app/extenders/attr';
+import '@app/extenders/type';
 import '@app/extenders/name';
+import '@app/extenders/value';
 import '@app/extenders/constraint';
 
 import '@app/extenders/focus';
