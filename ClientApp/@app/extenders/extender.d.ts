@@ -4,7 +4,7 @@ declare interface KnockoutObservable<T> {
     /** Method clear error of subscibe */
     clearError?: () => void;
     /** Method check subscribe has error or not */
-    checkError?: () => void;
+    checkError?: (value?: any) => void;
     /** Error message of subscibe on view */
     validationMessage?: KnockoutObservable<string>;
 }

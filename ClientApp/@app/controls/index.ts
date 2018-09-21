@@ -11,6 +11,10 @@ import "./check-ko-ext";
 import '@app/controls/each';
 import "@app/controls/label";
 import '@app/controls/input';
+import '@app/controls/date';
+import '@app/controls/time';
+import '@app/controls/clock';
+import '@app/controls/number';
 import '@app/controls/safe-click';
 
 import "@app/controls/sortable";

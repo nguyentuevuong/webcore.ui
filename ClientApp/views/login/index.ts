@@ -28,22 +28,8 @@ export class LoginViewModel implements IView, IDispose {
                 ]
             })
             .extend({
-                $type: {
-                    mask: '$num',
-                    blocks: {
-                        num: {
-                            // nested masks are available!
-                            mask: Number,
-                            thousandsSeparator: ',',
-                            min: 0,
-                            max: 9999
-                        }
-                    }
-                }
-            })
-            .extend({
                 required: true,
-                /*validate: (v: any) => {
+                validate: (v: any) => {
                     if (v == 'admin') {
                         return 'Ten dang nhap da ton tai';
                     } else if (v == 'vuong') {
@@ -52,7 +38,7 @@ export class LoginViewModel implements IView, IDispose {
 
                     return undefined;
                 },
-                regex: {
+                /*regex: {
                     pattern: /[^0-9]+/g,
                     message: 'Gia tri nhap khong khop voi regex: ${pattern}'
                 }*/
@@ -60,14 +46,18 @@ export class LoginViewModel implements IView, IDispose {
         passWord: ko.observable('').extend({
             $focus: false,
             $name: '#password',
-            $attr: {
-                type: 'password'
-            },
             $icons: {
                 before: 'far fa-address-card'
             }
         }).extend({
             required: true
+        }).extend({
+            $type: {
+                mask: Number,
+                min: -10000,
+                max: 10000,
+                thousandsSeparator: ','
+            }
         })
     }
 

@@ -94,10 +94,6 @@ export class InputComponent implements IView {
                 self.control.extend({
                     $raw: mask.typedValue
                 });
-
-                self.control.extend({
-                    $value: mask.typedValue
-                });
             });
 
         ko.computed({

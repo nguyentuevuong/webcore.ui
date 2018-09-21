@@ -2,9 +2,9 @@ import { $, ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 
 @handler({
-    bindingName: 'input'
+    bindingName: 'number'
 })
-export class TextEditorBindingHandler implements KnockoutBindingHandler {
+export class NumberEditorBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let $element = $(element),
             control: ValidationObservable<any> = valueAccessor();
@@ -16,21 +16,20 @@ export class TextEditorBindingHandler implements KnockoutBindingHandler {
             .extend({
                 $raw: ko.toJS(control),
                 $value: ko.toJS(control)
-            })
-            .extend({
+            }).extend({
                 $type: {
-                    mask: String
+                    mask: Number
                 }
             });
 
         ko.bindingHandlers.component.init!(element, () => ({ name: 'input', params: { control: valueAccessor() } }), allBindingsAccessor, viewModel, bindingContext);
-
+       
         control.$raw!.subscribe((raw: any) => {
             // validate and rebind value to control at here
             control.checkError!(raw);
 
             if (!control.hasError!()) {
-                control(raw);
+                
             }
         });
 
