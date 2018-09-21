@@ -2,9 +2,9 @@ import { $, ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 
 @handler({
-    bindingName: 'input'
+    bindingName: 'date'
 })
-export class TextEditorBindingHandler implements KnockoutBindingHandler {
+export class DateEditorBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let $element = $(element),
             control: ValidationObservable<any> = valueAccessor();
@@ -18,8 +18,16 @@ export class TextEditorBindingHandler implements KnockoutBindingHandler {
                 $value: ko.toJS(control)
             })
             .extend({
+                $icons: {
+                    before: 'fa fa-calendar'
+                }
+            })
+            .extend({
                 $type: {
-                    mask: String
+                    mask: Date,
+                    min: new Date(1900, 0, 1),
+                    max: new Date(9999, 11, 31),
+                    lazy: false
                 }
             });
 
@@ -30,7 +38,6 @@ export class TextEditorBindingHandler implements KnockoutBindingHandler {
             control.checkError!(raw);
 
             if (!control.hasError!()) {
-                control(raw);
             }
         });
 

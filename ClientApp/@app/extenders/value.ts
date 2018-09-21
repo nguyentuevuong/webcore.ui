@@ -10,7 +10,7 @@ ko.utils.extend(ko.extenders, {
             target.$value(ko.toJS(value));
         } else {
             ko.utils.extend(target, {
-                $value: ko.observable(ko.toJS(value))
+                $value: ko.observable(ko.toJS(value)).extend({ deferred: true })
             });
         }
 
