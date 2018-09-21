@@ -8,21 +8,21 @@ ko.utils.extend(ko.extenders, {
 
         //validate whenever the value changes
         if (!params) {
-            target.removeValidate('validate');
+            target.removeValidate!('validate');
         } else {
-            target.addValidate('validate', (value: string) => {
+            target.addValidate!('validate', (value: string) => {
                 let invalid = params.apply(target, [value]);
 
                 if (!!invalid) {
-                    target.addError('validate', invalid);
+                    target.addError!('validate', invalid);
                 } else {
-                    target.removeError('validate');
+                    target.removeError!('validate');
                 }
             });
         }
 
         // clear error for first binding time
-        target.removeError('validate');
+        target.removeError!('validate');
 
         //return the original observable
         return target;

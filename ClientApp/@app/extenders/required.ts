@@ -13,36 +13,36 @@ ko.utils.extend(ko.extenders, {
         // add or update require validate
         if (!params) {
             target.$require(false);
-            target.removeValidate('required');
+            target.removeValidate!('required');
         } else {
             target.$require(true);
-            target.addValidate('required', (value: any) => {
+            target.addValidate!('required', (value: any) => {
                 if (typeof params == 'object') {
                     if (_.has(params, 'validate')) {
                         if (params.validate.apply(target, [value])) {
-                            target.addError('required', params.message || "This field is required");
+                            target.addError!('required', params.message || "This field is required");
                         } else {
-                            target.removeError('required');
+                            target.removeError!('required');
                         }
                     } else {
                         if (!value) {
-                            target.addError('required', params.message || "This field is required");
+                            target.addError!('required', params.message || "This field is required");
                         } else {
-                            target.removeError('required');
+                            target.removeError!('required');
                         }
                     }
                 } else if (params) {
                     if (!value) {
-                        target.addError('required', "This field is required");
+                        target.addError!('required', "This field is required");
                     } else {
-                        target.removeError('required');
+                        target.removeError!('required');
                     }
                 }
             });
         }
 
         // clear error for first binding time
-        target.removeError('required');
+        target.removeError!('required');
 
         //return the original observable
         return target;

@@ -57,13 +57,13 @@ var imask = require('imask');
         <!-- /ko -->`
 })
 export class InputComponent implements IView {
-    control: KnockoutObservable<string> = ko.observable('')
+    control: ValidationObservable<string> = ko.observable('')
         .extend({
             $name: '#noname',
             $constraint: '#noconstraint'
         });
 
-    constructor(params: { control: KnockoutObservable<any> }, private element: HTMLElement) {
+    constructor(params: { control: ValidationObservable<any> }, private element: HTMLElement) {
         let self = this;
 
         if (params.control) {
@@ -91,8 +91,13 @@ export class InputComponent implements IView {
             mask = new imask(input, ko.toJS(self.control.$type) || {
                 mask: String
             }).on('complete', () => {
-                self.control(mask.typedValue);
-                self.control.$value!(mask.typedValue);
+                self.control.extend({
+                    $raw: mask.typedValue
+                });
+
+                self.control.extend({
+                    $value: mask.typedValue
+                });
             });
 
         ko.computed({
@@ -104,7 +109,9 @@ export class InputComponent implements IView {
                     mask.unmaskedValue = unmaskedValue;
                 }
 
-                self.control(mask.typedValue);
+                self.control.extend({
+                    $raw: mask.typedValue
+                });
             },
             owner: self,
             disposeWhen: () => !input

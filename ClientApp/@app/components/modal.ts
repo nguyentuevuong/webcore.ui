@@ -22,6 +22,12 @@ export class ModalComponent implements IView, IDispose {
         // remove attr role (no need display)
         element.removeAttribute('role');
 
+        ko.utils.registerEventHandler(element, "dialog.opening", (evt: Event) => {
+
+        });
+
+        ko.utils.triggerEvent(element, "dialog.opening")
+
         self.element.addEventListener("dialog.opening", (evt: Event) => {
             let data = (<CustomEvent>evt).detail;
             console.log(data);

@@ -2,6 +2,7 @@ import '@app/extenders/number';
 import '@app/extenders/attr';
 import '@app/extenders/type';
 import '@app/extenders/name';
+import '@app/extenders/raw';
 import '@app/extenders/value';
 import '@app/extenders/constraint';
 

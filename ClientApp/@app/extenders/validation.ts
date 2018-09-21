@@ -11,19 +11,19 @@ export function extend(target: ValidationObservable<any>) {
                 let msgs: IMessages = ko.toJS(target.validationMessages);
 
                 _.set(msgs, rule, message);
-                target.validationMessages(msgs);
+                target.validationMessages!(msgs);
             } else {
                 target.clearError!();
             }
         },
         clearError: target.clearError || function () {
-            target.validationMessages({});
+            target.validationMessages!({});
         },
         removeError: target.removeError || function (rule: string) {
             let msgs: IMessages = ko.toJS(target.validationMessages);
 
             _.unset(msgs, rule);
-            target.validationMessages(msgs || {});
+            target.validationMessages!(msgs || {});
         },
         checkError: target.checkError || function () {
             if (!target.$disable) {
@@ -40,9 +40,9 @@ export function extend(target: ValidationObservable<any>) {
         validationMessage: target.validationMessage || ko.observable(''),
         validationMessages: target.validationMessages || ko.observable({}),
         addValidate: target.addValidate || function (key: string, subscribe: any) {
-            target.removeValidate(key);
+            target.removeValidate!(key);
 
-            if (!target.hasSubscriptionsForValidation(key)) {
+            if (!target.hasSubscriptionsForValidation!(key)) {
                 let subscription = target.subscribe(subscribe);
 
                 ko.utils.extend(subscription, {
@@ -60,8 +60,8 @@ export function extend(target: ValidationObservable<any>) {
     });
 
     // accept only subscibe for show or hide message error
-    if (!target.validationMessages.getSubscriptionsCount()) {
-        target.validationMessages.subscribe((msgs: IMessages) => {
+    if (!target.validationMessages!.getSubscriptionsCount()) {
+        target.validationMessages!.subscribe((msgs: IMessages) => {
             if (_.isEmpty(msgs)) {
                 target.hasError!(false);
                 target.validationMessage!('');
