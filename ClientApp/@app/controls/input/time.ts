@@ -1,3 +1,6 @@
+
+var IMask = require('imask');
+
 import { $, ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 
@@ -16,9 +19,28 @@ export class TimeEditorBindingHandler implements KnockoutBindingHandler {
             .extend({
                 $raw: ko.toJS(control),
                 $value: ko.toJS(control)
-            }).extend({
+            })
+            .extend({
+                $icons: {
+                    after: 'fa fa-clock-o'
+                },
+                $width: 130
+            })
+            .extend({
                 $type: {
-                    mask: Date
+                    mask: 'hh:mm',
+                    blocks: {
+                        hh: {
+                            mask: IMask.MaskedRange,
+                            from: 0,
+                            to: 23
+                        },
+                        mm: {
+                            mask: IMask.MaskedRange,
+                            from: 0,
+                            to: 60
+                        },
+                    }
                 }
             });
 

@@ -45,10 +45,7 @@ export class LoginViewModel implements IView, IDispose {
             }),
         passWord: ko.observable('').extend({
             $focus: false,
-            $name: '#password',
-            $icons: {
-                before: 'far fa-address-card'
-            }
+            $name: '#password'
         }).extend({
             required: true
         })

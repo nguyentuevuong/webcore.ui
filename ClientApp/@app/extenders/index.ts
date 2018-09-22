@@ -12,6 +12,7 @@ import '@app/extenders/enable';
 import '@app/extenders/disabled';
 import '@app/extenders/required';
 import '@app/extenders/validate';
+import '@app/extenders/complete';
 
 import '@app/extenders/icons';
 import '@app/extenders/width';

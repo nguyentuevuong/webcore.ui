@@ -39,6 +39,7 @@ declare interface ValidationObservable<T> extends KnockoutObservable<T> {
     $value?: KnockoutObservable<string>;
     $constraint?: KnockoutObservable<string>;
     $multiline?: KnockoutObservable<boolean>;
+    $complete?: KnockoutObservable<boolean>;
     regex?: KnockoutObservable<RegExp>;
     $width?: KnockoutObservable<number>;
     $icons?: KnockoutObservable<{ before: string, after: string }>;

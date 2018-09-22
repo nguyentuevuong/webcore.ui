@@ -81,8 +81,18 @@ export class InputComponent implements IView {
         if (!ko.toJS(self.control.$value)) {
             self.control.extend({
                 $value: ko.toJS(self.control)
-            })
+            });
         }
+
+        if (!ko.isObservable(self.control.$focus)) {
+            self.control.extend({
+                $focus: false
+            });
+        }
+
+        self.control.extend({
+            $complete: false
+        });
     }
 
     afterRender(): void {
@@ -91,17 +101,25 @@ export class InputComponent implements IView {
             mask = new imask(input, {
                 mask: String
             }).on('complete', () => {
-                self.control.extend({ $raw: mask.typedValue });
+                self.control.extend({ $raw: mask.typedValue, $complete: true });
             });
 
         if (input) {
             // clear value if not complete imask event
             input.addEventListener('change', () => {
-                if (!mask.typedValue) {
+                if (!mask.typedValue || !ko.toJS(self.control.$complete)) {
                     self.control.extend({ $raw: undefined });
                 }
             });
         }
+
+        self.control.$focus!.subscribe(f => {
+            if (!!f) {
+                self.control.extend({ $complete: false });
+            } else {
+
+            }
+        });
 
         ko.computed({
             read: () => {
