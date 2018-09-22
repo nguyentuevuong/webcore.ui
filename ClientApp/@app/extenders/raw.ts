@@ -1,4 +1,4 @@
-import { ko } from '@app/providers';
+import { _, ko } from '@app/providers';
 import { extend } from '@app/extenders/validation';
 
 ko.utils.extend(ko.extenders, {

@@ -19,15 +19,16 @@ export class DateEditorBindingHandler implements KnockoutBindingHandler {
             })
             .extend({
                 $icons: {
-                    before: 'fa fa-calendar'
-                }
+                    after: 'fa fa-calendar'
+                },
+                $width: 150
             })
             .extend({
                 $type: {
                     mask: Date,
                     min: new Date(1900, 0, 1),
                     max: new Date(9999, 11, 31),
-                    lazy: false
+                    lazy: true
                 }
             });
 

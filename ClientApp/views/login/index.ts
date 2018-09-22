@@ -51,13 +51,6 @@ export class LoginViewModel implements IView, IDispose {
             }
         }).extend({
             required: true
-        }).extend({
-            $type: {
-                mask: Number,
-                min: -10000,
-                max: 10000,
-                thousandsSeparator: ','
-            }
         })
     }
 

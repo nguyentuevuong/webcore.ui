@@ -88,13 +88,20 @@ export class InputComponent implements IView {
     afterRender(): void {
         let self = this,
             input: HTMLElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id),
-            mask = new imask(input, ko.toJS(self.control.$type) || {
+            mask = new imask(input, {
                 mask: String
             }).on('complete', () => {
-                self.control.extend({
-                    $raw: mask.typedValue
-                });
+                self.control.extend({ $raw: mask.typedValue });
             });
+
+        if (input) {
+            // clear value if not complete imask event
+            input.addEventListener('change', () => {
+                if (!mask.typedValue) {
+                    self.control.extend({ $raw: undefined });
+                }
+            });
+        }
 
         ko.computed({
             read: () => {
@@ -110,7 +117,15 @@ export class InputComponent implements IView {
                 });
             },
             owner: self,
-            disposeWhen: () => !input
+            disposeWhen: () => !self
+        });
+
+        ko.computed({
+            read: () => {
+                mask.updateOptions(ko.toJS(self.control.$type));
+            },
+            owner: self,
+            disposeWhen: () => !self
         });
     }
 }

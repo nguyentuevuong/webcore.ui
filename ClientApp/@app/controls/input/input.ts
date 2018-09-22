@@ -28,7 +28,7 @@ export class TextEditorBindingHandler implements KnockoutBindingHandler {
         control.$raw!.subscribe((raw: any) => {
             // validate and rebind value to control at here
             control.checkError!(raw);
-            console.log(raw);
+            
             if (!control.hasError!()) {
                 control(raw);
             }
