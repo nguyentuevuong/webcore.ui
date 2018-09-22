@@ -90,9 +90,7 @@ export class InputComponent implements IView {
             });
         }
 
-        self.control.extend({
-            $complete: false
-        });
+        self.control.extend({ $complete: false });
     }
 
     afterRender(): void {
@@ -100,26 +98,28 @@ export class InputComponent implements IView {
             input: HTMLElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id),
             mask = new imask(input, {
                 mask: String
-            }).on('complete', () => {
-                self.control.extend({ $raw: mask.typedValue, $complete: true });
-            });
+            })
+                .on('accept', () => {
+                    if (mask.masked.isComplete) {
+                        self.control.extend({ $raw: mask.typedValue, $complete: true });
+                    } else {
+                        self.control.extend({ $complete: false });
+                    }
+                })
+                .on('complete', () => {
+                    self.control.extend({ $raw: mask.typedValue, $complete: true });
+                });
 
         if (input) {
             // clear value if not complete imask event
             input.addEventListener('change', () => {
-                if (!mask.typedValue || !ko.toJS(self.control.$complete)) {
-                    self.control.extend({ $raw: undefined });
+                if (!mask.masked.isComplete) {
+                    self.control.extend({ $raw: undefined, $complete: true });
+                } else {
+                    self.control.extend({ $raw: mask.typedValue, $complete: true });
                 }
             });
         }
-
-        self.control.$focus!.subscribe(f => {
-            if (!!f) {
-                self.control.extend({ $complete: false });
-            } else {
-
-            }
-        });
 
         ko.computed({
             read: () => {

@@ -47,10 +47,12 @@ export class TimeEditorBindingHandler implements KnockoutBindingHandler {
         ko.bindingHandlers.component.init!(element, () => ({ name: 'input', params: { control: valueAccessor() } }), allBindingsAccessor, viewModel, bindingContext);
 
         control.$raw!.subscribe((raw: any) => {
-            // validate and rebind value to control at here
-            control.checkError!(raw);
+            if (ko.toJS(control.$complete)) {
+                // validate and rebind value to control at here
+                control.checkError!(raw);
 
-            if (!control.hasError!()) {
+                if (!control.hasError!()) {
+                }
             }
         });
 
