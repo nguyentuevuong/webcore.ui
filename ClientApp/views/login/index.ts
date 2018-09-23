@@ -24,7 +24,7 @@ export class LoginViewModel implements IView, IDispose {
                 },
                 //$width: 200,
                 $columns: [
-                    'col-md-4', 'col-md-12'
+                    'col-md-4', 'col-md-8'
                 ]
             })
             .extend({
@@ -43,9 +43,11 @@ export class LoginViewModel implements IView, IDispose {
                     message: 'Gia tri nhap khong khop voi regex: ${pattern}'
                 }*/
             }),
-        passWord: ko.observable('').extend({
+        passWord: ko.observable(100).extend({
             $focus: false,
-            $name: '#password'
+            $name: '#time'
+        }).extend({
+            $columns: ['col-md-4', 'col-md-8']
         }).extend({
             required: true
         })
@@ -57,7 +59,6 @@ export class LoginViewModel implements IView, IDispose {
 
         self.element.addEventListener("dialog.opening", (evt: Event) => {
             let data = (<CustomEvent>evt).detail;
-            console.log(data);
         });
 
         // dispatch opening event
@@ -73,9 +74,7 @@ export class LoginViewModel implements IView, IDispose {
         let self = this;
         //route.goto('/', { id: 100, name: 'goto' });
         //self.model.userName.checkError();
-        self.model.userName.extend({
-            $value: '9999'
-        });
+        self.model.passWord(100);
     }
 
     removeValidate() {

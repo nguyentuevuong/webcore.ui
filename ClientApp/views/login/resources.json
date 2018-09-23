@@ -6,7 +6,8 @@
         "login_email": "Please enter your email and password",
         "login_forgot": "Forgot password?",
         "noname": "No name",
-        "noconstraint":"No constraint"
+        "noconstraint":"No constraint",
+        "time":"Time"
     },
     "vi": {
         "login": "Đăng nhập",
@@ -15,6 +16,7 @@
         "login_email": "Vui lòng nhập thư điện tử và mật khẩu",
         "login_forgot": "Quên mật khẩu?",
         "noname": "Không tên",
-        "noconstraint":"Không ràng buộc"
+        "noconstraint":"Không ràng buộc",
+        "time":"Thời gian"
     }
 }
