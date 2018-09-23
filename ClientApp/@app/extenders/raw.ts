@@ -2,7 +2,7 @@ import { _, ko } from '@app/providers';
 import { extend } from '@app/extenders/validation';
 
 ko.utils.extend(ko.extenders, {
-    $raw: (target: ValidationObservable<number>, raw: string) => {
+    $raw: (target: ValidationObservable<number>, raw: IMaskRawValue) => {
         extend(target);
 
         // extend name prop of observable

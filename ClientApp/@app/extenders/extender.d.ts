@@ -31,11 +31,12 @@ declare interface ValidationObservable<T> extends KnockoutObservable<T> {
     $focus?: KnockoutObservable<boolean>;
     /** Subscribe is require or not on view */
     $require?: KnockoutObservable<boolean>;
+    $invalid?: KnockoutObservable<boolean>;
     $enable?: KnockoutObservable<boolean>;
     /** Subscribe is enable or disable on view */
     $disable?: KnockoutObservable<boolean>;
     $columns?: KnockoutObservableArray<string>;
-    $raw?: KnockoutObservable<string>;
+    $raw?: KnockoutObservable<IMaskRawValue>;
     $value?: KnockoutObservable<string>;
     $constraint?: KnockoutObservable<string>;
     $multiline?: KnockoutObservable<boolean>;
