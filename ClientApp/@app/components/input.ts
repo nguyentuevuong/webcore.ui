@@ -51,10 +51,20 @@ var imask = require('imask');
                                     css: { 'is-invalid': $vm.control.hasError }, 
                                     attr: ko.toJS($vm.control.$attr)"></textarea>
                 <!-- /ko -->
-                <div class="invalid-feedback" data-bind="text: $vm.control.validationMessage"></div>
+                <div class="invalid-feedback" data-bind="i18n: $vm.control.validationMessage, params: { name: $vm.control.$name }"></div>
             </div>
         </div>
-        <!-- /ko -->`
+        <!-- /ko -->`,
+    resources: {
+        en: {
+            'field_invalid': '#{name} is invalid',
+            'field_required': '#{name} is required'
+        },
+        vi: {
+            'field_invalid': '#{name} có giá trị không hợp lệ',
+            'field_required': '#{name} bắt buộc phải có giá trị'
+        }
+    }
 })
 export class InputComponent implements IView {
     control: ValidationObservable<string> = ko.observable('')
@@ -78,19 +88,15 @@ export class InputComponent implements IView {
             })
         }
 
-        if (!ko.toJS(self.control.$value)) {
-            self.control.extend({
-                $value: ko.toJS(self.control)
-            });
-        }
-
         if (!ko.isObservable(self.control.$focus)) {
             self.control.extend({
                 $focus: false
             });
         }
 
-        self.control.extend({ $complete: false });
+        self.control
+            .extend({ $value: undefined })
+            .extend({ invalid: true, $complete: false });
     }
 
     afterRender(): void {
@@ -98,41 +104,39 @@ export class InputComponent implements IView {
             input: HTMLElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id),
             mask = new imask(input, {
                 mask: String
-            })
-                .on('accept', () => {
-                    if (mask.masked.isComplete) {
-                        self.control.extend({ $raw: mask.typedValue, $complete: true });
-                    } else {
-                        self.control.extend({ $complete: false });
+            }).on('accept', () => {
+                self.control.extend({
+                    $raw: {
+                        value: mask.value,
+                        typedValue: mask.typedValue,
+                        unmaskedValue: mask.unmaskedValue,
+                        isComplete: _.isEmpty(mask.value) || mask.masked.isComplete
                     }
-                })
-                .on('complete', () => {
-                    self.control.extend({ $raw: mask.typedValue, $complete: true });
                 });
-
-        if (input) {
-            // clear value if not complete imask event
-            input.addEventListener('change', () => {
-                if (!mask.masked.isComplete) {
-                    self.control.extend({ $raw: undefined, $complete: true });
-                } else {
-                    self.control.extend({ $raw: mask.typedValue, $complete: true });
-                }
             });
-        }
+
+
+        // clear value if not complete imask on blur
+        self.control.$focus!.subscribe((f: boolean) => {
+            if (!f) {
+                self.control.extend({
+                    $raw: {
+                        value: mask.value,
+                        typedValue: mask.typedValue,
+                        unmaskedValue: mask.unmaskedValue,
+                        isComplete: true
+                    }
+                });
+            }
+        });
 
         ko.computed({
             read: () => {
-                let value: any = ko.toJS(self.control.$value),
-                    unmaskedValue: string = String(value);
+                let unmaskedValue: string = ko.toJS(self.control.$value);
 
-                if (unmaskedValue != mask.unmaskedValue) {
+                if (!_.isNil(unmaskedValue) && !_.isEqual(unmaskedValue, mask.unmaskedValue)) {
                     mask.unmaskedValue = unmaskedValue;
                 }
-
-                self.control.extend({
-                    $raw: mask.typedValue
-                });
             },
             owner: self,
             disposeWhen: () => !self
