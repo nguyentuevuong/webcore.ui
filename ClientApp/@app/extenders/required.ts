@@ -12,28 +12,34 @@ ko.utils.extend(ko.extenders, {
 
         // add or update require validate
         if (!params) {
+            // extend $require for label control
             target.$require(false);
+
+            // remove validate required
             target.removeValidate!('required');
         } else {
+            // extend $require for label control
             target.$require(true);
+
+            // add validate required
             target.addValidate!('required', (value: any) => {
                 if (typeof params == 'object') {
                     if (_.has(params, 'validate')) {
                         if (params.validate.apply(target, [value])) {
-                            target.addError!('required', params.message || "This field is required");
+                            target.addError!('required', params.message || "#field_required");
                         } else {
                             target.removeError!('required');
                         }
                     } else {
-                        if (!value) {
-                            target.addError!('required', params.message || "This field is required");
+                        if (_.isNil(value)) {
+                            target.addError!('required', params.message || "#field_required");
                         } else {
                             target.removeError!('required');
                         }
                     }
-                } else if (params) {
-                    if (!value) {
-                        target.addError!('required', "This field is required");
+                } else {
+                    if (_.isNil(value)) {
+                        target.addError!('required', "#field_required");
                     } else {
                         target.removeError!('required');
                     }
