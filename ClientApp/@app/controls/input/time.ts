@@ -1,7 +1,7 @@
 
 var IMask = require('imask');
 
-import { $, ko } from '@app/providers';
+import { _, $, ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 
 @handler({
@@ -17,8 +17,9 @@ export class TimeEditorBindingHandler implements KnockoutBindingHandler {
 
         control
             .extend({
-                $raw: ko.toJS(control),
-                $value: ko.toJS(control)
+                $raw: {
+                    unmaskedValue: ko.toJS(control)
+                }
             })
             .extend({
                 $icons: {
@@ -38,22 +39,59 @@ export class TimeEditorBindingHandler implements KnockoutBindingHandler {
                         mm: {
                             mask: IMask.MaskedRange,
                             from: 0,
-                            to: 60
-                        },
+                            to: 59
+                        }
                     }
                 }
+            }).extend({
+                $constraint: '(00:00-23:59)'
             });
 
         ko.bindingHandlers.component.init!(element, () => ({ name: 'input', params: { control: valueAccessor() } }), allBindingsAccessor, viewModel, bindingContext);
 
-        control.$raw!.subscribe((raw: any) => {
-            if (ko.toJS(control.$complete)) {
-                // validate and rebind value to control at here
-                control.checkError!(raw);
+        ko.computed({
+            read: () => {
+                let value: number = ko.toJS(control);
 
-                if (!control.hasError!()) {
+                if (!_.isNil(value) && !_.isNaN(value)) {
+                    let hour: number = Math.floor(value / 60),
+                        minute: number = Math.floor(value % 60),
+                        unmaskedValue: string = _.padStart(hour.toString(), 2, '0') + _.padStart(minute.toString(), 2, '0');
+
+                    control.extend({
+                        $value: unmaskedValue
+                    });
                 }
+            },
+            owner: self,
+            disposeWhen: () => !control
+        });
+
+        // bind value to control from input component
+        control.$raw!.subscribe((raw: IMaskRawValue) => {
+            if (raw.isComplete) {
+                let value: number = Number(raw.typedValue),
+                    hour: number = Math.floor(value / 100),
+                    minute: number = Math.floor(value % 100),
+                    valid: number = hour * 60 + minute;
+
+                // validate and rebind value to control at here
+                control.checkError!(raw.typedValue ? valid : undefined);
+
+                if (!!raw.typedValue && !control.hasError!()) {
+                    if (!_.isNaN(valid)) {
+                        control(valid);
+                    } else {
+                        control(undefined);
+                    }
+                } else {
+                    control(undefined);
+                }
+            } else {
+                control(undefined);
             }
+
+            control.checkError!();
         });
 
         return { controlsDescendantBindings: true };
