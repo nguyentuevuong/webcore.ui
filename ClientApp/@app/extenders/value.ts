@@ -7,10 +7,16 @@ ko.utils.extend(ko.extenders, {
 
         // extend name prop of observable
         if (ko.isObservable(target.$value)) {
-            target.$value(ko.toJS(value));
+            let store: string = ko.toJS(target.$value);
+
+            if (store != value) {
+                target.$value(ko.toJS(value));
+            } else {
+                target.$value!.valueHasMutated!();
+            }
         } else {
             ko.utils.extend(target, {
-                $value: ko.observable(ko.toJS(value)).extend({ deferred: true })
+                $value: ko.observable(ko.toJS(value))
             });
         }
 
