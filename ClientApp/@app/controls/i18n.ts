@@ -1,28 +1,22 @@
 import { _, ko } from '@app/providers';
 
 import { handler } from '@app/common/ko';
-import { lang, i18n, Ii18n } from '@app/common/lang';
+import { lang, i18n, Ii18n, getText } from '@app/common/lang';
 
 @handler({
     virtual: false,
     bindingName: 'i18n'
 })
 export class I18nBindingHandler implements KnockoutBindingHandler {
-    init = (element: HTMLElement, valueAccessor: any) => {
+    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         ko.computed({
             read: () => {
                 let _lang: string = ko.toJS(lang),
-                    _i18n: string | Ii18n = ko.toJS(valueAccessor());
+                    _i18n: string | Ii18n = ko.toJS(valueAccessor()),
+                    params: { [key: string]: string } = ko.toJS(allBindingsAccessor().params);
 
-                if (_.isString(_i18n)) {
-                    if (_i18n.indexOf('#') == -1) {
-                        element.innerText = i18n[_lang][_i18n] || _i18n;
-                    }
-                    else if (_i18n.indexOf('#') == 0) {
-                        element.innerText = i18n[_lang][_i18n.replace('#', '')] || _i18n;
-                    } else {
-                        element.innerText = _i18n;
-                    }
+                if (typeof _i18n == 'string') {
+                    element.innerText = getText(_i18n, params) || _i18n;
                 } else {
                     _.each(_.keys(_i18n), prop => {
                         let resource = _.get(_i18n, prop);
