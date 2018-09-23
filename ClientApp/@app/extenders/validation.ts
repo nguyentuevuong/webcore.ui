@@ -26,10 +26,12 @@ export function extend(target: ValidationObservable<any>) {
             target.validationMessages!(msgs || {});
         },
         checkError: target.checkError || function (value?: any) {
+            let args = arguments;
+
             if (!target.$disable) {
                 _.each(_.get(target, "_subscriptions.change"), (subscribe: { validate: string, callback: (value: any) => void }) => {
                     if (subscribe.validate) {
-                        subscribe.callback(value || ko.toJS(target));
+                        subscribe.callback(_.size(args) ? value : ko.toJS(target));
                     }
                 });
             }
