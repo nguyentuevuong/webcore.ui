@@ -21,11 +21,25 @@ module.exports = (env) => {
         },
         module: {
             rules: [
-                { test: /\.css|\.html$/, use: 'raw-loader' },
-                { test: /\.ts$/, include: /ClientApp/, loader: 'ts-loader' },
-                { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=100000' },
-                { test: /\.(sa|sc)ss$/, include: /(views|components)/, use: ['raw-loader', 'sass-loader'] },
-                { test: /\.(sa|sc)ss$/, include: /styles/, use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'] }
+                { test: /\.css$/, loaders: ['raw-loader'] },
+                { test: /\.ts$/, include: /ClientApp/, loaders: ['ts-loader'] },
+                {
+                    test: /\.html$/, loaders: [
+                        'raw-loader',
+                        {
+                            loader: 'html-minify-loader',
+                            options: {
+                                cdata: true,
+                                quotes: true,
+                                comments: true,
+                                dom: { lowerCaseTags: false }
+                            }
+                        }
+                    ]
+                },
+                { test: /\.(png|jpg|jpeg|gif|svg)$/, loaders: ['url-loader?limit=100000'] },
+                { test: /\.(sa|sc)ss$/, include: /(views|components)/, loaders: ['raw-loader', 'sass-loader'] },
+                { test: /\.(sa|sc)ss$/, include: /styles/, loaders: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'] }
             ]
         },
         entry: {
