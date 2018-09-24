@@ -72,7 +72,7 @@ module.exports = (env) => {
                         ecma: 6,
                         mangle: true,
                         output: {
-                          comments: false
+                            comments: false
                         }
                     },
                     sourceMap: false
@@ -98,8 +98,8 @@ module.exports = (env) => {
             new MiniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
                 // both options are optional
-                filename: env && env.prod ? '[name].[hash].css' : '[name].css',
-                chunkFilename: env && env.prod ? '[id].[hash].css' : '[id].css',
+                filename: '[name].css',
+                chunkFilename: '[id].css',
 
             }),
             new webpack.DllReferencePlugin({

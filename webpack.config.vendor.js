@@ -96,8 +96,8 @@ module.exports = (env) => {
             new MiniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
                 // both options are optional
-                filename: env && env.prod ? '[name].[hash].css' : '[name].css',
-                chunkFilename: env && env.prod ? '[id].[hash].css' : '[id].css',
+                filename: '[name].css',
+                chunkFilename: '[id].css',
             }),
             // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
             new webpack.ProvidePlugin({
