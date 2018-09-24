@@ -26,3 +26,5 @@ import './color';
 import './wizard';
 import './tree';
 import './sortable';
+
+import './barcode';
