@@ -12,6 +12,9 @@ import { Components } from '@app/common/ko';
 import 'popper.js';
 import 'bootstrap';
 
+// import external observable
+import '@app/common/ko/observable';
+
 // import components
 import '@app/common/ajax-ext';
 
