@@ -3,12 +3,12 @@ import { ko } from '@app/providers';
 let orgObser = ko.observable;
 
 ko.utils.extend(ko, {
-    observable: function(initialValue: any | undefined) {
+    observable: function(initialValue: any | undefined | null) {
         return orgObser(initialValue).extend({
             required: false
         });
     },
-    observableString: function(initialValue: string | undefined) {
+    observableString: function(initialValue: string | undefined | null) {
         return orgObser(initialValue)
             .extend({
                 required: false
@@ -18,7 +18,7 @@ ko.utils.extend(ko, {
                 }
             });
     },
-    observableDate: function(initialValue: Date | undefined) {
+    observableDate: function(initialValue: Date | undefined | null) {
         return orgObser(initialValue)
             .extend({
                 required: false
@@ -30,7 +30,7 @@ ko.utils.extend(ko, {
                 }
             });
     },
-    observableTime: function(initialValue: number | undefined) {
+    observableTime: function(initialValue: number | undefined | null) {
         return orgObser(initialValue)
             .extend({
                 required: false
@@ -42,7 +42,7 @@ ko.utils.extend(ko, {
                 }
             });
     },
-    observableClock: function(initialValue: number | undefined) {
+    observableClock: function(initialValue: number | undefined | null) {
         return orgObser(initialValue)
             .extend({
                 required: false
@@ -54,7 +54,7 @@ ko.utils.extend(ko, {
                 }
             });
     },
-    observableNumber: function(initialValue: number | undefined) {
+    observableNumber: function(initialValue: number | undefined | null) {
         return orgObser(initialValue)
             .extend({
                 required: false

@@ -23,7 +23,6 @@ declare interface KnockoutObservableNumber<T> extends KnockoutObservable<T> {
     toCurrencyString: () => string;
 }
 
-
 declare interface KnockoutObservableString<T> extends KnockoutObservable<T> {
 
 }
