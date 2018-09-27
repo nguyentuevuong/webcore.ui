@@ -3,10 +3,12 @@ import { component, IView } from "@app/common/ko";
 import { BarCode } from '@app/common/barcode';
 import { randomId } from '@app/common/id';
 
+import { BrowserQRCodeReader, Result } from '@zxing/library';
+
 @component({
     name: 'barcode',
     styles: `#barcode{position:relative},
-    #barcode>video,#barcode>canvas{height: 100px}	
+    #barcode>video,#barcode>canvas{width:200px;height:200px}	
     #barcode>canvas{position:absolute;top:0px;left:0px}
     #barcode+canvas{display:none}`,
     template: `
@@ -47,17 +49,28 @@ export class InputComponent implements IView {
 
         let self = this,
             video = document.getElementById(self.ids.video) as HTMLVideoElement,
-            canvas = document.getElementById(self.ids.canvas) as HTMLCanvasElement,
-            canvasg = document.getElementById(self.ids.canvasg) as HTMLCanvasElement;
+            codeReader = new BrowserQRCodeReader(),
+            continuos = () => {
+                if (navigator.getUserMedia) {
+                    navigator.getUserMedia({
+                        audio: false, video: {
+                            advanced: [{
+                                facingMode: "environment"
+                            }]
+                        }
+                    }, function (stream) {
+                        codeReader.decodeFromVideoSource(window.URL.createObjectURL(stream), video)
+                            .then((result: Result) => {
+                                self.control(result.getText());
+                                continuos();
+                            })
+                            .catch(err => console.error(err));
+                    }, function (error) {
+                        console.log(error);
+                    });
+                }
+            };
 
-        if (video && canvas && canvasg) {
-            new BarCode({
-                canvas: canvas,
-                canvasg: canvasg,
-                subscribe: self.control,
-                video: video
-            });
-        }
-        debugger;
+        continuos();
     }
 }

@@ -43,9 +43,13 @@ export class LoginViewModel implements IView, IDispose {
                     message: 'Gia tri nhap khong khop voi regex: ${pattern}'
                 }*/
             }),
-        passWord: ko.observable(100).extend({
+        passWord: ko.observableTime(100).extend({
             $focus: false,
-            $name: '#time'
+            $name: '#time',
+            $type: {
+                min: 510,
+                max: 1050
+            }
         }).extend({
             $columns: ['col-md-4', 'col-md-8']
         }).extend({

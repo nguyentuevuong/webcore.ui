@@ -12,27 +12,7 @@ export class TextEditorBindingHandler implements KnockoutBindingHandler {
         $element
             .addClass('form-group row');
 
-        control
-            .extend({
-                $raw: ko.toJS(control),
-                $value: ko.toJS(control)
-            })
-            .extend({
-                $type: {
-                    mask: String
-                }
-            });
-
         ko.bindingHandlers.component.init!(element, () => ({ name: 'input', params: { control: valueAccessor() } }), allBindingsAccessor, viewModel, bindingContext);
-
-        control.$raw!.subscribe((raw: any) => {
-            // validate and rebind value to control at here
-            control.checkError!(raw);
-            
-            if (!control.hasError!()) {
-                control(raw);
-            }
-        });
 
         return { controlsDescendantBindings: true };
     }

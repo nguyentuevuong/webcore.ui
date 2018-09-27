@@ -102,7 +102,7 @@ export class InputComponent implements IView {
     afterRender(): void {
         let self = this,
             input: HTMLElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id),
-            mask = new imask(input, {
+            mask = new imask(input, ko.toJS(self.control.$type) || {
                 mask: String
             }).on('accept', () => {
                 self.control.extend({
@@ -115,6 +115,7 @@ export class InputComponent implements IView {
                 });
             });
 
+        self.control.mask = mask;
 
         // clear value if not complete imask on blur
         self.control.$focus!.subscribe((f: boolean) => {

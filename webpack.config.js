@@ -138,6 +138,10 @@ module.exports = (env) => {
             watchContentBase: true,
             index: './index.htm',
             historyApiFallback: true
+        },
+        node: {
+            __filename: true,
+            __dirname: true,
         }
     }];
 };

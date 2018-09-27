@@ -1,5 +1,5 @@
 import { ko } from '@app/providers';
-import { extend } from '@app/extenders/validation';
+import { extend } from '@app/extenders/validate';
 
 ko.utils.extend(ko.extenders, {
     $icons: (target: ValidationObservable<number>, icons: { before?: string, after?: string }) => {

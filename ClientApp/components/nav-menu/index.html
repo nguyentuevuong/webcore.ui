@@ -7,13 +7,27 @@
             </button>
         </div>
     </div>
-    <button class="btn btn-link d-md-none p-0" type="button" data-toggle="collapse" data-target="#bd-docs-nav" aria-controls="bd-docs-nav"
-        aria-expanded="false" aria-label="Toggle docs navigation">
+    <button class="btn btn-link d-md-none p-0" type="button" data-toggle="collapse" data-target="#bd-docs-nav"
+        aria-controls="bd-docs-nav" aria-expanded="false" aria-label="Toggle docs navigation">
         <i class="fa fa-bars fa-2x"></i>
     </button>
 </form>
-<div class="sidebar-sticky">
+<div class="sidebar-sticky noselect">
     <nav class="collapse show" id="bd-docs-nav">
+            <ul class="nav flex-column nav-sample" data-bind="foreach: { data: ($vm.keyword(), $vm.filterRoute()), as: 'r'}">
+                <li class="nav-item">
+                    <a class="nav-link" data-bind='
+                        attr: { href: $vm.router.link(r.url) },
+                        css: { active: $vm.router.currentRoute().component.name === r.name }'>
+                        <i data-bind="attr: { 'class': r.icon }"></i>
+                        <span data-bind="text: r.title"></span>
+                    </a>
+                </li>
+            </ul>
+        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
+            <span>Title of group</span>
+            <i class="fa fa-plus-circle"></i>
+        </h6>
         <ul class="nav flex-column nav-sample" data-bind="foreach: { data: ($vm.keyword(), $vm.filterRoute()), as: 'r'}">
             <li class="nav-item">
                 <a class="nav-link" data-bind='

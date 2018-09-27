@@ -1,4 +1,4 @@
-declare interface KnockoutObservable<T> {
+declare interface KnockoutObservable<T> extends KnockoutSubscribable<T>, KnockoutObservableFunctions<T> {
     /** Check subscribe has error or not */
     hasError?: KnockoutObservable<boolean>;
     /** Method clear error of subscibe */
@@ -43,6 +43,7 @@ declare interface ValidationObservable<T> extends KnockoutObservable<T> {
     $complete?: KnockoutObservable<boolean>;
     regex?: KnockoutObservable<RegExp>;
     $width?: KnockoutObservable<number>;
+    mask?: IMaskRawValue;
     $icons?: KnockoutObservable<{ before: string, after: string }>;
 }
 
@@ -66,4 +67,13 @@ declare interface IMessages {
 
 declare interface ISubscribeValidates {
     [key: string]: any;
+}
+
+
+declare interface IMaskRawValue {
+    value: any;
+    typedValue: any;
+    unmaskedValue: string;
+    rawInputValue: any;
+    isComplete: boolean;
 }

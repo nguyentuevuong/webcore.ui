@@ -1,8 +1,9 @@
-
 var IMask = require('imask');
 
 import { _, $, ko } from '@app/providers';
 import { handler } from '@app/common/ko';
+
+import { time, clock } from '@app/common/utils';
 
 @handler({
     bindingName: 'time'
@@ -10,41 +11,84 @@ import { handler } from '@app/common/ko';
 export class TimeEditorBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let $element = $(element),
-            control: ValidationObservable<any> = valueAccessor();
+            control: ValidationObservable<any> = valueAccessor(),
+            type: { min: number, max: number } = ko.toJS(control.$type);
 
         $element
             .addClass('form-group row');
 
+        if (!type) {
+            type = {
+                min: 0,
+                max: 4320
+            }
+        }
+
+        if (!type.min) {
+            type.min = 0;
+        }
+
+        if (!type.max) {
+            type.max = 4320;
+        }
+
         control
             .extend({
-                $raw: {
-                    unmaskedValue: ko.toJS(control)
-                }
+                $type: type
             })
             .extend({
-                $icons: {
-                    after: 'fa fa-clock-o'
-                },
-                $width: 130
-            })
-            .extend({
+                $constraint: `${time.format(type.min)}~${time.format(type.max)}`
+            }).extend({
                 $type: {
-                    mask: 'hh:mm',
-                    blocks: {
-                        hh: {
-                            mask: IMask.MaskedRange,
-                            from: 0,
-                            to: 23
-                        },
-                        mm: {
-                            mask: IMask.MaskedRange,
-                            from: 0,
-                            to: 59
+                    mask: 'dd:dd',
+                    definitions: {
+                        'd': (value: string) => {
+                            let mask: { typedValue: string } = control.mask || { typedValue: '' },
+                                type: { min: number; max: number; } = ko.toJS(control.$type),
+                                raw: string = mask.typedValue;
+
+                            raw = _.padEnd(raw, 2, '9');
+                            raw = _.padEnd(raw, 3, '5');
+                            raw = _.padEnd(raw, 4, '9');
+
+                            let maxOfMin = time.toInt(raw) || 0;
+
+                            raw = mask.typedValue;
+                            raw = _.padEnd(raw, 2, '0');
+                            raw = _.padEnd(raw, 3, '0');
+                            raw = _.padEnd(raw, 4, '0');
+
+                            let minOfMax = time.toInt(raw) || 0;
+
+                            return !!value.match(/\d/) && type.min <= maxOfMin && minOfMax <= type.max;
                         }
                     }
+                    /*mask: [
+                        {
+                            mask: '@#:$$',
+                            definitions: {
+                                '@': new RegExp('7'),
+                                '#': new RegExp('2'),
+                                '$': new RegExp('0')
+                            }
+                        },
+                        {
+                            mask: 'hh:mm',
+                            blocks: {
+                                hh: {
+                                    mask: IMask.MaskedRange,
+                                    from: 0,
+                                    to: 71
+                                },
+                                mm: {
+                                    mask: IMask.MaskedRange,
+                                    from: 0,
+                                    to: 59
+                                }
+                            }
+                        }
+                    ]*/
                 }
-            }).extend({
-                $constraint: '(00:00-23:59)'
             });
 
         ko.bindingHandlers.component.init!(element, () => ({ name: 'input', params: { control: valueAccessor() } }), allBindingsAccessor, viewModel, bindingContext);
@@ -54,9 +98,7 @@ export class TimeEditorBindingHandler implements KnockoutBindingHandler {
                 let value: number = ko.toJS(control);
 
                 if (!_.isNil(value) && !_.isNaN(value)) {
-                    let hour: number = Math.floor(value / 60),
-                        minute: number = Math.floor(value % 60),
-                        unmaskedValue: string = _.padStart(hour.toString(), 2, '0') + _.padStart(minute.toString(), 2, '0');
+                    let unmaskedValue: string = time.format(value);
 
                     control.extend({
                         $value: unmaskedValue
@@ -70,10 +112,7 @@ export class TimeEditorBindingHandler implements KnockoutBindingHandler {
         // bind value to control from input component
         control.$raw!.subscribe((raw: IMaskRawValue) => {
             if (raw.isComplete) {
-                let value: number = Number(raw.typedValue),
-                    hour: number = Math.floor(value / 100),
-                    minute: number = Math.floor(value % 100),
-                    valid: number = hour * 60 + minute;
+                let valid: number | undefined = time.toInt(raw.typedValue);
 
                 // validate and rebind value to control at here
                 control.checkError!(raw.typedValue ? valid : undefined);

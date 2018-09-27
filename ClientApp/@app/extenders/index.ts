@@ -7,11 +7,8 @@ import '@app/extenders/value';
 import '@app/extenders/constraint';
 
 import '@app/extenders/focus';
-import '@app/extenders/regex';
 import '@app/extenders/enable';
 import '@app/extenders/disabled';
-import '@app/extenders/invalid';
-import '@app/extenders/required';
 import '@app/extenders/validate';
 
 import '@app/extenders/icons';

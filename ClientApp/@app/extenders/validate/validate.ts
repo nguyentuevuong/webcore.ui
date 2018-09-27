@@ -1,5 +1,5 @@
 import { _, ko } from '@app/providers';
-import { extend } from '@app/extenders/validation';
+import { extend } from '@app/extenders/validate';
 
 ko.utils.extend(ko.extenders, {
     validate: (target: ValidationObservable<any>, params: (value: any) => string | undefined) => {
