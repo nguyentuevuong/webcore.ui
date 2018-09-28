@@ -43,13 +43,15 @@ var imask = require('imask');
                 <input type="text" class="form-control"
                     data-bind=" hasFocus: $vm.control.$focus,
                                 css: { 'is-invalid': $vm.control.hasError },
-                                attr: ko.toJS($vm.control.$attr)" />
+                                attr: ko.toJS($vm.control.$attr),
+                                enable: ko.toJS($vm.control.$enable) != false" />
                 <!-- /ko -->
                 <!-- ko ifnot: !ko.toJS($vm.control.$multiline) -->
                     <textarea class="form-control"
                         data-bind=" hasFocus: $vm.control.$focus,
                                     css: { 'is-invalid': $vm.control.hasError }, 
-                                    attr: ko.toJS($vm.control.$attr)"></textarea>
+                                    attr: ko.toJS($vm.control.$attr),
+                                    enable: ko.toJS($vm.control.$enable) != false"></textarea>
                 <!-- /ko -->
                 <div class="invalid-feedback" data-bind="i18n: $vm.control.validationMessage, params: { name: $vm.control.$name }"></div>
             </div>
@@ -101,7 +103,7 @@ export class InputComponent implements IView {
 
     afterRender(): void {
         let self = this,
-            input: HTMLElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id),
+            input: HTMLInputElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id) as HTMLInputElement,
             mask = new imask(input, ko.toJS(self.control.$type) || {
                 mask: String
             }).on('accept', () => {
@@ -133,11 +135,7 @@ export class InputComponent implements IView {
 
         ko.computed({
             read: () => {
-                let unmaskedValue: string = ko.toJS(self.control.$value);
-
-                if (!_.isNil(unmaskedValue) && !_.isEqual(unmaskedValue, mask.unmaskedValue)) {
-                    mask.unmaskedValue = unmaskedValue;
-                }
+                input!.value = ko.toJS(self.control.$value);
             },
             owner: self,
             disposeWhen: () => !self

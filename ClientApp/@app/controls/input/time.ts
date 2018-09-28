@@ -97,11 +97,12 @@ export class TimeEditorBindingHandler implements KnockoutBindingHandler {
             read: () => {
                 let value: number = ko.toJS(control);
 
-                if (!_.isNil(value) && !_.isNaN(value)) {
-                    let unmaskedValue: string = time.format(value);
+                // validate and rebind value to control at here
+                control.checkError!(value);
 
+                if (!_.isNil(value) && !_.isNaN(value)) {
                     control.extend({
-                        $value: unmaskedValue
+                        $value: time.format(value)
                     });
                 }
             },
