@@ -25,7 +25,7 @@ ko.utils.extend(ko, {
                     min: new Date(1900, 1, 1),
                     max: new Date(9999, 12, 31)
                 }
-            });
+            }) as KnockoutObservableDate;
     },
     observableTime: function (initialValue: number | undefined | null) {
         return ko.observable(initialValue)
