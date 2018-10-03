@@ -1,3 +1,4 @@
+import '@app/controls/input/mask';
 import '@app/controls/input/input';
 import '@app/controls/input/date';
 import '@app/controls/input/time';

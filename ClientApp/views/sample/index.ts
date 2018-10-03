@@ -18,3 +18,4 @@ import './tree';
 import './sortable';
 
 import './barcode';
+import '@views/sample/controls';
