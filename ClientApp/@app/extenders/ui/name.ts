@@ -10,9 +10,13 @@ ko.utils.extend(ko.extenders, {
             target.$name(ko.toJS(name));
         } else {
             ko.utils.extend(target, {
-                $name: ko.observable(ko.toJS(name))
+                $name: ko.observableOrg(ko.toJS(name))
             });
         }
+
+        ko.utils.extend(target, {
+            name: ko.toJS(name)
+        });
 
         return target;
     }

@@ -7,7 +7,7 @@ ko.utils.extend(ko.extenders, {
 
         // init attr object
         if (!ko.isObservable(target.$attr)) {
-            target.$attr = ko.observable({});
+            target.$attr = ko.observableOrg({});
         }
 
         let $attr: { [key: string]: KnockoutObservable<any> } = ko.toJS(target.$attr);
@@ -23,7 +23,7 @@ ko.utils.extend(ko.extenders, {
                 if (ko.isObservable($attr[key])) {
                     $attr[key](value);
                 } else {
-                    $attr[key] = ko.observable(ko.toJS(value));
+                    $attr[key] = ko.observableOrg(ko.toJS(value));
                 }
             });
         }

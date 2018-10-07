@@ -11,7 +11,7 @@ ko.utils.extend(ko.extenders, {
                 target.$enable(ko.toJS(enable));
             } else {
                 ko.utils.extend(target, {
-                    $enable: ko.observable(ko.toJS(enable))
+                    $enable: ko.observableOrg(ko.toJS(enable))
                 });
             }
 

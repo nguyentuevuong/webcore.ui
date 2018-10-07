@@ -7,7 +7,7 @@ ko.utils.extend(ko.extenders, {
         extend(target);
 
         if (!ko.isObservable(target.$require)) {
-            target.$require = ko.observable(false);
+            target.$require = ko.observableOrg(false);
         }
 
         // add or update require validate

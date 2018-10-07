@@ -62,7 +62,8 @@ export class TimeEditorBindingHandler implements KnockoutBindingHandler {
 
                             return !!value.match(/\d/) && type.min <= maxOfMin && minOfMax <= type.max;
                         }
-                    }
+                    },
+                    lazy: false
                     /*mask: [
                         {
                             mask: '@#:$$',
@@ -114,7 +115,7 @@ export class TimeEditorBindingHandler implements KnockoutBindingHandler {
         control.$raw!.subscribe((raw: IMaskRawValue) => {
             if (raw.isComplete) {
                 let valid: number | undefined = time.toInt(raw.typedValue);
-
+                console.log(raw);
                 // validate and rebind value to control at here
                 control.checkError!(raw.typedValue ? valid : undefined);
 

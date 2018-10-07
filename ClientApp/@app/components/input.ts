@@ -1,8 +1,9 @@
 import { _, ko } from '@app/providers';
 import { component, IView } from "@app/common/ko";
 import { randomId } from '@app/common/id';
+import { mask } from '@app/common/ui/mask';
 
-var imask = require('imask');
+var IMask = require('imask');
 
 @component({
     name: 'input',
@@ -104,29 +105,40 @@ export class InputComponent implements IView {
     afterRender(): void {
         let self = this,
             input: HTMLInputElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id) as HTMLInputElement,
-            mask = new imask(input, ko.toJS(self.control.$type) || {
+            imask = new IMask(input, ko.toJS(self.control.$type) || {
                 mask: String
             }).on('accept', () => {
                 self.control.extend({
                     $raw: {
-                        value: mask.value,
-                        typedValue: mask.typedValue,
-                        unmaskedValue: mask.unmaskedValue,
-                        isComplete: _.isEmpty(mask.value) || mask.masked.isComplete
+                        value: imask.value,
+                        typedValue: imask.typedValue,
+                        unmaskedValue: imask.unmaskedValue,
+                        isComplete: _.isEmpty(imask.value) || imask.masked.isComplete
                     }
                 });
             });
 
-        self.control.mask = mask;
+        let inputmask = new mask(input, {
+            mask: Date,
+            definitions: {
+                min: new Date(1900, 1, 1),
+                max: new Date(9999, 12, 31),
+                pattern: 'yyyy/mm/dd',
+            }
+        }).on('accept', (value: string, status: boolean) => {
+
+        });
+
+        self.control.mask = imask;
 
         // clear value if not complete imask on blur
         self.control.$focus!.subscribe((f: boolean) => {
             if (!f) {
                 self.control.extend({
                     $raw: {
-                        value: mask.value,
-                        typedValue: mask.typedValue,
-                        unmaskedValue: mask.unmaskedValue,
+                        value: imask.value,
+                        typedValue: imask.typedValue,
+                        unmaskedValue: imask.unmaskedValue,
                         isComplete: true
                     }
                 });
@@ -143,7 +155,7 @@ export class InputComponent implements IView {
 
         ko.computed({
             read: () => {
-                mask.updateOptions(ko.toJS(self.control.$type));
+                imask.updateOptions(ko.toJS(self.control.$type));
             },
             owner: self,
             disposeWhen: () => !self

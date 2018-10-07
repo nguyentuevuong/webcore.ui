@@ -1,4 +1,5 @@
 declare interface KnockoutStatic {
+    observableOrg: KnockoutObservableStatic;
     observableDate: KnockoutObservableDateStatic;
     observableTime: KnockoutObservableTimeStatic;
     observableClock: KnockoutObservableClockStatic;
@@ -124,4 +125,17 @@ declare interface KnockoutObservableSelectionStatic {
     <T = any>(value: T): KnockoutObservableSelection;
     <T = any>(value: null): KnockoutObservableSelection;
     <T = any>(): KnockoutObservableSelection;
+}
+
+declare interface KnockoutObservableStatic {
+    org: boolean;
+}
+
+declare interface KnockoutUtils {
+    setPrototypeOfOrExtend: (obj: KnockoutObservable<any>, proto: any) => KnockoutObservable<any>;
+}
+
+declare interface KnockoutSubscribableFunctions<T> {
+    init: (instance: KnockoutObservable<any>) => void;
+    extend: (requestedExtenders: any) => void;
 }

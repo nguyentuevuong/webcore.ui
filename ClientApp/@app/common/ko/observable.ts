@@ -1,12 +1,43 @@
 import { ko } from '@app/providers';
+import { randomId } from '@app/common/id';
 
-var IMask = require('imask');
+let orgSet = ko.utils.setPrototypeOfOrExtend;
+
+// default extender for all observable
+ko.utils.extend(ko.utils, {
+    setPrototypeOfOrExtend: (obj: KnockoutObservable<any>, proto: any) => {
+        orgSet(obj, proto);
+
+        // extend observable :|
+        if (ko.observable.org !== true) {
+            obj.extend({
+                $focus: false,
+                $enable: true,
+                required: false
+            });
+        }
+
+        ko.observable.org = false;
+
+        return obj;
+    }
+});
 
 ko.utils.extend(ko, {
+    observableOrg: function (initialValue?: any) {
+        ko.observable.org = true;
+
+        return ko.observable(initialValue);
+    },
     observableString: function (initialValue: string | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                required: false
+                $focus: false,
+                $enable: true,
+                required: false,
+                $attr: {
+                    id: randomId()
+                }
             }).extend({
                 $type: {
                     bind: 'string',
@@ -17,7 +48,12 @@ ko.utils.extend(ko, {
     observableDate: function (initialValue: Date | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                required: false
+                $focus: false,
+                $enable: true,
+                required: false,
+                $attr: {
+                    id: randomId()
+                }
             }).extend({
                 $type: {
                     bind: 'date',
@@ -25,18 +61,25 @@ ko.utils.extend(ko, {
                     min: new Date(1900, 1, 1),
                     max: new Date(9999, 12, 31)
                 }
-            }) as KnockoutObservableDate;
+            });
     },
     observableTime: function (initialValue: number | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                required: false
+                $focus: false,
+                $enable: true,
+                required: false,
+                $attr: {
+                    id: randomId()
+                }
             }).extend({
                 $icons: {
                     after: 'fa fa-clock-o'
                 },
                 $type: {
-                    bind: 'time'
+                    bind: 'time',
+                    min: 0,     // 00:00 (0h today)
+                    max: 2160   // 36:00 (12h tomorow)
                 },
                 //$width: 130,
                 $value: initialValue, // convert to display value
@@ -48,7 +91,12 @@ ko.utils.extend(ko, {
     observableClock: function (initialValue: number | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                required: false
+                $focus: false,
+                $enable: true,
+                required: false,
+                $attr: {
+                    id: randomId()
+                }
             }).extend({
                 $type: {
                     bind: 'clock',
@@ -61,7 +109,12 @@ ko.utils.extend(ko, {
     observableNumber: function (initialValue: number | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                required: false
+                $focus: false,
+                $enable: true,
+                required: false,
+                $attr: {
+                    id: randomId()
+                }
             }).extend({
                 $type: {
                     bind: 'number',

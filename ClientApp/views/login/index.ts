@@ -45,16 +45,12 @@ export class LoginViewModel implements IView, IDispose {
             }),
         passWord: ko.observableTime(100)
             .extend({
-                $disable: true
-            })
-            .extend({
                 $focus: false,
                 $name: '#time',
                 $type: {
                     min: 510,
                     max: 1050
-                }
-            }).extend({
+                },
                 $columns: ['col-md-4', 'col-md-8']
             }).extend({
                 required: true

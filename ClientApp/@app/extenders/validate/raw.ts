@@ -10,7 +10,7 @@ ko.utils.extend(ko.extenders, {
             target.$raw(ko.toJS(raw));
         } else {
             ko.utils.extend(target, {
-                $raw: ko.observable(ko.toJS(raw)).extend({ deferred: true })
+                $raw: ko.observableOrg(ko.toJS(raw)).extend({ deferred: true })
             });
         }
 
