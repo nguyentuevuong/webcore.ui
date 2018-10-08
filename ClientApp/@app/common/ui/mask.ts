@@ -1,7 +1,14 @@
 import { ko } from '@app/providers';
 
+const DIGIT: string = '9',
+    ALPHA: string = 'A',
+    ALPHANUM: string = 'S',
+    BY_PASS_KEYS: Array<number> = [8, 9, 13, 32, 37, 38, 39, 40],
+    isAllowedKeyCode: (keyCode: number) => boolean = (keyCode: number) => BY_PASS_KEYS.indexOf(keyCode) == -1,
+    convert2PlaceHolder: (pattern: string, mask?: string) => string = (pattern: string, mask?: string) => pattern.replace(/(A|S|9)/g, mask || '_');
+
 export class InputMask {
-    private options: IInputMaskOptions = { mask: String };
+    private options: IInputMaskOptions = { bind: 'string', mask: String };
     private listeners: { [evt: string]: Array<Function> } = {};
 
     private _value: string = "";
@@ -13,17 +20,28 @@ export class InputMask {
             self.options = options;
         }
 
-        ko.utils.registerEventHandler(element, 'keydown', (evt: KeyboardEvent) => {
+        element.addEventListener('focus', (evt: FocusEvent) => {
 
         });
 
-        ko.utils.triggerEvent(element, "");
+        // outfocus event
+        element.addEventListener('blur', (evt: FocusEvent) => {
+
+        });
+
+        element.addEventListener('paste', (evt: ClipboardEvent) => {
+
+        });
 
         element.addEventListener('keydown', (evt: KeyboardEvent) => {
-            if (!self.validator(element.value)) {
-                evt.preventDefault();
+            if (!isAllowedKeyCode(evt.keyCode)) {
+
             }
-        })
+        });
+
+        element.addEventListener('keyup', (evt: KeyboardEvent) => {
+
+        });
     }
 
     get success() {
@@ -64,6 +82,8 @@ export class InputMask {
             options: IInputMaskOptions = self.options;
 
         if (options.mask instanceof RegExp) {
+
+        } else if (options.mask instanceof String) {
 
         }
 
@@ -158,6 +178,7 @@ export class InputMask {
 export { InputMask as mask };
 
 interface IInputMaskOptions {
+    bind: string,
     mask: RegExp | Date | Number | String | Function | Array<IInputMaskOptions>;
     definitions?: {
         min?: Date | Number;

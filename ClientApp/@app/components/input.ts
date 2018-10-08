@@ -119,6 +119,7 @@ export class InputComponent implements IView {
             });
 
         let inputmask = new mask(input, {
+            bind: 'date',
             mask: Date,
             definitions: {
                 min: new Date(1900, 1, 1),
