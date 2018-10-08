@@ -12,3 +12,4 @@
     </div>
     <button type="button" class="btn btn-primary btn-block" data-bind="i18n: '#login', click: $vm.checkValidate"></button>
 </div>
+<div data-bind="check: ko.observableSelection('').extend({ $name: '#noname', required: true, $columns: ['col-md-4', 'col-md-8'] })"></div>

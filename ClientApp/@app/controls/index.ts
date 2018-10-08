@@ -11,6 +11,7 @@ import "./check-ko-ext";
 import '@app/controls/each';
 import "@app/controls/label";
 import '@app/controls/input';
+import '@app/controls/selection';
 import '@app/controls/safe-click';
 
 import "@app/controls/sortable";
