@@ -14,73 +14,25 @@ declare interface KnockoutStatic {
 
 declare interface KnockoutObservableTime extends KnockoutObservable<number | undefined> {
     toString: () => string;
-    /** Check subscribe has error or not */
-    hasError: KnockoutObservable<boolean>;
-    /** Method clear error of subscibe */
-    clearError: () => void;
-    /** Method check subscribe has error or not */
-    checkError: (value?: any) => void;
-    /** Error message of subscibe on view */
-    validationMessage: KnockoutObservable<string>;
 }
 
 declare interface KnockoutObservableClock extends KnockoutObservable<number | undefined> {
     toString: () => string;
-    /** Check subscribe has error or not */
-    hasError: KnockoutObservable<boolean>;
-    /** Method clear error of subscibe */
-    clearError: () => void;
-    /** Method check subscribe has error or not */
-    checkError: (value?: any) => void;
-    /** Error message of subscibe on view */
-    validationMessage: KnockoutObservable<string>;
 }
 
 declare interface KnockoutObservableDate extends KnockoutObservable<Date | undefined> {
     toString: (format: string) => string;
-    /** Check subscribe has error or not */
-    hasError: KnockoutObservable<boolean>;
-    /** Method clear error of subscibe */
-    clearError: () => void;
-    /** Method check subscribe has error or not */
-    checkError: (value?: any) => void;
-    /** Error message of subscibe on view */
-    validationMessage: KnockoutObservable<string>;
 }
 
 declare interface KnockoutObservableNumber extends KnockoutObservable<number | undefined> {
     toLocateString: () => string;
     toCurrencyString: () => string;
-    /** Check subscribe has error or not */
-    hasError: KnockoutObservable<boolean>;
-    /** Method clear error of subscibe */
-    clearError: () => void;
-    /** Method check subscribe has error or not */
-    checkError: (value?: any) => void;
-    /** Error message of subscibe on view */
-    validationMessage: KnockoutObservable<string>;
 }
 
 declare interface KnockoutObservableString extends KnockoutObservable<string | undefined> {
-    /** Check subscribe has error or not */
-    hasError: KnockoutObservable<boolean>;
-    /** Method clear error of subscibe */
-    clearError: () => void;
-    /** Method check subscribe has error or not */
-    checkError: (value?: any) => void;
-    /** Error message of subscibe on view */
-    validationMessage: KnockoutObservable<string>;
 }
 
 declare interface KnockoutObservableSelection extends KnockoutObservable<any | undefined> {
-    /** Check subscribe has error or not */
-    hasError: KnockoutObservable<boolean>;
-    /** Method clear error of subscibe */
-    clearError: () => void;
-    /** Method check subscribe has error or not */
-    checkError: (value?: any) => void;
-    /** Error message of subscibe on view */
-    validationMessage: KnockoutObservable<string>;
 }
 
 declare interface KnockoutObservableDateStatic {
@@ -137,9 +89,4 @@ declare interface KnockoutObservableStatic {
 
 declare interface KnockoutUtils {
     setPrototypeOfOrExtend: (obj: KnockoutObservable<any>, proto: any) => KnockoutObservable<any>;
-}
-
-declare interface KnockoutSubscribableFunctions<T> {
-    init: (instance: KnockoutObservable<any>) => void;
-    extend: (requestedExtenders: any) => void;
 }

@@ -1,5 +1,6 @@
 import { ko } from '@app/providers';
 import { randomId } from '@app/common/id';
+import { init } from 'highlight-ts';
 
 let orgSet = ko.utils.setPrototypeOfOrExtend;
 
@@ -47,7 +48,7 @@ ko.utils.extend(ko, {
 
         return result.extend({ 'trackArrayChanges': true });
     },
-    observableString: function (initialValue: string | undefined | null) {
+    observableString: function (initialValue?: string) {
         return ko.observable(initialValue)
             .extend({
                 $type: {
@@ -56,7 +57,7 @@ ko.utils.extend(ko, {
                 }
             });
     },
-    observableDate: function (initialValue: Date | undefined | null) {
+    observableDate: function (initialValue?: Date) {
         return ko.observable(initialValue)
             .extend({
                 $type: {
@@ -67,7 +68,7 @@ ko.utils.extend(ko, {
                 }
             });
     },
-    observableTime: function (initialValue: number | undefined | null) {
+    observableTime: function (initialValue?: number) {
         return ko.observable(initialValue)
             .extend({
                 $icons: {
@@ -85,7 +86,7 @@ ko.utils.extend(ko, {
                 }
             });
     },
-    observableClock: function (initialValue: number | undefined | null) {
+    observableClock: function (initialValue?: number) {
         return ko.observable(initialValue)
             .extend({
                 $type: {
@@ -96,13 +97,19 @@ ko.utils.extend(ko, {
                 }
             });
     },
-    observableNumber: function (initialValue: number | undefined | null) {
+    observableNumber: function (initialValue?: number) {
         return ko.observable(initialValue)
             .extend({
                 $type: {
                     bind: 'number',
                     mask: Number
                 }
+            });
+    },
+    observableSelection: function (initialValue?: any) {
+        return ko.observable(initialValue)
+            .extend({
+                dataSources: []
             });
     }
 });

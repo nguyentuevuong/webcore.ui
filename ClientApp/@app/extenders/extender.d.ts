@@ -45,6 +45,7 @@ declare interface ValidationObservable<T> extends KnockoutObservable<T> {
     $width?: KnockoutObservable<number>;
     mask?: IMaskRawValue;
     $icons?: KnockoutObservable<{ before: string, after: string }>;
+    dataSources?: KnockoutObservableArray<any>;
 }
 
 declare interface KnockoutExtenders {

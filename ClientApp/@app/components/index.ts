@@ -1,9 +1,5 @@
-import '@app/components/label';
+import '@app/components/ui';
+import '@app/components/selection';
+
 import '@app/components/input';
-import '@app/components/tree';
-import '@app/components/tabs';
-import '@app/components/wizard';
-
 import '@app/components/barcode';
-
-//export * from '@app/components/selection';

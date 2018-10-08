@@ -118,17 +118,10 @@ export class InputComponent implements IView {
                 });
             });
 
-        let inputmask = new mask(input, {
-            bind: 'date',
-            mask: Date,
-            definitions: {
-                min: new Date(1900, 1, 1),
-                max: new Date(9999, 12, 31),
-                pattern: 'yyyy/mm/dd',
-            }
-        }).on('accept', (value: string, status: boolean) => {
+        let inputmask = new mask(input, ko.toJS(self.control.$type))
+            .on('accept', (value: string, status: boolean) => {
 
-        });
+            });
 
         self.control.mask = imask;
 

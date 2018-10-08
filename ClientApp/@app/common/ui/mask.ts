@@ -20,6 +20,8 @@ export class InputMask {
             self.options = options;
         }
 
+        debugger;
+
         element.addEventListener('focus', (evt: FocusEvent) => {
 
         });
