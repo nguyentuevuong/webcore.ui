@@ -10,7 +10,7 @@ ko.utils.extend(ko.extenders, {
             target.$icons(ko.toJS(icons));
         } else {
             ko.utils.extend(target, {
-                $icons: ko.observableOrg(ko.toJS(icons))
+                $icons: ko.observableOrig(ko.toJS(icons))
             });
         }
 

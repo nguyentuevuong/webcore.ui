@@ -3,7 +3,7 @@ import { _, ko } from '@app/providers';
 export function extend(target: ValidationObservable<any>) {
     // extend validations prop
     ko.utils.extend(target, {
-        hasError: target.hasError || ko.observableOrg(false),
+        hasError: target.hasError || ko.observableOrig(false),
         addError: target.addError || function (rule: string, message: string) {
             let $disable: boolean = ko.toJS(target.$disable) || (ko.toJS(target.$attr) || {})['disabled'];
 
@@ -39,8 +39,8 @@ export function extend(target: ValidationObservable<any>) {
         hasSubscriptionsForValidation: target.hasSubscriptionsForValidation || function (key: string) {
             return !!_.find(_.get(target, '_subscriptions.change'), (subc: { validate: string }) => _.isEqual(subc.validate, key));
         },
-        validationMessage: target.validationMessage || ko.observableOrg(''),
-        validationMessages: target.validationMessages || ko.observableOrg({}),
+        validationMessage: target.validationMessage || ko.observableOrig(''),
+        validationMessages: target.validationMessages || ko.observableOrig({}),
         addValidate: target.addValidate || function (key: string, subscribe: any) {
             target.removeValidate!(key);
 

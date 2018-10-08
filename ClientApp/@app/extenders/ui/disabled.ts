@@ -10,7 +10,7 @@ ko.utils.extend(ko.extenders, {
                 target.$disable(ko.toJS(disable));
             } else {
                 ko.utils.extend(target, {
-                    $disable: ko.observableOrg(ko.toJS(disable))
+                    $disable: ko.observableOrig(ko.toJS(disable))
                 });
             }
 

@@ -24,10 +24,24 @@ ko.utils.extend(ko.utils, {
 });
 
 ko.utils.extend(ko, {
-    observableOrg: function (initialValue?: any) {
+    observableOrig: function (initialValue?: any) {
         ko.observable.org = true;
 
         return ko.observable(initialValue);
+    },
+    observableArrayOrig: function (initialValues?: Array<any>) {
+        initialValues = initialValues || [];
+
+        if (typeof initialValues != 'object' || !('length' in initialValues))
+            throw new Error("The argument passed when initializing an observable array must be an array, or null, or undefined.");
+
+        ko.observable.org = true;
+        let result = ko.observable(initialValues);
+
+        ko.observable.org = true;
+        ko.utils.setPrototypeOfOrExtend(result, ko.observableArray['fn']);
+
+        return result.extend({ 'trackArrayChanges': true });
     },
     observableString: function (initialValue: string | undefined | null) {
         return ko.observable(initialValue)

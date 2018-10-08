@@ -10,7 +10,7 @@ ko.utils.extend(ko.extenders, {
             target.$multiline(ko.toJS(multiline));
         } else {
             ko.utils.extend(target, {
-                $multiline: ko.observableOrg(ko.toJS(multiline))
+                $multiline: ko.observableOrig(ko.toJS(multiline))
             });
         }
         

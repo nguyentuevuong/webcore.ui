@@ -10,7 +10,7 @@ ko.utils.extend(ko.extenders, {
             target.$constraint(ko.toJS(constraint));
         } else {
             ko.utils.extend(target, {
-                $constraint: ko.observableOrg(ko.toJS(constraint))
+                $constraint: ko.observableOrig(ko.toJS(constraint))
             });
         }
 

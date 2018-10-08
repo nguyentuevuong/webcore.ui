@@ -1,19 +1,16 @@
-import * as _ from 'lodash';
-import * as $ from 'jquery';
-import * as ko from 'knockout';
+// import external libs
+import 'popper.js';
+import 'bootstrap';
 
-// import external observable
-import '@app/common/ko/observable';
+import { _, $, ko } from '@app/providers';
 
 import * as crossroads from 'crossroads';
 import { createBrowserHistory } from 'history';
 
-import { i18n } from '@app/common/lang';
-import { Components } from '@app/common/ko';
+// import external observable
+import '@app/common/ko/observable';
 
-// import external libs
-import 'popper.js';
-import 'bootstrap';
+import { Components } from '@app/common/ko';
 
 // import components
 import '@app/common/ajax-ext';
@@ -51,7 +48,6 @@ ko.utils.extend(window, {
     _: _,
     $: $,
     ko: ko,
-    i18n: i18n,
     routes: Components,
     crossroads: crossroads
 });

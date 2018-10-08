@@ -7,7 +7,7 @@ ko.utils.extend(ko.extenders, {
 
         // init type object
         if (!ko.isObservable(target.$type)) {
-            target.$type = ko.observableOrg({});
+            target.$type = ko.observableOrig({});
         }
 
         let $type: { [key: string]: KnockoutObservable<any> } = ko.toJS(target.$type);
@@ -23,12 +23,12 @@ ko.utils.extend(ko.extenders, {
                 if (ko.isObservable($type[key])) {
                     $type[key](value);
                 } else {
-                    $type[key] = ko.observableOrg(ko.toJS(value));
+                    $type[key] = ko.observableOrig(ko.toJS(value));
                 }
             });
         }
 
-        target.$type($type);
+        target.$type!($type);
 
         return target;
     }

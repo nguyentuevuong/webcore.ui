@@ -10,7 +10,7 @@ ko.utils.extend(ko.extenders, {
             target.$name(ko.toJS(name));
         } else {
             ko.utils.extend(target, {
-                $name: ko.observableOrg(ko.toJS(name))
+                $name: ko.observableOrig(ko.toJS(name))
             });
         }
 

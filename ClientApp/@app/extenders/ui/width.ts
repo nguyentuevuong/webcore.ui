@@ -10,7 +10,7 @@ ko.utils.extend(ko.extenders, {
             target.$width(ko.toJS(width));
         } else {
             ko.utils.extend(target, {
-                $width: ko.observableOrg(ko.toJS(width))
+                $width: ko.observableOrig(ko.toJS(width))
             });
         }
 

@@ -1,3 +1,5 @@
+import { ko } from '@app/providers';
+
 export class InputMask {
     private options: IInputMaskOptions = { mask: String };
     private listeners: { [evt: string]: Array<Function> } = {};
@@ -10,6 +12,12 @@ export class InputMask {
         if (!!options) {
             self.options = options;
         }
+
+        ko.utils.registerEventHandler(element, 'keydown', (evt: KeyboardEvent) => {
+
+        });
+
+        ko.utils.triggerEvent(element, "");
 
         element.addEventListener('keydown', (evt: KeyboardEvent) => {
             if (!self.validator(element.value)) {
@@ -56,7 +64,7 @@ export class InputMask {
             options: IInputMaskOptions = self.options;
 
         if (options.mask instanceof RegExp) {
-            
+
         }
 
         return false;
