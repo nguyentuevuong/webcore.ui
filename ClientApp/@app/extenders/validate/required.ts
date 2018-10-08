@@ -38,7 +38,7 @@ ko.utils.extend(ko.extenders, {
                         }
                     }
                 } else {
-                    if (_.isNil(value)) {
+                    if (_.isString(value) ? _.isEmpty(value) : _.isNil(value)) {
                         target.addError!('required', "#field_required");
                     } else {
                         target.removeError!('required');

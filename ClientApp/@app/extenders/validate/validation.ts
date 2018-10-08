@@ -28,9 +28,9 @@ export function extend(target: ValidationObservable<any>) {
         checkError: target.checkError || function (value?: any) {
             let args = arguments;
 
-            if (!target.$disable) {
+            if (!ko.toJS(target.$disable)) {
                 _.each(_.get(target, "_subscriptions.change"), (subscribe: { validate: string, callback: (value: any) => void }) => {
-                    if (subscribe.validate) {
+                    if (!!ko.toJS(subscribe.validate)) {
                         subscribe.callback(_.size(args) ? value : ko.toJS(target));
                     }
                 });
