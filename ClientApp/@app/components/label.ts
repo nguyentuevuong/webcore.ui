@@ -4,17 +4,15 @@ import { component } from "@app/common/ko";
 @component({
     name: 'label',
     template: `
-    <label class="control-label control-label-block mb-1" data-bind="css: { 'control-label-danger': ko.toJS($vm.control.$require) }">
-        <!-- ko if: ko.toJS($vm.control.$name) -->
-        <span data-bind="i18n: $vm.control.$name"></span>
-        <!-- /ko -->
-        <!-- ko if: ko.toJS($vm.control.$constraint) -->
-        <span data-bind="i18n: $vm.control.$constraint"></span>
-        <!-- /ko -->
-    </label>`
+    <!-- ko if: ko.toJS($vm.control.$name) -->
+    <span data-bind="i18n: $vm.control.$name"></span>
+    <!-- ko if: ko.toJS($vm.control.$constraint) -->
+    <span data-bind="i18n: $vm.control.$constraint"></span>
+    <!-- /ko -->
+    <!-- /ko -->`
 })
 export class LabelComponent {
-    control: KnockoutObservable<string> = ko.observable('')
+    control: KnockoutObservable<string> = ko.observableOrig('')
         .extend({
             $name: '#noname',
             $constraint: '#noconstraint'
