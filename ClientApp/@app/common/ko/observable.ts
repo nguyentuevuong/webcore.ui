@@ -13,7 +13,11 @@ ko.utils.extend(ko.utils, {
             obj.extend({
                 $focus: false,
                 $enable: true,
-                required: false
+                required: false,
+                $attr: {
+                    id: randomId()
+                },
+                $columns: ['col-md-12', 'col-md-12']
             });
         }
 
@@ -46,10 +50,6 @@ ko.utils.extend(ko, {
     observableString: function (initialValue: string | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                $attr: {
-                    id: randomId()
-                }
-            }).extend({
                 $type: {
                     bind: 'string',
                     mask: String,
@@ -59,10 +59,6 @@ ko.utils.extend(ko, {
     observableDate: function (initialValue: Date | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                $attr: {
-                    id: randomId()
-                }
-            }).extend({
                 $type: {
                     bind: 'date',
                     mask: Date,
@@ -74,10 +70,6 @@ ko.utils.extend(ko, {
     observableTime: function (initialValue: number | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                $attr: {
-                    id: randomId()
-                }
-            }).extend({
                 $icons: {
                     after: 'fa fa-clock-o'
                 },
@@ -96,10 +88,6 @@ ko.utils.extend(ko, {
     observableClock: function (initialValue: number | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                $attr: {
-                    id: randomId()
-                }
-            }).extend({
                 $type: {
                     bind: 'clock',
                     mask: Number,
@@ -111,10 +99,6 @@ ko.utils.extend(ko, {
     observableNumber: function (initialValue: number | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                $attr: {
-                    id: randomId()
-                }
-            }).extend({
                 $type: {
                     bind: 'number',
                     mask: Number

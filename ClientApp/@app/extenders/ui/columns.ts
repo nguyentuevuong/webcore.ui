@@ -10,7 +10,7 @@ ko.utils.extend(ko.extenders, {
             target.$columns(ko.toJS(columns));
         } else {
             ko.utils.extend(target, {
-                $columns: ko.observableArray(ko.toJS(columns))
+                $columns: ko.observableArrayOrig(ko.toJS(columns))
             });
         }
 
