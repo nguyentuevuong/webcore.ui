@@ -32,9 +32,6 @@ ko.utils.extend(ko, {
     observableString: function (initialValue: string | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                $focus: false,
-                $enable: true,
-                required: false,
                 $attr: {
                     id: randomId()
                 }
@@ -48,9 +45,6 @@ ko.utils.extend(ko, {
     observableDate: function (initialValue: Date | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                $focus: false,
-                $enable: true,
-                required: false,
                 $attr: {
                     id: randomId()
                 }
@@ -66,9 +60,6 @@ ko.utils.extend(ko, {
     observableTime: function (initialValue: number | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                $focus: false,
-                $enable: true,
-                required: false,
                 $attr: {
                     id: randomId()
                 }
@@ -91,9 +82,6 @@ ko.utils.extend(ko, {
     observableClock: function (initialValue: number | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                $focus: false,
-                $enable: true,
-                required: false,
                 $attr: {
                     id: randomId()
                 }
@@ -109,9 +97,6 @@ ko.utils.extend(ko, {
     observableNumber: function (initialValue: number | undefined | null) {
         return ko.observable(initialValue)
             .extend({
-                $focus: false,
-                $enable: true,
-                required: false,
                 $attr: {
                     id: randomId()
                 }

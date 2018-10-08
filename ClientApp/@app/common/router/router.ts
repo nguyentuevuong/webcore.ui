@@ -15,7 +15,7 @@ import { lang, i18n } from '@app/common/lang';
 // Knockout that requires or even knows about this technique. It's just one of
 // many possible ways of setting up client-side routes.
 export class Router {
-    public currentRoute = ko.observable<IComponent>({});
+    public currentRoute = ko.observableOrg<IComponent>({});
     private disposeHistory: () => void;
     private clickEventListener: JQuery.EventHandlerBase<any, JQuery.Event<Document, any>>;
 

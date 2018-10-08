@@ -2,6 +2,9 @@ import * as _ from 'lodash';
 import * as $ from 'jquery';
 import * as ko from 'knockout';
 
+// import external observable
+import '@app/common/ko/observable';
+
 import * as crossroads from 'crossroads';
 import { createBrowserHistory } from 'history';
 
@@ -11,9 +14,6 @@ import { Components } from '@app/common/ko';
 // import external libs
 import 'popper.js';
 import 'bootstrap';
-
-// import external observable
-import '@app/common/ko/observable';
 
 // import components
 import '@app/common/ajax-ext';

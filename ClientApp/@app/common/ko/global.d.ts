@@ -1,4 +1,7 @@
 declare interface KnockoutStatic {
+    // Extender observable (has some extend)
+    observable: KnockoutObservableStatic;
+    // Original observable
     observableOrg: KnockoutObservableStatic;
     observableDate: KnockoutObservableDateStatic;
     observableTime: KnockoutObservableTimeStatic;
