@@ -5,7 +5,7 @@ import * as ko from 'knockout';
 import * as _ from 'lodash';
 
 @component({
-    url: '/sample/icons',
+    url: '/sample/uis/icons',
     icon: 'fa fa-address-book-o',
     title: 'Font icons',
     template: require('./index.html'),
