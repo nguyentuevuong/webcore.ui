@@ -2,9 +2,9 @@ import { $, ko } from '@app/providers';
 import { component } from '@app/common/ko';
 
 @component({
-    url: 'sample/wizard',
+    url: 'sample/navigate/wizard',
     name: 'sample-wizard',
-    title: 'Step wizard',
+    title: '#wizard',
     icon: 'fa fa-refresh',
     //styles: require('./style.scss'),
     template: require('./index.html')
