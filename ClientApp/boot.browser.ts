@@ -51,5 +51,5 @@ ko.utils.extend(window, {
     ko: ko,
     routes: Components,
     crossroads: crossroads,
-    menu: menu.hirachies
+    menu: menu
 });

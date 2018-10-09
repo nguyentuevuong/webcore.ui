@@ -69,15 +69,31 @@
     </button>
     <div class="navbar-collapse collapse" id="navbarColor01">
         <ul class="navbar-nav mr-auto">
-            <!-- ko foreach: { data: _.filter(routes, function(r) { return r.url.indexOf('sample') == -1; }), as: 'r'} -->
+            <!-- ko foreach: { data: routes, as: 'r'} -->
+            <!-- ko if: r.component -->
             <li class="nav-item text-nowrap">
-                <a class="nav-link" data-bind='
-                                attr: { href: $vm.router.link(r.url) },
-                                css: { active: $vm.router.currentRoute().component.name === r.name }'>
-                    <i data-bind="attr: { 'class': r.icon }"></i>
-                    <span data-bind="i18n: r.title"></span>
+                <a class="nav-link" data-bind='attr: { href: $vm.router.link(r.component.url) },
+                            css: { active: $vm.router.currentRoute().component.name === r.component.name }'>
+                    <i data-bind="attr: { 'class': r.component.icon }"></i>
+                    <span data-bind="i18n: r.component.title"></span>
                 </a>
             </li>
+            <!-- /ko -->
+            <!-- ko if: !r.component -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="javascript: void(0);" data-toggle="dropdown">
+                    <i class="fas fa-ellipsis-v"></i>
+                    <span data-bind="i18n: r.name"></span>
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown" data-bind="foreach: { data: r.childs, as: 'c' }">
+                    <a class="dropdown-item" data-bind='attr: { href: $vm.router.link(c.component.url) },
+                            css: { active: $vm.router.currentRoute().component.name === c.component.name }'>
+                        <i data-bind="attr: { 'class': c.component.icon }"></i>
+                        <span data-bind="i18n: c.component.title"></span>
+                    </a>
+                </div>
+            </li>
+            <!-- /ko -->
             <!-- /ko -->
             <li class="nav-item text-nowrap">
                 <a class="nav-link" href="/no-page/1">

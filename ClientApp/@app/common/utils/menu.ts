@@ -1,40 +1,77 @@
 import { _, ko } from '@app/providers';
+import { random } from '@app/common/id';
 import { Components, IComponent } from '@app/common/ko';
 
+export interface IMenu {
+    name: string;
+    parent?: IMenu;
+    childs: Array<IMenu>;
+    component?: IComponent;
+}
+
 export class Menu {
-    public static get hirachies() {
+    public static get all(): Array<IMenu> {
         let menus: Array<IMenu> = _(Components).filter(f => !_.isUndefined(f.url)).map((m: IComponent, i: number) => ({
-            index: i + 1,
-            url: m.url || '',
-            name: m.name || '',
-            icon: m.icon || '',
-            title: m.title || '',
-            childs: []
-        })).value();
+            name: (m.url || '').split('/').filter(r => !!r && !r.match(/:\w+:/)).join('|'),
+            parent: undefined,
+            childs: [],
+            component: m
+        })).value(),
+            names: { [key: string]: Array<Array<string>> } = _(menus).map(m => m.name.split('|')).groupBy(m => m[0]).value(),
+            keys: Array<string> = _.keys(names);
 
-        // create group menu
-        _.each(menus, (m: IMenu) => {
-            let gurl = m.url.split('/');
+        _(names).keys().each(k => {
+            if (_.size(names[k]) > 1) {
+                let root = {
+                    name: k,
+                    childs: _.filter(menus, m => m.name == random.id)
+                }, groups = _(names[k]).map(m => m).groupBy(m => m[1]).value();
 
-            if (_.size(gurl) >= 2) {
-                _(gurl).take(2).each(m => {
-                    //if()
+                menus.push(root);
+
+                _(groups).keys().each(m => {
+                    if (_.size(groups[m]) > 1) {
+                        let name = [k, m].join('|'),
+                            leaps = _.filter(menus, (u: IMenu) => u.name.indexOf(name) == 0),
+                            child = {
+                                name: name,
+                                parent: root,
+                                childs: leaps
+                            };
+
+                        menus.push(child);
+
+                        _.each(leaps, l => l.parent = child);
+                    }
+                });
+
+                _(menus).filter((u: IMenu) => (u.parent == root) || (!u.parent && u.name != k && u.name.indexOf(k) == 0)).each((c: IMenu) => {
+                    c.parent = root;
+                    root.childs.push(c);
                 });
             }
         });
 
-        return _.filter(menus, m => _.isNil(m.parent));
+        _.each(menus, (m: IMenu) => {
+            if (!m.parent) {
+                delete m.parent;
+            }
+
+            if (!_.size(m.childs)) {
+                delete m.childs;
+            }
+        });
+
+        return menus.filter(m => !m.parent);
+    }
+
+    public static get top(): Array<IMenu> {
+        return Menu.all.filter(m => m.name != 'sample');
+    }
+
+    public static get sample(): Array<IMenu> {
+        return Menu.all.filter(m => m.name == 'sample')[0].childs;
     }
 }
 
 export { Menu as menu }
-
-interface IMenu {
-    index: number;
-    url: string;
-    name: string;
-    icon: string;
-    title: string;
-    parent?: IMenu;
-    childs?: Array<IMenu>;
-}

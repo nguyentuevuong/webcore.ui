@@ -4,7 +4,8 @@ import * as ko from 'knockout';
 
 import { component } from '@app/common/ko';
 import { Router } from '@app/common/router';
-import { IComponent, Components } from '@app/common/ko';
+
+import { menu, IMenu } from '@app/common/utils/menu';
 
 @component({
     name: 'nav-menu',
@@ -13,7 +14,7 @@ import { IComponent, Components } from '@app/common/ko';
 })
 export class NavMenuViewModel {
     public router: Router;
-    public routes: IComponent[] = Components;
+    public routes: IMenu[] = menu.sample;
 
     public keyword: KnockoutObservable<string> = ko.observable('');
 
@@ -26,11 +27,11 @@ export class NavMenuViewModel {
 
     public filterRoute() {
         let self = this,
-            routes: Array<IComponent> = ko.toJS(self.routes),
+            routes: Array<IMenu> = ko.toJS(self.routes),
             keyword: string = _.toLower(ko.toJS(self.keyword));
 
         return _.filter(routes, r => {
-            return _.toLower(r.title).indexOf(keyword) > -1 && (r.url || '').indexOf('sample') > -1;
+            return true; //_.toLower(r.title).indexOf(keyword) > -1 && (r.url || '').indexOf('sample') > -1;
         });
     }
 

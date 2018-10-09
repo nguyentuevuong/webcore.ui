@@ -4,7 +4,7 @@ import * as ko from 'knockout';
 import { component } from '@app/common/ko';
 
 @component({
-    url: '/update-employee-info',
+    url: '/employee/update-info',
     title: '#cps001_title',
     icon: 'fa fa-globe',
     styles: require('./style.css'),
