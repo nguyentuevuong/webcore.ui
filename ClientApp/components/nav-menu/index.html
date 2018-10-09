@@ -21,7 +21,7 @@
                         attr: { href: $vm.router.link(r.component.url) },
                         css: { active: $vm.router.currentRoute().component.name === r.component.name }'>
                     <i data-bind="attr: { 'class': r.component.icon }"></i>
-                    <span data-bind="text: r.component.title"></span>
+                    <span data-bind="i18n: r.component.title"></span>
                 </a>
                 <!-- /ko -->
                 <!-- ko if: !r.component -->
@@ -36,7 +36,7 @@
                         <a class="nav-link" data-bind='attr: { href: $vm.router.link(c.component.url) },
                                     css: { active: $vm.router.currentRoute().component.name === c.component.name }'>
                             <i data-bind="attr: { 'class': c.component.icon }"></i>
-                            <span data-bind="text: c.component.title"></span>
+                            <span data-bind="i18n: c.component.title"></span>
                         </a>
                     </li>
                 </ul>
