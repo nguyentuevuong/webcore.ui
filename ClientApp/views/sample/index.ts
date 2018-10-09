@@ -19,3 +19,4 @@ import './sortable';
 
 import './barcode';
 import '@views/sample/controls';
+import '@views/sample/inputs';

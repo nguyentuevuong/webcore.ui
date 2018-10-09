@@ -8,7 +8,15 @@ import { component } from '@app/common/ko';
     title: 'Dropdown list',
     icon: 'fa fa-toggle-down',
     styles: require('./dropdown.css'),
-    template: require('./dropdown.html')
+    template: require('./dropdown.html'),
+    resources: {
+        'en': {
+            'sample|selection': 'Selections'
+        },
+        'vi': {
+            'sample|selection': 'Chọn giá trị'
+        }
+    }
 })
 class SampleDropdownViewModel {
     employee: KnockoutObservable<IEmployee | undefined> = ko.observable(undefined);
