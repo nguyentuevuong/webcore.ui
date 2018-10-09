@@ -1,10 +1,12 @@
 {
     "en": {
         "cps001_title": "Update employee info",
-        "save_info": "Save info"
+        "save_info": "Save info",
+        "employee": "Employees"
     },
     "vi": {
         "cps001_title": "Cập nhật thông tin nhân viên",
-        "save_info": "Lưu thông tin"
+        "save_info": "Lưu thông tin",
+        "employee": "Nhân viên"
     }
 }

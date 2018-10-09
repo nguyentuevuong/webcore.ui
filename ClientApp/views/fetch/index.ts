@@ -17,7 +17,15 @@ interface IEmployee {
     url: 'ajax/fetch-data',
     icon: 'fa fa-refresh',
     name: 'fetch-data',
-    template: require('./index.html')
+    template: require('./index.html'),
+    resources: {
+        'en': {
+            'fetch-data': 'Fetch data'
+        },
+        'vi': {
+            'fetch-data': 'Tải dữ liệu'
+        }
+    }
 })
 export class FetchDataViewModel {
     public forecasts = ko.observableArray<IEmployee>();
