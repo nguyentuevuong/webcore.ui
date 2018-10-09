@@ -3,7 +3,7 @@ import * as $ from 'jquery';
 import * as ko from 'knockout';
 
 import { i18n } from '@app/common/lang';
-import { randomId } from '@app/common/id';
+import { random, randomId } from '@app/common/id';
 import { Components } from '@app/common/ko';
 
 interface IDecoratorComponent {
@@ -35,7 +35,7 @@ interface ElementRef {
  **/
 export function component(params: IDecoratorComponent) {
     return function (constructor: ComponentConstructor) {
-        let id = randomId();
+        let id = random.id;
 
         // merge resources
         _.merge(i18n, params.resources);

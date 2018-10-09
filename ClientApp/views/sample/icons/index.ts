@@ -1,4 +1,4 @@
-import { component } from "@app/common/ko";
+import { component, IView } from "@app/common/ko";
 
 import * as data from './data';
 import * as ko from 'knockout';
@@ -30,7 +30,7 @@ import * as _ from 'lodash';
         text-overflow: ellipsis;
     }`
 })
-export class IconsViewModel {
+export class IconsViewModel implements IView {
     public keyword: KnockoutObservable<string> = ko.observable('');
 
     public filtered: KnockoutObservableArray<string> = ko.observableArray([]).extend({ deferred: true });
@@ -41,6 +41,11 @@ export class IconsViewModel {
 
             this.filtered(_(_data || []).filter(f => f.indexOf(k) > -1).value());
         });
-        this.keyword('fa');
+    }
+
+    afterRender(): void {
+        setTimeout(() => {
+            this.keyword('fa');
+        }, 200);
     }
 }

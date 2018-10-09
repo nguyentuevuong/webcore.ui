@@ -1,29 +1,26 @@
-<div class="animated fadeInRight">
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-2">
-                <label class="control-label">
-                    <span>Search</span>
-                    <span data-bind="text: 'filter by class name: ' + ko.toJS(filtered).length"></span>
-                </label></div>
-            <div class="col-md-10">
-                <div class="input-group">
-                    <input class="form-control" data-bind="value: keyword, valueUpdate: ['afterkeydown', 'input']"/>
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" data-bind="click: function() { keyword.valueHasMutated() }"><i
-                                class="fa fa-search"></i></button>
-                    </div>
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-2">
+            <label class="control-label">
+                <span>Search</span>
+                <span data-bind="text: 'filter by class name: ' + ko.toJS(filtered).length"></span>
+            </label></div>
+        <div class="col-md-10">
+            <div class="input-group">
+                <input class="form-control" data-bind="value: keyword, valueUpdate: ['afterkeydown', 'input']" />
+                <div class="input-group-append">
+                    <button class="btn btn-primary" data-bind="click: function() { keyword.valueHasMutated() }"><i
+                            class="fa fa-search"></i></button>
                 </div>
             </div>
         </div>
     </div>
-    
-    
-    <div class="row"
-         data-bind="foreach: {data: filtered, as: 'icon' }">
-        <div class="col-md-3 icon">
-            <i data-bind="attr: { 'class': icon }"></i>
-            <span data-bind="text: icon"></span>
-        </div>
+</div>
+
+
+<div class="row" data-bind="foreach: {data: filtered, as: 'icon' }">
+    <div class="col-md-3 icon">
+        <i data-bind="attr: { 'class': icon }"></i>
+        <span data-bind="text: icon"></span>
     </div>
 </div>

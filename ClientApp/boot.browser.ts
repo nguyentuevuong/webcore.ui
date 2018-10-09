@@ -11,6 +11,7 @@ import { createBrowserHistory } from 'history';
 import '@app/common/ko/observable';
 
 import { Components } from '@app/common/ko';
+import { menu } from '@app/common/utils/menu';
 
 // import components
 import '@app/common/ajax-ext';
@@ -49,5 +50,6 @@ ko.utils.extend(window, {
     $: $,
     ko: ko,
     routes: Components,
-    crossroads: crossroads
+    crossroads: crossroads,
+    menu: menu.hirachies
 });
