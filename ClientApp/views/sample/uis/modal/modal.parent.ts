@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { component } from '@app/common/ko';
 
 @component({
-    url: 'sample/modal',
+    url: 'sample/navigate/modal',
     name: 'modal-sample',
     icon: 'fa fa-window-maximize',
     title: '#modal',
