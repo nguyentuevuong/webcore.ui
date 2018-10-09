@@ -6,7 +6,15 @@ import { component } from '@app/common/ko';
     url: 'sample/barcode',
     title: '#barcode',
     icon: 'fa fa-css3',
-    template: require('./index.html')
+    template: require('./index.html'),
+    resources: {
+        'en': {
+            'barcode': 'Barcode'
+        },
+        'vi': {
+            'barcode': 'Mã vạch'
+        }
+    }
 })
 export class BarCodeSampleViewModel {
     barcode: KnockoutObservable<string> = ko.observable('');

@@ -1,12 +1,12 @@
-import './home';
-import './text-editor/editor';
-import './date-picker/date-picker';
+import '@views/sample/home';
 
-import './employee/employee';
-
-import './barcode';
-
+// group view by category
 import '@views/sample/uis';
 import '@views/sample/inputs';
 import '@views/sample/controls';
 import '@views/sample/selections';
+
+
+import './barcode';
+import './employee/employee';
+import './date-picker/date-picker';
