@@ -4,7 +4,7 @@ import { History } from 'history';
 import * as crossroads from 'crossroads';
 
 import { IComponent, Components } from '@app/common/ko';
-import { lang, i18n } from '@app/common/lang';
+import { lang, i18n, getText } from '@app/common/lang';
 
 // This module configures crossroads.js, a routing library. If you prefer, you
 // can use any other routing library (or none at all) as Knockout is designed to
@@ -102,7 +102,7 @@ export class Router {
                     title: HTMLElement | null = document.querySelector('head>title');
 
                 // change title of document
-                title!.innerText = route!.component!.title ? i18n[_lang][route!.component!.title!.replace('#', '')] : (route!.url || '');
+                title!.innerText = _.has(route, 'component.title') ? getText(route.component!.title) : (route.url || '');
             }
         });
     }
