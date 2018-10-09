@@ -1,6 +1,6 @@
 import { _, ko } from '@app/providers';
 import { component, IView } from "@app/common/ko";
-import { randomId } from '@app/common/id';
+import { randomId, random } from '@app/common/id';
 import { mask } from '@app/common/ui/mask';
 
 var IMask = require('imask');
@@ -86,7 +86,7 @@ export class InputComponent implements IView {
         if (!(ko.toJS(self.control.$attr) || {}).id) {
             self.control.extend({
                 $attr: {
-                    id: randomId()
+                    id: random.id
                 }
             })
         }

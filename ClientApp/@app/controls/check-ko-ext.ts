@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 
 import * as cm from './_ctrl-cm';
 import { handler } from '@app/common/ko';
-import { randomId } from '@app/common/id';
+import { randomId, random } from '@app/common/id';
 
 @handler({
     virtual: true,
@@ -18,7 +18,7 @@ export class CheckboxBindingHandler implements KnockoutBindingHandler {
 
         $element
             .addClass('row')
-            .trigger(cm.SAVE_DATA, [cm.NTS_ID, randomId()]);
+            .trigger(cm.SAVE_DATA, [cm.NTS_ID, random.id]);
 
         if (!$element.parent().hasClass('form-group')) {
             $element.addClass('form-group');
@@ -111,7 +111,7 @@ export class CheckboxBindingHandler implements KnockoutBindingHandler {
         }
 
         _.each(options, option => {
-            let id = randomId(),
+            let id = random.id,
                 $fc = $('<div>', {
                     'class': `${configs.mode == 'button' ? '' : 'form-check'} ${configs.mode != 'button' && configs.inline ? 'form-check-inline checkbox-inline' : ''}`
                 }),

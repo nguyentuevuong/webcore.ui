@@ -1,7 +1,7 @@
 import { _, ko } from '@app/providers';
 import { component, IView } from "@app/common/ko";
 import { BarCode } from '@app/common/barcode';
-import { randomId } from '@app/common/id';
+import { random, randomId } from '@app/common/id';
 
 import { BrowserQRCodeReader, Result } from '@zxing/library';
 
@@ -35,9 +35,9 @@ export class InputComponent implements IView {
         let self = this;
 
         ko.utils.extend(self.ids, {
-            video: randomId(),
-            canvas: randomId(),
-            canvasg: randomId()
+            video: random.id,
+            canvas: random.id,
+            canvasg: random.id
         });
 
         if (params.control) {

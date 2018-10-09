@@ -1,5 +1,5 @@
 import { ko } from '@app/providers';
-import { randomId } from '@app/common/id';
+import { random, randomId } from '@app/common/id';
 import { init } from 'highlight-ts';
 
 let orgSet = ko.utils.setPrototypeOfOrExtend;
@@ -16,7 +16,7 @@ ko.utils.extend(ko.utils, {
                 $enable: true,
                 required: false,
                 $attr: {
-                    id: randomId()
+                    id: random.id
                 },
                 $columns: ['col-md-12', 'col-md-12']
             });
