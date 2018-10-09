@@ -7,7 +7,7 @@ import { component } from '@app/common/ko';
     url: 'sample/input/text',
     icon: 'fa fa-cogs',
     title: 'String input',
-    template: ''
+    template: require('./index.html'),
 })
 export class SampleInputTextViewModel {
 

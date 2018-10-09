@@ -7,7 +7,7 @@ import { component } from '@app/common/ko';
     url: 'sample/input/clock',
     icon: 'fa fa-cogs',
     title: 'Clock input',
-    template: '',
+    template: require('./index.html'),
     resources: {
         'en': {
             'sample|input': 'Input controls'

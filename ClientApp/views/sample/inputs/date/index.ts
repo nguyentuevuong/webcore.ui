@@ -7,7 +7,7 @@ import { component } from '@app/common/ko';
     url: 'sample/input/date',
     icon: 'fa fa-cogs',
     title: 'Date input',
-    template: ''
+    template: require('./index.html'),
 })
 export class SampleInputDateViewModel {
 
