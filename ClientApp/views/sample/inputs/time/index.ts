@@ -6,7 +6,7 @@ import { component } from '@app/common/ko';
 @component({
     url: 'sample/input/time',
     icon: 'fa fa-cogs',
-    title: 'Index page',
+    title: 'Time input',
     template: ''
 })
 export class SampleInputTimeViewModel {

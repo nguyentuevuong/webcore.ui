@@ -7,14 +7,14 @@ import { component } from '@app/common/ko';
     url: 'sample/selection/dropdown',
     title: 'Dropdown list',
     icon: 'fa fa-toggle-down',
-    styles: require('./dropdown.css'),
-    template: require('./dropdown.html'),
+    styles: require('./style.css'),
+    template: require('./index.html'),
     resources: {
         'en': {
             'sample|selection': 'Selections'
         },
         'vi': {
-            'sample|selection': 'Chọn giá trị'
+            'sample|selection': 'Điều khiển dạng chọn'
         }
     }
 })

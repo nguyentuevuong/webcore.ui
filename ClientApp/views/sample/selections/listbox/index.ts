@@ -6,8 +6,8 @@ import { component } from '@app/common/ko';
     url: 'sample/selection/listbox',
     title: 'Listbox',
     icon: 'fa fa-list',
-    styles: require('./listbox.css'),
-    template: require('./listbox.html')
+    styles: require('./style.css'),
+    template: require('./index.html')
 })
 class SampleListboxViewModel {
     employee: KnockoutObservable<Employee> = ko.observable(new Employee());

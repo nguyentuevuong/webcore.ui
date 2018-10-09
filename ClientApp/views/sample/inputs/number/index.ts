@@ -6,7 +6,7 @@ import { component } from '@app/common/ko';
 @component({
     url: 'sample/input/number',
     icon: 'fa fa-cogs',
-    title: 'Index page',
+    title: 'Number input',
     template: ''
 })
 export class SampleInputNumberViewModel {

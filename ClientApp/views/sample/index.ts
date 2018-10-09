@@ -1,4 +1,3 @@
-
 import './home';
 import './icons';
 import './text-editor/editor';
@@ -10,13 +9,13 @@ import './modal/modal.childrent.2';
 
 import './employee/employee';
 
-import './selections/dropdown/dropdown';
-import './selections/listbox/listbox';
 import './color';
 import './wizard';
 import './tree';
 import './sortable';
 
 import './barcode';
-import '@views/sample/controls';
+
 import '@views/sample/inputs';
+import '@views/sample/controls';
+import '@views/sample/selections';
