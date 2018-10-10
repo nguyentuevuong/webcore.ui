@@ -1,9 +1,11 @@
 {
     "en": {
-        "language": "Language"
+        "language": "Language",
+        "jp":  "Japan"
     },
     "vi": {
-        "language": "Ngôn ngữ"
+        "language": "Ngôn ngữ",
+        "jp":  "Japan"
     },
     "jp": {
         "language": "言語",
