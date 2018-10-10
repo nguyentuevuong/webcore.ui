@@ -242,8 +242,12 @@ $enable-shadows: false !default;
         .menu-group {
             display: inline-block;
             &:not(:first-child) {
-                padding-left: 10px;
+                padding-left: 1rem;
             }
+        }
+        .dropdown-item {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
         }
     }
 }
