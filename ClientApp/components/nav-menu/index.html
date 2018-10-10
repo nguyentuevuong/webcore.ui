@@ -26,9 +26,12 @@
                 <!-- /ko -->
                 <!-- ko if: !r.component -->
                 <!-- ko init: { $expand: ko.observable(false) } -->
-                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-2 text-muted" data-bind="click: function() { $expand(!$expand()) }.bind($vm), timeClick: -1">
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 pt-2 pb-1 text-muted" data-bind="click: function() { $expand(!$expand()) }.bind($vm), timeClick: -1">
                     <span data-bind="i18n: r.name"></span>
-                    <i class="fa fa-plus-circle"></i>
+                    <i class="fa" data-bind="css: {
+                            'fa-plus-circle': !ko.toJS($expand),
+                            'fa-minus-circle': ko.toJS($expand)
+                        }"></i>
                 </h6>
                 <!-- ko if: $expand() -->
                 <ul class="nav flex-column nav-sample" data-bind="foreach: { data: r.childs, as: 'c'}">
