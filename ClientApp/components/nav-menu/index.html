@@ -33,8 +33,7 @@
                 <!-- ko if: $expand() -->
                 <ul class="nav flex-column nav-sample" data-bind="foreach: { data: r.childs, as: 'c'}">
                     <li class="nav-item">
-                        <a class="nav-link" data-bind='attr: { href: $vm.router.link(c.component.url) },
-                                    css: { active: $vm.router.currentRoute().component.name === c.component.name }'>
+                        <a class="nav-link" data-bind='attr: { href: $vm.router.link(c.component.url) }, css: { active: $vm.router.currentRoute().component.name === c.component.name }'>
                             <i data-bind="attr: { 'class': c.component.icon }"></i>
                             <span data-bind="i18n: c.component.title"></span>
                         </a>
