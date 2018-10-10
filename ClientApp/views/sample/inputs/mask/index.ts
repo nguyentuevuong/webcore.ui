@@ -2,7 +2,7 @@ import { component } from '@app/common/ko';
 import * as ko from 'knockout';
 
 @component({
-    url: 'sample/controls/mask',
+    url: 'sample/input/mask',
     name: 'controls-mask',
     title: 'Mask bindings',
     icon: 'fa fa-thumbs-o-up',

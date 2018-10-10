@@ -5,7 +5,6 @@ import '@views/sample/documents';
 
 import '@views/sample/uis';
 import '@views/sample/inputs';
-import '@views/sample/controls';
 import '@views/sample/selections';
 
 

@@ -1,1 +1,0 @@
-import '@views/sample/controls/mask';
