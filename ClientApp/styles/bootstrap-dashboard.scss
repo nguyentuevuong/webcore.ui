@@ -241,6 +241,9 @@ $enable-shadows: false !default;
         white-space: nowrap;
         .menu-group {
             display: inline-block;
+            &:not(:first-child) {
+                padding-left: 10px;
+            }
         }
     }
 }
