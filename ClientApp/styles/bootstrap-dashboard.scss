@@ -681,7 +681,7 @@ input[type="checkbox"],
     &-transparent {
         .input-group-prepend,
         .input-group-append {
-            z-index: 9;
+            z-index: -1;
             position: absolute;
             border-color: transparent;
             background-color: transparent;
@@ -694,12 +694,14 @@ input[type="checkbox"],
             left: 0;
             +.form-control {
                 padding-left: 32px;
+                background-color: transparent;
             }
         }
         .input-group-append {
             right: 0;
             +.form-control {
                 padding-right: 32px;
+                background-color: transparent;
             }
         }
     }
