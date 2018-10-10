@@ -4,8 +4,8 @@ import * as ko from 'knockout';
 @component({
     url: 'sample/input/mask',
     name: 'controls-mask',
-    title: 'Mask bindings',
-    icon: 'fa fa-thumbs-o-up',
+    title: '#mask',
+    icon: 'fa fa-hashtag',
     template: require('./index.html')
 })
 export class SampleMaskBindingViewModel {
