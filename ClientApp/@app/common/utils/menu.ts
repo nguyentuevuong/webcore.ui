@@ -3,6 +3,7 @@ import { random } from '@app/common/id';
 import { Components, IComponent } from '@app/common/ko';
 
 export interface IMenu {
+    id: number;
     name: string;
     parent?: IMenu;
     childs: Array<IMenu>;
@@ -12,6 +13,7 @@ export interface IMenu {
 export class Menu {
     public static get all(): Array<IMenu> {
         let menus: Array<IMenu> = _(Components).filter(f => !_.isUndefined(f.url)).map((m: IComponent, i: number) => ({
+            id: i + 1,
             name: (m.url || '').split('/').filter(r => !!r && !r.match(/:\w+:/)).join('|'),
             parent: undefined,
             childs: [],
@@ -20,20 +22,22 @@ export class Menu {
             names: { [key: string]: Array<Array<string>> } = _(menus).map(m => m.name.split('|')).groupBy(m => m[0]).value(),
             keys: Array<string> = _.keys(names);
 
-        _(names).keys().each(k => {
+        _(names).keys().each((k: string, i: number) => {
             if (_.size(names[k]) > 1) {
                 let root = {
+                    id: (i + 1),
                     name: k,
                     childs: _.filter(menus, m => m.name == random.id)
                 }, groups = _(names[k]).map(m => m).groupBy(m => m[1]).value();
 
                 menus.push(root);
 
-                _(groups).keys().each(m => {
+                _(groups).keys().each((m: string, j: number) => {
                     if (_.size(groups[m]) > 1) {
                         let name = [k, m].join('|'),
                             leaps = _.filter(menus, (u: IMenu) => u.name.indexOf(name) == 0),
                             child = {
+                                id: (i + 1) * 10 + j,
                                 name: name,
                                 parent: root,
                                 childs: leaps

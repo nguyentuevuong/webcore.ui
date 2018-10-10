@@ -8,6 +8,6 @@ import '@views/sample/inputs';
 import '@views/sample/selections';
 
 
-import './barcode';
+/*import './barcode';
 import './employee/employee';
-import './date-picker/date-picker';
+import './date-picker/date-picker';*/
