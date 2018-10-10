@@ -2,22 +2,14 @@ import { _, ko } from '@app/providers';
 import { component } from '@app/common/ko';
 
 @component({
-    url: 'sample/sortable/simple',
-    name: 'sample-sortable-simple',
-    title: 'Sortable control (simple)',
+    url: 'sample/sortable/draggable',
+    name: 'sample-sortable-draggable',
+    title: 'Sortable control (draggable)',
     icon: 'fa fa-refresh',
     styles: require('./style.css'),
-    template: require('./index.html'),
-    resources: {
-        'en': {
-            'sample|sortable': 'Sortables'
-        },
-        'vi': {
-            'sample|sortable': 'Điều khiển sắp xếp'            
-        }
-    }
+    template: require('./index.html')
 })
-export class SampleSortableSimpleViewModel {
+export class SampleSortableDraggableViewModel {
     highPriorityTasks: KnockoutObservableArray<Task> = ko.observableArray([
         new Task("Get dog food"),
         new Task("Mow lawn"),
