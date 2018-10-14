@@ -1,3 +1,5 @@
+import '@app/controls/ui/errors'
+;
 import '@app/controls/ui/tabs';
 import '@app/controls/ui/label';
 import '@app/controls/ui/modal';

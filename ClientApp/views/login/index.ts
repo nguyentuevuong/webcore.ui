@@ -25,7 +25,8 @@ export class LoginViewModel implements IView, IDispose {
                 //$width: 200,
                 $columns: [
                     'col-md-4', 'col-md-8'
-                ]
+                ],
+                $disable: true
             })
             .extend({
                 required: true,

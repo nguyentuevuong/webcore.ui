@@ -54,7 +54,9 @@ var IMask = require('imask');
                                     attr: ko.toJS($vm.control.$attr),
                                     enable: ko.toJS($vm.control.$enable) != false"></textarea>
                 <!-- /ko -->
+                <!-- ko ifnot: ko.toJS(ko.errors.showDialog) -->
                 <div class="invalid-feedback" data-bind="i18n: $vm.control.validationMessage, params: { name: $vm.control.$name }"></div>
+                <!-- /ko -->
             </div>
         </div>
         <!-- /ko -->`,

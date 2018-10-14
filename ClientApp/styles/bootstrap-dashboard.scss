@@ -679,9 +679,9 @@ input[type="checkbox"],
 
 .input-group {
     &-transparent {
+        background-color: #fff;
         .input-group-prepend,
         .input-group-append {
-            z-index: -1;
             position: absolute;
             border-color: transparent;
             background-color: transparent;
@@ -689,19 +689,23 @@ input[type="checkbox"],
                 border-color: transparent;
                 background-color: transparent;
             }
+            +.form-control {
+                background-color: transparent;
+                &:disabled {
+                    background-color: rgba(240, 240, 240, 0.75);
+                }
+            }
         }
         .input-group-prepend {
             left: 0;
             +.form-control {
                 padding-left: 32px;
-                background-color: transparent;
             }
         }
         .input-group-append {
             right: 0;
             +.form-control {
                 padding-right: 32px;
-                background-color: transparent;
             }
         }
     }
@@ -1172,6 +1176,25 @@ pre {
             top: 0;
             left: -15px;
             position: absolute;
+        }
+    }
+    /* Errors btn */
+    &-errors {
+        display: none;
+        position: fixed;
+        top: 68px;
+        left: 15px;
+        border-radius: 3px;
+        &.show {
+            color: #fff;
+            display: block;
+            z-index: 99999;
+            background-color: #ff291d;
+            border-color: darken(#ff291d, 25%);
+            &:focus,
+            &:hover {
+                text-decoration: none;
+            }
         }
     }
 }

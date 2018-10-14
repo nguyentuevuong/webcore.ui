@@ -30,7 +30,7 @@ export function extend(target: ValidationObservable<any>) {
 
             if (!ko.toJS(target.$disable)) {
                 _.each(_.get(target, "_subscriptions.change"), (subscribe: { validate: string, callback: (value: any) => void }) => {
-                    if (!!ko.toJS(subscribe.validate)) {
+                    if (subscribe && !!ko.toJS(subscribe.validate)) {
                         subscribe.callback(_.size(args) ? value : ko.toJS(target));
                     }
                 });
@@ -67,9 +67,15 @@ export function extend(target: ValidationObservable<any>) {
             if (_.isEmpty(msgs)) {
                 target.hasError!(false);
                 target.validationMessage!('');
+
+                // remove observable in errors list
+                ko.errors.remove(target);
             } else {
                 target.hasError!(true);
                 target.validationMessage!(_.first(_.values(msgs)) || '');
+
+                // add observable to errors list
+                ko.errors.push(target);
             }
         });
     }

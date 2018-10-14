@@ -1,8 +1,13 @@
 import { ko } from '@app/providers';
 import { random, randomId } from '@app/common/id';
-import { init } from 'highlight-ts';
 
 let orgSet = ko.utils.setPrototypeOfOrExtend;
+
+ko.utils.extend(ko.utils, {
+    has: (obj: any, prop: string) => {
+        return obj != null && Object.prototype.hasOwnProperty.call(obj, prop);
+    }
+})
 
 // default extender for all observable
 ko.utils.extend(ko.utils, {
@@ -19,6 +24,18 @@ ko.utils.extend(ko.utils, {
                     id: random.id
                 },
                 $columns: ['col-md-12', 'col-md-12']
+            });
+        }
+
+        if (!ko.utils.has(obj, 'beforeValue')) {
+            let origVwm = obj.valueWillMutate;
+
+            ko.utils.extend(obj, {
+                valueWillMutate: () => {
+                    obj.beforeValue = ko.toJS(obj);
+                    
+                    origVwm!.apply(obj);
+                }
             });
         }
 
@@ -106,10 +123,65 @@ ko.utils.extend(ko, {
                 }
             });
     },
+    observableBoolean: function (initialValue?: boolean) {
+        return ko.observable(initialValue);
+    },
     observableSelection: function (initialValue?: any) {
         return ko.observable(initialValue)
             .extend({
                 dataSources: []
             });
     }
+});
+
+// extend fn from origObservable
+ko.utils.extend(ko.observableArrayOrig, {
+    fn: ko.observableArray['fn']
+});
+
+// context for all primitive errors
+ko.utils.extend(ko, {
+    errors: ko.observableArrayOrig([]),
+    clearError: () => {
+        ko.errors.removeAll.apply(ko.errors);
+    },
+    routes: ko.observableArrayOrig([])
+});
+
+// override push, remove and removeAll method;
+let orgiP = ko.errors.push,
+    origR = ko.errors.remove,
+    origRA = ko.errors.removeAll;
+
+ko.utils.extend(ko.errors, {
+    push: (b: any) => {
+        let items = ko.unwrap(ko.errors);
+
+        if (items.indexOf(b) == -1) {
+            orgiP.apply(ko.errors, [b]);
+        }
+    },
+    remove: (b: any) => {
+        let items = origR.apply(ko.errors, [b]);
+
+        ko.utils.arrayForEach(items, (item: KnockoutObservable<any>) => {
+            if (item.clearError) {
+                item.clearError.apply(item);
+            }
+        });
+
+        return items;
+    },
+    removeAll: (b: any) => {
+        let items = origRA.apply(ko.errors, [b]);
+
+        ko.utils.arrayForEach(items, (item: KnockoutObservable<any>) => {
+            if (item.clearError) {
+                item.clearError.apply(item);
+            }
+        });
+
+        return items;
+    },
+    showDialog: ko.observableOrig(true)
 });

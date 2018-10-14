@@ -43,6 +43,9 @@ export class Router {
                 }
             });
 
+            // clear old errors
+            ko.clearError();
+
             // remove lastest matched url
             _.extend(crossroads, {
                 _prevMatchedRequest: null
@@ -57,6 +60,9 @@ export class Router {
                         .filter(k => _.isNumber(k))
                         .map(k => String(k))
                         .value();
+
+                    // clear old errors
+                    ko.clearError();
 
                     // remove request, vals, number params;
                     self.currentRoute(ko.utils.extend({ component: route }, _.omit(requestParams, _.concat(rmk, ['request_', 'vals_']))));
