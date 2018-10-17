@@ -11,10 +11,14 @@ let origC = ko.bindingHandlers.component;
 })
 export class CustomComponentBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
+        //let newAccessor = () => ({ $afterRender: (viewModel.afterRender || function () { }).bind(viewModel || {}) });
+
+        //ko.bindingHandlers.init.init!(element, () => ({ $vm: viewModel || {} }), allBindingsAccessor, viewModel, bindingContext);
+
+        //ko.bindingHandlers.template.init!(element, newAccessor, allBindingsAccessor, viewModel, bindingContext);
+        //ko.bindingHandlers.template.update!(element, newAccessor, allBindingsAccessor, viewModel, bindingContext);
 
         origC.init!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
-
-        debugger;
 
         return { controlsDescendantBindings: true };
     }
