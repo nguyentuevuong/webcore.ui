@@ -10,3 +10,5 @@ import '@views/sample/uis/switch';
 import '@views/sample/uis/modal/modal.parent';
 import '@views/sample/uis/modal/modal.childrent';
 import '@views/sample/uis/modal/modal.childrent.2';
+
+import '@views/sample/uis/fixedtable';
