@@ -193,7 +193,7 @@ export class fxTable {
         }
 
         elements.scrollBody.dispatchEvent(new Event('resize'));
-        
+
         self.options.inserted = true;
     }
 
@@ -276,22 +276,54 @@ export class fxTable {
         scrollBody.addEventListener('scroll', function (evt: Event) {
             scrollHeader.scrollLeft = scrollBody.scrollLeft;
             fixedBody.scrollTop = scrollBody.scrollTop;
+            
+            // cancel all scroll event of parents
+            evt.preventDefault();
+        });
+
+
+        scrollBody.addEventListener('wheel', (evt: WheelEvent) => {
+            let step = evt.deltaY ? 125 : 40,
+                wheel = (evt.deltaY || evt.wheelDeltaY);
+
+            if (!evt.shiftKey) {
+                if (wheel > 0) {
+                    scrollBody.scrollTop -= step;
+                } else {
+                    scrollBody.scrollTop += step;
+                }
+            } else {
+                if (wheel > 0) {
+                    scrollBody.scrollLeft -= step;
+                } else {
+                    scrollBody.scrollLeft += step;
+                }
+            }
+            
+            // cancel all scroll event of parents
+            evt.preventDefault();
         });
 
         fixedBody.addEventListener('wheel', (evt: WheelEvent) => {
+            let step = evt.deltaY ? 125 : 40,
+                wheel = (evt.deltaY || evt.wheelDeltaY);
+
             if (!evt.shiftKey) {
-                if (evt.wheelDeltaY > 0) {
-                    scrollBody.scrollTop -= 40;
+                if (wheel > 0) {
+                    scrollBody.scrollTop -= step;
                 } else {
-                    scrollBody.scrollTop += 40;
+                    scrollBody.scrollTop += step;
                 }
             } else {
-                if (evt.wheelDeltaY > 0) {
-                    scrollBody.scrollLeft -= 40;
+                if (wheel > 0) {
+                    scrollBody.scrollLeft -= step;
                 } else {
-                    scrollBody.scrollLeft += 40;
+                    scrollBody.scrollLeft += step;
                 }
             }
+
+            // cancel all scroll event of parents
+            evt.preventDefault();
         })
 
         return {
