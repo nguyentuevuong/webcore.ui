@@ -28,8 +28,8 @@ module.exports = (env) => {
                 'jqueryui',
                 'lodash',
                 'moment',
-                '@chenfengyuan/datepicker',
-                '@chenfengyuan/datepicker/dist/datepicker.css',
+                //'@chenfengyuan/datepicker',
+                //'@chenfengyuan/datepicker/dist/datepicker.css',
                 '@fortawesome/fontawesome-free/css/all.css',
                 '@fortawesome/fontawesome-free/css/v4-shims.css',
                 'animate.css/animate.css'

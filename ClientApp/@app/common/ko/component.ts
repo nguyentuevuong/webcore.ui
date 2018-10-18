@@ -130,7 +130,7 @@ export function component(params: IDecoratorComponent) {
                 }
             },
             template: `${params.styles || ''}
-                <!-- ko init: { $vm: $data, $afterRender: $data.afterRender || function() {} }, template: { afterRender: $afterRender.bind($vm) } -->
+                <!-- ko init: { $vm: $data, $afterRender: ($data.afterRender || function() {}).bind($data) }, template: { afterRender: $afterRender } -->
                 ${params.template}
                 <!-- /ko -->`,
             synchronous: true,

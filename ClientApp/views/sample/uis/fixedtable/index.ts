@@ -29,7 +29,7 @@ export class SampleFixedTableViewModel {
     constructor(params: any, private element: HTMLElement) {
         ko.utils.extend(window, { $vm: this });
 
-        for (var i = 1; i <= 50; i++) {
+        for (var i = 1; i <= 25; i++) {
             this.dataSource.push({
                 id: i,
                 value1: ko.observableOrig(''),

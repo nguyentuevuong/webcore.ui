@@ -2,22 +2,6 @@ table {
     td {
         border-bottom: 1px solid #ccc;
     }
-    td:first-child,
-    th:first-child {
-        min-width: 100px;
-    }
-    td:nth-child(2),
-    th:nth-child(2) {
-        min-width: 100px;
-    }
-    td:nth-child(3),
-    th:nth-child(3) {
-        min-width: 500px;
-    }
-    td:nth-child(4),
-    th:nth-child(4) {
-        min-width: 500px;
-    }
 }
 
 .fx-fixed-body {
@@ -31,11 +15,13 @@ table {
     .fx-fixed-header {
         th {
             background-color: #eee;
+            min-height: 45px;
         }
     }
     .fx-scroll-header {
         th {
             background-color: #eee;
+            min-height: 45px;
         }
     }
 }

@@ -1,5 +1,13 @@
-<table class="tbl-employees" data-bind="fxtable: { width: 600, displayRow: 10, fixedColumn: 2 }">
+<table class="tbl-employees" data-bind="init: { '$fx.$tabindex': 10 }, fxtable: { width: 600, displayRow: 10, fixedColumn: 2 }">
     <thead>
+        <tr>
+            <th>Index</th>
+            <th>Value 1</th>
+            <th>Value 2</th>
+            <th>Value 3</th>
+            <th>Value 4</th>
+            <th>Value 5</th>
+        </tr>
         <tr>
             <th>Index</th>
             <th>Value 1</th>
@@ -10,18 +18,18 @@
         </tr>
     </thead>
     <tbody data-bind="foreach: $vm.dataSource">
-        <tr>
+        <tr data-bind="init: { '$fx.$tabindex': $index() == 0 ? 10 : $fx.$tabindex }">
             <td data-bind="text: $data.id"></td>
-            <td class="time"><input data-bind="value: $data.value1" /></td>
-            <td class="time"><input data-bind="value: $data.value2" /></td>
-            <td class="time"><input data-bind="value: $data.value3" /></td>
-            <td class="time"><input data-bind="value: $data.value4" /></td>
-            <td class="time"><input data-bind="value: $data.value5" /></td>
+            <td class="time"><input data-bind="value: $data.value1, attr: { tabindex: ++$fx.$tabindex }" /></td>
+            <td class="time"><input data-bind="value: $data.value2, attr: { tabindex: ++$fx.$tabindex }" /></td>
+            <td class="time"><input data-bind="value: $data.value3, attr: { tabindex: ++$fx.$tabindex }" /></td>
+            <td class="time"><input data-bind="value: $data.value4, attr: { tabindex: ++$fx.$tabindex }" /></td>
+            <td class="time"><input data-bind="value: $data.value5, attr: { tabindex: ++$fx.$tabindex }" /></td>
         </tr>
     </tbody>
 </table>
 
-<table data-bind="fxtable: { width: undefined }">
+<table data-bind="fxtable: { width: 300, fixedColumn: 1 }">
     <thead>
         <tr>
             <th>Name</th>

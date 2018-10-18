@@ -1,20 +1,20 @@
 import { ko, $ } from '@app/providers';
 
 export class fxTable {
+    initial: number | null = null;
+
     options: {
         width: number | string;
         displayRow: number;
         fixedColumn: number;
         rowHeight: number;
         autoWidth: boolean;
-        inserted: boolean;
     } = {
             width: 400,
             displayRow: 10,
             fixedColumn: 0,
             rowHeight: 30,
-            autoWidth: false,
-            inserted: false
+            autoWidth: false
         };
 
     elements: {
@@ -38,8 +38,7 @@ export class fxTable {
         displayRow: number;
         fixedColumn: number;
     }) {
-        let self = this,
-            resizeTimeout: number | null = null;
+        let self = this;
 
         options = options || self.options;
 
@@ -66,9 +65,9 @@ export class fxTable {
         self.elements.container.style.width = `${self.options.width}px`;
 
         if (self.options.autoWidth && self.elements.scrollBody.clientWidth - self.elements.scrollBody.scrollWidth < 20) {
-            if (!resizeTimeout) {
-                resizeTimeout = setTimeout(function () {
-                    resizeTimeout = null;
+            if (!self.initial) {
+                self.initial = setTimeout(function () {
+                    self.initial = null;
                     let body = self.elements.scrollBody;
                     self.elements.container.style.width = self.elements.container.scrollWidth + (body.scrollWidth - body.clientWidth) + 'px';
                 }, 500);
@@ -79,14 +78,19 @@ export class fxTable {
 
         self.initLayout();
 
-        self.elements.table.addEventListener('DOMNodeInserted', function () {
-            if (self.options.inserted) {
-                if (!resizeTimeout) {
-                    resizeTimeout = setTimeout(function () {
-                        resizeTimeout = null;
-                        self.initLayout();
-                    }, 500);
-                }
+        self.elements.table.querySelector('tbody')!.addEventListener('DOMNodeInserted', function (evt: Event) {
+            if (!self.initial) {
+                self.initial = setTimeout(function () {
+                    self.initLayout();
+                }, 0);
+            }
+        });
+
+        self.elements.table.querySelector('tbody')!.addEventListener('DOMNodeRemoved', function () {
+            if (!self.initial) {
+                self.initial = setTimeout(function () {
+                    self.initLayout();
+                }, 0);
             }
         });
     }
@@ -101,44 +105,57 @@ export class fxTable {
             tbody = table.querySelector('tbody');
 
         self.clearStyle();
-        self.options.inserted = false;
 
         // copy and restyle all element
         if (thead) {
-            let ths: HTMLTableHeaderCellElement[] = [].slice.call(thead.querySelectorAll('th')),
-                fths: HTMLTableHeaderCellElement[] = [],
-                sths: HTMLTableHeaderCellElement[] = [];
+            let ftrs: HTMLTableRowElement[] = [],
+                strs: HTMLTableRowElement[] = [];
 
-            ths.forEach((th: HTMLTableHeaderCellElement, i: number) => {
-                th.style.minWidth = th.getBoundingClientRect().width + 'px';
-            });
+            [].slice.call(thead.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+                let frow = document.createElement('tr'),
+                    srow = document.createElement('tr');
 
-            ths.forEach((th: HTMLTableHeaderCellElement, i: number) => {
-                if (i < fc) {
-                    let cth = th.cloneNode(true) as HTMLTableHeaderCellElement;
-                    cth.style.display = "none";
+                frow.style.height = tr.getBoundingClientRect().height + 'px';
+                srow.style.height = tr.getBoundingClientRect().height + 'px';
 
-                    th.parentElement!.replaceChild(cth, th);
+                [].slice.call(tr.querySelectorAll('th')).forEach((th: HTMLTableHeaderCellElement, i: number) => {
+                    th.style.minWidth = th.getBoundingClientRect().width + 'px';
 
-                    fths.push(th);
-                } else {
-                    let cth = th.cloneNode(true) as HTMLTableHeaderCellElement;
-                    cth.style.display = "none";
+                    if (i < fc) {
+                        let cth = th.cloneNode(true) as HTMLTableHeaderCellElement;
+                        cth.style.display = "none";
 
-                    th.parentElement!.replaceChild(cth, th);
+                        th.parentElement!.replaceChild(cth, th);
 
-                    sths.push(th);
-                }
+                        frow.appendChild(th);
+
+                        ko.utils.domData.set(tr, 'delete_cell' + i, cth);
+                        ko.utils.domData.set(tr, 'restore_cell' + i, th);
+                    } else {
+                        let cth = th.cloneNode(true) as HTMLTableHeaderCellElement;
+                        cth.style.display = "none";
+
+                        th.parentElement!.replaceChild(cth, th);
+
+                        srow.appendChild(th);
+
+                        ko.utils.domData.set(tr, 'delete_cell' + i, cth);
+                        ko.utils.domData.set(tr, 'restore_cell' + i, th);
+                    }
+                });
+
+                ftrs.push(frow);
+                strs.push(srow);
             });
 
             if (!fc) {
                 elements.fixedHeader.setAttribute('style', 'display: none');
                 elements.scrollHeader.style.borderLeft = null;
             } else {
-                self.initTableContent(elements.fixedHeader, fths, CONTENT_TYPE.FIXED_HEAD);
+                self.initTableContent(elements.fixedHeader, ftrs, CONTENT_TYPE.FIXED_HEAD);
             }
 
-            self.initTableContent(elements.scrollHeader, sths, CONTENT_TYPE.SCROLL_HEAD);
+            self.initTableContent(elements.scrollHeader, strs, CONTENT_TYPE.SCROLL_HEAD);
 
             thead.style.display = "none";
         }
@@ -162,6 +179,9 @@ export class fxTable {
                         td.parentElement!.replaceChild(ctd, td);
 
                         row.appendChild(td as HTMLTableDataCellElement);
+
+                        ko.utils.domData.set(tr, 'delete_cell' + i, ctd);
+                        ko.utils.domData.set(tr, 'restore_cell' + i, td);
                     }
                 });
 
@@ -194,7 +214,7 @@ export class fxTable {
 
         elements.scrollBody.dispatchEvent(new Event('resize'));
 
-        self.options.inserted = true;
+        self.initial = null;
     }
 
     initTableContent(element: HTMLDivElement, contents: HTMLElement[], type: CONTENT_TYPE) {
@@ -233,7 +253,6 @@ export class fxTable {
 
         fixedHeader.style.cssFloat = 'left';
         fixedHeader.style.verticalAlign = 'top';
-        //fixedHeader.style.borderRight = '1px solid #ccc';
         fixedHeader.setAttribute('class', 'fx-fixed-header');
 
         scrollHeader.style.cssFloat = 'left';
@@ -242,7 +261,6 @@ export class fxTable {
 
         fixedBody.style.cssFloat = 'left';
         fixedBody.style.verticalAlign = 'top';
-        //fixedBody.style.borderRight = '1px solid #ccc';
         fixedBody.style.borderBottom = '1px solid #ccc';
         fixedBody.setAttribute('class', 'fx-fixed-body');
 
@@ -269,18 +287,21 @@ export class fxTable {
         fixedBody.style.overflow = "hidden";
 
         scrollBody.addEventListener('resize', (evt: Event) => {
-            fixedBody.style.height = scrollBody.clientHeight + 'px';
+            fixedBody.style.height = scrollBody.clientHeight + 1 + 'px';
             scrollHeader.style.width = scrollBody.clientWidth + 2 + 'px';
         });
 
         scrollBody.addEventListener('scroll', function (evt: Event) {
             scrollHeader.scrollLeft = scrollBody.scrollLeft;
             fixedBody.scrollTop = scrollBody.scrollTop;
-            
+
             // cancel all scroll event of parents
             evt.preventDefault();
         });
 
+        fixedBody.addEventListener('scroll', function (evt: Event) {
+            scrollBody.scrollTop = fixedBody.scrollTop;
+        });
 
         scrollBody.addEventListener('wheel', (evt: WheelEvent) => {
             let step = evt.deltaY ? 125 : 40,
@@ -299,7 +320,7 @@ export class fxTable {
                     scrollBody.scrollLeft += step;
                 }
             }
-            
+
             // cancel all scroll event of parents
             evt.preventDefault();
         });
@@ -340,6 +361,28 @@ export class fxTable {
         let self = this,
             head = self.elements.table.querySelector('thead'),
             body = self.elements.table.querySelector('tbody');
+
+        [].slice.call(head!.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+            [].slice.call(tr.querySelectorAll('th')).forEach((th: any, i: number) => {
+                let d = ko.utils.domData.get(tr, 'delete_cell' + i),
+                    r = ko.utils.domData.get(tr, 'restore_cell' + i);
+
+                if (d && r) {
+                    tr.replaceChild(r, d);
+                }
+            });
+        });
+
+        [].slice.call(body!.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+            [].slice.call(tr.querySelectorAll('td')).forEach((td: any, i: number) => {
+                let d = ko.utils.domData.get(tr, 'delete_cell' + i),
+                    r = ko.utils.domData.get(tr, 'restore_cell' + i);
+
+                if (d && r) {
+                    tr.replaceChild(r, d);
+                }
+            });
+        });
 
         self.elements.table.removeAttribute('style');
 
