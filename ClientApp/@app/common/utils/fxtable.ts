@@ -1,0 +1,353 @@
+import { ko, $ } from '@app/providers';
+
+export class fxTable {
+    options: {
+        width: number | string;
+        displayRow: number;
+        fixedColumn: number;
+        rowHeight: number;
+        autoWidth: boolean;
+        inserted: boolean;
+    } = {
+            width: 400,
+            displayRow: 10,
+            fixedColumn: 0,
+            rowHeight: 30,
+            autoWidth: false,
+            inserted: false
+        };
+
+    elements: {
+        container: HTMLDivElement,
+        fixedHeader: HTMLDivElement,
+        scrollHeader: HTMLDivElement,
+        fixedBody: HTMLDivElement,
+        scrollBody: HTMLDivElement,
+        table: HTMLTableElement
+    } = {
+            container: document.createElement('div'),
+            fixedHeader: document.createElement('div'),
+            scrollHeader: document.createElement('div'),
+            fixedBody: document.createElement('div'),
+            scrollBody: document.createElement('div'),
+            table: document.createElement('table')
+        };
+
+    constructor(table: HTMLTableElement, options?: {
+        width: number | string;
+        displayRow: number;
+        fixedColumn: number;
+    }) {
+        let self = this,
+            resizeTimeout: number | null = null;
+
+        options = options || self.options;
+
+        ko.utils.extend(self.options, options);
+
+        if (!self.options.width) {
+            self.options.autoWidth = true;
+            ko.utils.extend(self.options, {
+                width: table.getBoundingClientRect().width
+            });
+        }
+
+        self.elements = self.createElements();
+        self.elements.table = table;
+
+        if (!table.className) {
+            table.className = 'fx-table';
+        } else {
+            table.classList.add('fx-table');
+        }
+
+        table.parentElement!.replaceChild(self.elements.container, table);
+
+        self.elements.container.style.width = `${self.options.width}px`;
+
+        if (self.options.autoWidth && self.elements.scrollBody.clientWidth - self.elements.scrollBody.scrollWidth < 20) {
+            if (!resizeTimeout) {
+                resizeTimeout = setTimeout(function () {
+                    resizeTimeout = null;
+                    let body = self.elements.scrollBody;
+                    self.elements.container.style.width = self.elements.container.scrollWidth + (body.scrollWidth - body.clientWidth) + 'px';
+                }, 500);
+            }
+        }
+
+        self.elements.scrollBody.appendChild(table);
+
+        self.initLayout();
+
+        self.elements.table.addEventListener('DOMNodeInserted', function () {
+            if (self.options.inserted) {
+                if (!resizeTimeout) {
+                    resizeTimeout = setTimeout(function () {
+                        resizeTimeout = null;
+                        self.initLayout();
+                    }, 500);
+                }
+            }
+        });
+    }
+
+    initLayout() {
+        let self = this,
+            options = self.options,
+            elements = self.elements,
+            fc = options.fixedColumn,
+            table = self.elements.table,
+            thead = table.querySelector('thead'),
+            tbody = table.querySelector('tbody');
+
+        self.clearStyle();
+        self.options.inserted = false;
+
+        // copy and restyle all element
+        if (thead) {
+            let ths: HTMLTableHeaderCellElement[] = [].slice.call(thead.querySelectorAll('th')),
+                fths: HTMLTableHeaderCellElement[] = [],
+                sths: HTMLTableHeaderCellElement[] = [];
+
+            ths.forEach((th: HTMLTableHeaderCellElement, i: number) => {
+                th.style.minWidth = th.getBoundingClientRect().width + 'px';
+            });
+
+            ths.forEach((th: HTMLTableHeaderCellElement, i: number) => {
+                if (i < fc) {
+                    let cth = th.cloneNode(true) as HTMLTableHeaderCellElement;
+                    cth.style.display = "none";
+
+                    th.parentElement!.replaceChild(cth, th);
+
+                    fths.push(th);
+                } else {
+                    let cth = th.cloneNode(true) as HTMLTableHeaderCellElement;
+                    cth.style.display = "none";
+
+                    th.parentElement!.replaceChild(cth, th);
+
+                    sths.push(th);
+                }
+            });
+
+            if (!fc) {
+                elements.fixedHeader.setAttribute('style', 'display: none');
+                elements.scrollHeader.style.borderLeft = null;
+            } else {
+                self.initTableContent(elements.fixedHeader, fths, CONTENT_TYPE.FIXED_HEAD);
+            }
+
+            self.initTableContent(elements.scrollHeader, sths, CONTENT_TYPE.SCROLL_HEAD);
+
+            thead.style.display = "none";
+        }
+
+        if (tbody) {
+            let trs: HTMLTableRowElement[] = [].slice.call(tbody.querySelectorAll('tr')),
+                ftds: HTMLTableRowElement[] = [];
+
+            options.rowHeight = tbody.querySelector('tr')!.offsetHeight;
+
+            trs.forEach((tr: HTMLTableRowElement) => {
+                let row = document.createElement('tr');
+                row.style.height = tr.getBoundingClientRect().height + 'px';
+
+                [].slice.call(tr.querySelectorAll('td')).forEach((td: HTMLTableDataCellElement, i: number) => {
+                    if (i < fc) {
+                        let ctd = td.cloneNode(true) as HTMLTableDataCellElement;
+
+                        ctd.style.display = "none";
+
+                        td.parentElement!.replaceChild(ctd, td);
+
+                        row.appendChild(td as HTMLTableDataCellElement);
+                    }
+                });
+
+                ftds.push(row);
+            });
+
+            if (!fc) {
+                elements.fixedBody.setAttribute('style', 'display: none');
+                elements.scrollBody.style.borderLeft = null;
+            } else {
+                self.initTableContent(elements.fixedBody, ftds, CONTENT_TYPE.FIXED_BODY);
+            }
+        }
+
+        if (elements.fixedHeader.getBoundingClientRect().width < elements.fixedBody.getBoundingClientRect().width) {
+            elements.fixedHeader.style.width = elements.fixedBody.getBoundingClientRect().width + 'px';
+        } else {
+            elements.fixedBody.style.width = elements.fixedHeader.getBoundingClientRect().width + 'px';
+        }
+
+        if (fc) {
+            elements.scrollBody.style.width = elements.container.getBoundingClientRect().width - elements.fixedBody.getBoundingClientRect().width - 2 + 'px';
+        }
+
+        elements.scrollBody.style.height = (options.rowHeight + 1) * options.displayRow + 'px';
+
+        if (elements.scrollBody.clientHeight <= (options.rowHeight + 1) * options.displayRow) {
+            elements.scrollBody.style.height = elements.scrollBody.offsetHeight + (elements.scrollBody.offsetHeight - elements.scrollBody.clientHeight) + 'px';
+        }
+
+        elements.scrollBody.dispatchEvent(new Event('resize'));
+        
+        self.options.inserted = true;
+    }
+
+    initTableContent(element: HTMLDivElement, contents: HTMLElement[], type: CONTENT_TYPE) {
+        let table = document.createElement('table'),
+            body = document.createElement([CONTENT_TYPE.FIXED_HEAD, CONTENT_TYPE.SCROLL_HEAD].indexOf(type) > -1 ? 'thead' : 'tbody');
+
+        table.setAttribute('class', 'fx-table');
+
+        table.appendChild(body);
+
+        element.appendChild(table);
+
+        contents.forEach((content: HTMLElement) => body.appendChild(content));
+    }
+
+    createElements() {
+        let container = document.createElement('div'),
+            rowHeader = document.createElement('div'),
+            fixedHeader = document.createElement('div'),
+            scrollHeader = document.createElement('div'),
+            rowBody = document.createElement('div'),
+            fixedBody = document.createElement('div'),
+            scrollBody = document.createElement('div'),
+            cf = document.createElement('div');
+
+        cf.style.clear = 'both';
+
+        container.setAttribute('class', 'fx-container');
+        container.style.border = '1px solid #ccc';
+        container.style.marginBottom = '25px';
+
+        rowHeader.setAttribute('class', 'fx-row-header');
+
+        rowBody.style.borderTop = '1px solid #ccc';
+        rowBody.setAttribute('class', 'fx-row-body');
+
+        fixedHeader.style.cssFloat = 'left';
+        fixedHeader.style.verticalAlign = 'top';
+        //fixedHeader.style.borderRight = '1px solid #ccc';
+        fixedHeader.setAttribute('class', 'fx-fixed-header');
+
+        scrollHeader.style.cssFloat = 'left';
+        scrollHeader.style.borderLeft = '2px solid #ccc';
+        scrollHeader.setAttribute('class', 'fx-scroll-header');
+
+        fixedBody.style.cssFloat = 'left';
+        fixedBody.style.verticalAlign = 'top';
+        //fixedBody.style.borderRight = '1px solid #ccc';
+        fixedBody.style.borderBottom = '1px solid #ccc';
+        fixedBody.setAttribute('class', 'fx-fixed-body');
+
+        scrollBody.style.cssFloat = 'float';
+        scrollBody.style.overflow = 'auto';
+        scrollBody.style.borderLeft = '2px solid #ccc';
+        scrollBody.setAttribute('class', 'fx-scroll-body');
+
+        // add row;
+        container.appendChild(rowHeader);
+        container.appendChild(rowBody);
+
+        rowHeader.appendChild(fixedHeader);
+        rowHeader.appendChild(scrollHeader);
+        rowHeader.appendChild(cf.cloneNode());
+
+        rowBody.appendChild(fixedBody);
+        rowBody.appendChild(scrollBody);
+        rowBody.appendChild(cf.cloneNode());
+
+        container.style.overflow = "hidden";
+        fixedHeader.style.overflow = "hidden";
+        scrollHeader.style.overflow = "hidden";
+        fixedBody.style.overflow = "hidden";
+
+        scrollBody.addEventListener('resize', (evt: Event) => {
+            fixedBody.style.height = scrollBody.clientHeight + 'px';
+            scrollHeader.style.width = scrollBody.clientWidth + 2 + 'px';
+        });
+
+        scrollBody.addEventListener('scroll', function (evt: Event) {
+            scrollHeader.scrollLeft = scrollBody.scrollLeft;
+            fixedBody.scrollTop = scrollBody.scrollTop;
+        });
+
+        fixedBody.addEventListener('wheel', (evt: WheelEvent) => {
+            if (!evt.shiftKey) {
+                if (evt.wheelDeltaY > 0) {
+                    scrollBody.scrollTop -= 40;
+                } else {
+                    scrollBody.scrollTop += 40;
+                }
+            } else {
+                if (evt.wheelDeltaY > 0) {
+                    scrollBody.scrollLeft -= 40;
+                } else {
+                    scrollBody.scrollLeft += 40;
+                }
+            }
+        })
+
+        return {
+            container: container,
+            fixedHeader: fixedHeader,
+            scrollHeader: scrollHeader,
+            fixedBody: fixedBody,
+            scrollBody: scrollBody,
+            table: document.createElement('table')
+        };
+    }
+
+    clearStyle() {
+        let self = this,
+            head = self.elements.table.querySelector('thead'),
+            body = self.elements.table.querySelector('tbody');
+
+        self.elements.table.removeAttribute('style');
+
+        if (head) {
+            head.removeAttribute('style');
+
+            [].slice.call(head.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+                tr.removeAttribute('style');
+
+                [].slice.call(tr.querySelectorAll('th')).forEach((th: HTMLTableHeaderCellElement) => {
+                    th.removeAttribute('style');
+                    th.style.overflow = 'hidden';
+                    th.style.textOverflow = 'ellipsis';
+                })
+            });
+        }
+
+        if (body) {
+            body.setAttribute('style', '');
+
+            [].slice.call(body.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement, i: number) => {
+                tr.removeAttribute('style');
+                tr.setAttribute('row', `${i}`);
+
+                [].slice.call(tr.querySelectorAll('td')).forEach((td: HTMLTableDataCellElement, j: number) => {
+                    td.removeAttribute('style');
+                    td.setAttribute('column', `${j}`);
+                })
+            });
+        }
+
+        self.elements.fixedBody.innerHTML = '';
+        self.elements.fixedHeader.innerHTML = '';
+        self.elements.scrollHeader.innerHTML = '';
+    }
+}
+
+enum CONTENT_TYPE {
+    FIXED_HEAD = <any>'FIXED_HEAD',
+    SCROLL_HEAD = <any>'SCROLL_HEAD',
+    FIXED_BODY = <any>'FIXED_BODY',
+    SCROLL_BODY = <any>'SCROLL_BODY',
+}

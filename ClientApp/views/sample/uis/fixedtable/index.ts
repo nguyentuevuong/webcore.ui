@@ -18,8 +18,26 @@ import { component } from '@app/common/ko';
     }
 })
 export class SampleFixedTableViewModel {
-    dataSource: KnockoutObservableArray<number> = ko.observableArrayOrig([1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0]).extend({ deferred: true });
+    dataSource: KnockoutObservableArray<{
+        id: number,
+        value1: KnockoutObservable<string>,
+        value2: KnockoutObservable<string>,
+        value3: KnockoutObservable<string>,
+        value4: KnockoutObservable<string>,
+        value5: KnockoutObservable<string>
+    }> = ko.observableArrayOrig([]).extend({ deferred: true });
     constructor(params: any, private element: HTMLElement) {
         ko.utils.extend(window, { $vm: this });
+
+        for (var i = 1; i <= 50; i++) {
+            this.dataSource.push({
+                id: i,
+                value1: ko.observableOrig(''),
+                value2: ko.observableOrig(''),
+                value3: ko.observableOrig(''),
+                value4: ko.observableOrig(''),
+                value5: ko.observableOrig(''),
+            })
+        }
     }
 }
