@@ -20,24 +20,43 @@ import { component } from '@app/common/ko';
 export class SampleFixedTableViewModel {
     dataSource: KnockoutObservableArray<{
         id: number,
-        value1: KnockoutObservable<string>,
-        value2: KnockoutObservable<string>,
-        value3: KnockoutObservable<string>,
-        value4: KnockoutObservable<string>,
-        value5: KnockoutObservable<string>
+        value1: KnockoutObservable<number>,
+        value2: KnockoutObservable<number>,
+        value3: KnockoutObservable<number>,
+        value4: KnockoutObservable<number>,
+        value5: KnockoutObservable<number>
     }> = ko.observableArrayOrig([]).extend({ deferred: true });
+
     constructor(params: any, private element: HTMLElement) {
         ko.utils.extend(window, { $vm: this });
 
-        for (var i = 1; i <= 25; i++) {
-            this.dataSource.push({
+        let ds = [];
+
+        for (var i = 1; i <= 10; i++) {
+            ds.push({
                 id: i,
-                value1: ko.observableOrig(''),
-                value2: ko.observableOrig(''),
-                value3: ko.observableOrig(''),
-                value4: ko.observableOrig(''),
-                value5: ko.observableOrig(''),
+                value1: ko.observableOrig(i),
+                value2: ko.observableOrig(i + 1),
+                value3: ko.observableOrig(i + 2),
+                value4: ko.observableOrig(i + 3),
+                value5: ko.observableOrig(i + 4),
             })
         }
+
+        this.dataSource(ds);
+    }
+
+    addData() {
+        let self = this,
+            i = _.size(ko.toJS(self.dataSource)) + 1;
+
+        self.dataSource.push({
+            id: i,
+            value1: ko.observableOrig(0),
+            value2: ko.observableOrig(0),
+            value3: ko.observableOrig(0),
+            value4: ko.observableOrig(0),
+            value5: ko.observableOrig(0),
+        });
     }
 }

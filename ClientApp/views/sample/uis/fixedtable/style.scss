@@ -1,34 +1,73 @@
-table {
-    td {
-        border-bottom: 1px solid #ccc;
-    }
-}
-
 .fx-fixed-body {
+    background-color: #E0F59E;
     td {
-        background-color: #eee;
+        background-color: #E0F59E;
+        &:last-child {
+            border-right: 0px;
+        }
     }
 }
 
 .fx-row-header {
-    background-color: #eee;
+    background-color: #E0F59E;
     .fx-fixed-header {
         th {
-            background-color: #eee;
-            min-height: 45px;
+            background-color: #E0F59E;
+            &:last-child {
+                border-right: 0px;
+            }
         }
     }
     .fx-scroll-header {
         th {
-            background-color: #eee;
-            min-height: 45px;
+            background-color: #E0F59E;
         }
     }
 }
 
+.fx-row-footer {
+    background-color: #E0F59E;
+    .fx-fixed-footer {
+        th {
+            background-color: #E0F59E;
+            &:last-child {
+                border-right: 0px;
+            }
+        }
+    }
+    .fx-scroll-footer {
+        th {
+            background-color: #E0F59E;
+        }
+    }    
+}
+
 .fx-row-body {
-    background-color: #eee;
+    background-color: #dcdcdc;
     .fx-scroll-body {
         background-color: #fff;
+    }
+}
+
+.fx-table {
+    th,
+    td {
+        line-height: 30px;
+    }
+    .remove-cell {
+        text-align: center;
+        min-width: 40px;
+        border-right: 1px solid #ccc;
+        .fa {
+            cursor: pointer;
+        }
+    }
+    .fx-name {
+        min-width: 100px;
+        border-right: 1px solid #ccc;
+    }
+    .time {
+        min-width: 200px;
+        border-right: 1px solid #ccc;
     }
 }

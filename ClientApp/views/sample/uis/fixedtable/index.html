@@ -1,39 +1,48 @@
-<table class="tbl-employees" data-bind="init: { '$fx.$tabindex': 10 }, fxtable: { width: 600, displayRow: 10, fixedColumn: 2 }">
+<button class="btn btn-secondary" data-bind="i18n: '#add_data', click: $vm.addData, timeClick: -1"></button>
+<hr />
+<table class="tbl-employees" data-bind="init: { '$fx.$tabindex': 10 }, fxtable: { width: 600, displayRow: 10, fixedColumn: 1 }">
     <thead>
         <tr>
-            <th>Index</th>
-            <th>Value 1</th>
-            <th>Value 2</th>
-            <th>Value 3</th>
-            <th>Value 4</th>
-            <th>Value 5</th>
-        </tr>
-        <tr>
-            <th>Index</th>
-            <th>Value 1</th>
-            <th>Value 2</th>
-            <th>Value 3</th>
-            <th>Value 4</th>
-            <th>Value 5</th>
+            <th class="remove-cell">Index</th>
+            <th class="fx-name">Value 1</th>
+            <th class="time">Value 2</th>
+            <th class="time">Value 3</th>
+            <th class="time">Value 4</th>
+            <th class="time">Value 5</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: $vm.dataSource">
         <tr data-bind="init: { '$fx.$tabindex': $index() == 0 ? 10 : $fx.$tabindex }">
-            <td data-bind="text: $data.id"></td>
-            <td class="time"><input data-bind="value: $data.value1, attr: { tabindex: ++$fx.$tabindex }" /></td>
-            <td class="time"><input data-bind="value: $data.value2, attr: { tabindex: ++$fx.$tabindex }" /></td>
-            <td class="time"><input data-bind="value: $data.value3, attr: { tabindex: ++$fx.$tabindex }" /></td>
-            <td class="time"><input data-bind="value: $data.value4, attr: { tabindex: ++$fx.$tabindex }" /></td>
-            <td class="time"><input data-bind="value: $data.value5, attr: { tabindex: ++$fx.$tabindex }" /></td>
+            <td class="remove-cell" style="display: none;">
+                <i class="fa fa-trash" data-bind="click: $vm.dataSource.remove.bind($vm.dataSource, $data)"></i>
+            </td>
+            <td class="fx-name" data-bind="text: $data.value1"></td>
+            <td class="time" data-bind="text: $data.value2"></td>
+            <td class="time" data-bind="text: $data.value3"></td>
+            <td class="time" data-bind="text: $data.value4"></td>
+            <td class="time" data-bind="text: $data.value5"></td>
         </tr>
     </tbody>
+    <tfoot>
+        <tr>
+            <th class="remove-cell">Index</th>
+            <th class="fx-name">Value 1</th>
+            <th class="time">Value 2</th>
+            <th class="time">Value 3</th>
+            <th class="time">Value 4</th>
+            <th class="time">Value 5</th>
+        </tr>
+    </tfoot>
 </table>
 
-<table data-bind="fxtable: { width: 300, fixedColumn: 1 }">
+<table data-bind="fxtable: { width: 300, fixedColumn: 2 }">
     <thead>
         <tr>
             <th>Name</th>
             <th>Status</th>
+            <th>Description</th>
+            <th>Description</th>
+            <th>Description</th>
             <th>Description</th>
         </tr>
     </thead>
@@ -42,8 +51,9 @@
             <td data-bind="text: $data.id"></td>
             <td data-bind="text: $data.value1"></td>
             <td data-bind="text: $data.value2"></td>
+            <td data-bind="text: $data.value3"></td>
+            <td data-bind="text: $data.value4"></td>
+            <td data-bind="text: $data.value5"></td>
         </tr>
     </tbody>
 </table>
-
-<pre data-bind="code: $vm.dataSource, type: 'json'"></pre>

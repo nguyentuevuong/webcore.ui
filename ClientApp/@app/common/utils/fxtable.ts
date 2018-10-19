@@ -9,27 +9,33 @@ export class fxTable {
         fixedColumn: number;
         rowHeight: number;
         autoWidth: boolean;
+        border: string;
     } = {
             width: 400,
             displayRow: 10,
             fixedColumn: 0,
             rowHeight: 30,
-            autoWidth: false
+            autoWidth: false,
+            border: '1px solid #dcdcdc'
         };
 
     elements: {
-        container: HTMLDivElement,
-        fixedHeader: HTMLDivElement,
-        scrollHeader: HTMLDivElement,
-        fixedBody: HTMLDivElement,
-        scrollBody: HTMLDivElement,
-        table: HTMLTableElement
+        container: HTMLDivElement;
+        fixedHeader: HTMLDivElement;
+        scrollHeader: HTMLDivElement;
+        fixedBody: HTMLDivElement;
+        scrollBody: HTMLDivElement;
+        fixedFooter: HTMLDivElement;
+        scrollFooter: HTMLDivElement;
+        table: HTMLTableElement;
     } = {
             container: document.createElement('div'),
             fixedHeader: document.createElement('div'),
             scrollHeader: document.createElement('div'),
             fixedBody: document.createElement('div'),
             scrollBody: document.createElement('div'),
+            fixedFooter: document.createElement('div'),
+            scrollFooter: document.createElement('div'),
             table: document.createElement('table')
         };
 
@@ -62,9 +68,11 @@ export class fxTable {
 
         table.parentElement!.replaceChild(self.elements.container, table);
 
+        self.elements.scrollBody.appendChild(table);
+
         self.elements.container.style.width = `${self.options.width}px`;
 
-        if (self.options.autoWidth && self.elements.scrollBody.clientWidth - self.elements.scrollBody.scrollWidth < 20) {
+        /*if (self.options.autoWidth && self.elements.scrollBody.clientWidth - self.elements.scrollBody.scrollWidth < 20) {
             if (!self.initial) {
                 self.initial = setTimeout(function () {
                     self.initial = null;
@@ -72,25 +80,21 @@ export class fxTable {
                     self.elements.container.style.width = self.elements.container.scrollWidth + (body.scrollWidth - body.clientWidth) + 'px';
                 }, 500);
             }
-        }
-
-        self.elements.scrollBody.appendChild(table);
+        }*/
 
         self.initLayout();
 
-        self.elements.table.querySelector('tbody')!.addEventListener('DOMNodeInserted', function (evt: Event) {
-            if (!self.initial) {
-                self.initial = setTimeout(function () {
-                    self.initLayout();
-                }, 0);
-            }
-        });
+        let body = self.elements.table.querySelector('tbody');
 
-        self.elements.table.querySelector('tbody')!.addEventListener('DOMNodeRemoved', function () {
-            if (!self.initial) {
-                self.initial = setTimeout(function () {
-                    self.initLayout();
-                }, 0);
+        ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => {
+            if (body) {
+                body.addEventListener(evt, (evt) => {
+                    if (!self.initial) {
+                        self.initial = setTimeout(function () {
+                            self.initLayout();
+                        }, 10);
+                    }
+                });
             }
         });
     }
@@ -102,7 +106,9 @@ export class fxTable {
             fc = options.fixedColumn,
             table = self.elements.table,
             thead = table.querySelector('thead'),
-            tbody = table.querySelector('tbody');
+            tbody = table.querySelector('tbody'),
+            tfoot = table.querySelector('tfoot'),
+            scrollBody = elements.scrollBody;
 
         self.clearStyle();
 
@@ -112,40 +118,47 @@ export class fxTable {
                 strs: HTMLTableRowElement[] = [];
 
             [].slice.call(thead.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
-                let frow = document.createElement('tr'),
-                    srow = document.createElement('tr');
+                if (tr) {
+                    let frow = document.createElement('tr'),
+                        srow = document.createElement('tr');
 
-                frow.style.height = tr.getBoundingClientRect().height + 'px';
-                srow.style.height = tr.getBoundingClientRect().height + 'px';
+                    frow.style.borderBottom = options.border;
+                    srow.style.borderBottom = options.border;
 
-                [].slice.call(tr.querySelectorAll('th')).forEach((th: HTMLTableHeaderCellElement, i: number) => {
-                    th.style.minWidth = th.getBoundingClientRect().width + 'px';
+                    //frow.style.height = tr.getBoundingClientRect().height + 'px';
+                    //srow.style.height = tr.getBoundingClientRect().height + 'px';
 
-                    if (i < fc) {
-                        let cth = th.cloneNode(true) as HTMLTableHeaderCellElement;
-                        cth.style.display = "none";
+                    [].slice.call(tr.querySelectorAll('th')).forEach((th: HTMLTableHeaderCellElement, i: number) => {
+                        if (th) {
+                            //th.style.minWidth = th.getBoundingClientRect().width + 'px';
 
-                        th.parentElement!.replaceChild(cth, th);
+                            if (i < fc) {
+                                let cth = document.createElement('th');
+                                cth.style.display = "none";
 
-                        frow.appendChild(th);
+                                th.parentElement!.replaceChild(cth, th);
 
-                        ko.utils.domData.set(tr, 'delete_cell' + i, cth);
-                        ko.utils.domData.set(tr, 'restore_cell' + i, th);
-                    } else {
-                        let cth = th.cloneNode(true) as HTMLTableHeaderCellElement;
-                        cth.style.display = "none";
+                                frow.appendChild(th);
 
-                        th.parentElement!.replaceChild(cth, th);
+                                ko.utils.domData.set(tr, 'delete_cell' + i, cth);
+                                ko.utils.domData.set(tr, 'restore_cell' + i, th);
+                            } else {
+                                let cth = document.createElement('th');
+                                cth.style.display = "none";
 
-                        srow.appendChild(th);
+                                th.parentElement!.replaceChild(cth, th);
 
-                        ko.utils.domData.set(tr, 'delete_cell' + i, cth);
-                        ko.utils.domData.set(tr, 'restore_cell' + i, th);
-                    }
-                });
+                                srow.appendChild(th);
 
-                ftrs.push(frow);
-                strs.push(srow);
+                                ko.utils.domData.set(tr, 'delete_cell' + i, cth);
+                                ko.utils.domData.set(tr, 'restore_cell' + i, th);
+                            }
+                        }
+                    });
+
+                    ftrs.push(frow);
+                    strs.push(srow);
+                }
             });
 
             if (!fc) {
@@ -162,38 +175,100 @@ export class fxTable {
 
         if (tbody) {
             let trs: HTMLTableRowElement[] = [].slice.call(tbody.querySelectorAll('tr')),
-                ftds: HTMLTableRowElement[] = [];
+                ftds: HTMLTableRowElement[] = [],
+                fr = tbody.querySelector('tr') as HTMLTableRowElement;
 
-            options.rowHeight = tbody.querySelector('tr')!.offsetHeight;
+            if (fr) {
+                options.rowHeight = fr.offsetHeight;
+            }
 
             trs.forEach((tr: HTMLTableRowElement) => {
-                let row = document.createElement('tr');
-                row.style.height = tr.getBoundingClientRect().height + 'px';
+                if (tr) {
+                    let row = document.createElement('tr');
 
-                [].slice.call(tr.querySelectorAll('td')).forEach((td: HTMLTableDataCellElement, i: number) => {
-                    if (i < fc) {
-                        let ctd = td.cloneNode(true) as HTMLTableDataCellElement;
+                    //row.style.height = tr.getBoundingClientRect().height + 'px';
 
-                        ctd.style.display = "none";
+                    [].slice.call(tr.querySelectorAll('td')).forEach((td: HTMLTableDataCellElement, i: number) => {
+                        if (td && i < fc) {
+                            let ctd = document.createElement('td');
 
-                        td.parentElement!.replaceChild(ctd, td);
+                            ctd.style.display = "none";
+                            td.style.minWidth = td.width + 'px';
+                            //td.style.height = td.height + 'px';
+                            td.parentElement!.replaceChild(ctd, td);
 
-                        row.appendChild(td as HTMLTableDataCellElement);
+                            row.appendChild(td);
 
-                        ko.utils.domData.set(tr, 'delete_cell' + i, ctd);
-                        ko.utils.domData.set(tr, 'restore_cell' + i, td);
-                    }
-                });
+                            ko.utils.domData.set(tr, 'delete_cell' + i, ctd);
+                            ko.utils.domData.set(tr, 'restore_cell' + i, td);
+                        }
+                    });
 
-                ftds.push(row);
+                    ftds.push(row);
+                }
             });
 
             if (!fc) {
                 elements.fixedBody.setAttribute('style', 'display: none');
-                elements.scrollBody.style.borderLeft = null;
+                scrollBody.style.borderLeft = null;
             } else {
                 self.initTableContent(elements.fixedBody, ftds, CONTENT_TYPE.FIXED_BODY);
             }
+        }
+
+        if (tfoot) {
+            let ftrs: HTMLTableRowElement[] = [],
+                strs: HTMLTableRowElement[] = [];
+
+            [].slice.call(tfoot.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+                if (tr) {
+                    let frow = document.createElement('tr'),
+                        srow = document.createElement('tr');
+
+                    frow.style.borderBottom = options.border;
+                    srow.style.borderBottom = options.border;
+
+                    frow.style.height = tr.getBoundingClientRect().height + 'px';
+                    srow.style.height = tr.getBoundingClientRect().height + 'px';
+
+                    [].slice.call(tr.querySelectorAll('th')).forEach((th: HTMLTableHeaderCellElement, i: number) => {
+                        if (th) {
+                            if (i < fc) {
+                                let cth = document.createElement('th');
+                                cth.style.display = "none";
+
+                                th.parentElement!.replaceChild(cth, th);
+
+                                frow.appendChild(th);
+
+                                ko.utils.domData.set(tr, 'delete_cell' + i, cth);
+                                ko.utils.domData.set(tr, 'restore_cell' + i, th);
+                            } else {
+                                let cth = document.createElement('th');
+                                cth.style.display = "none";
+
+                                th.parentElement!.replaceChild(cth, th);
+
+                                srow.appendChild(th);
+
+                                ko.utils.domData.set(tr, 'delete_cell' + i, cth);
+                                ko.utils.domData.set(tr, 'restore_cell' + i, th);
+                            }
+                        }
+                    });
+
+                    ftrs.push(frow);
+                    strs.push(srow);
+                }
+            });
+
+            if (fc) {
+                self.initTableContent(elements.fixedFooter, ftrs, CONTENT_TYPE.FIXED_FOOT);
+            }
+
+            self.initTableContent(elements.scrollFooter, strs, CONTENT_TYPE.SCROLL_FOOT);
+
+            tfoot.style.display = "none";
         }
 
         if (elements.fixedHeader.getBoundingClientRect().width < elements.fixedBody.getBoundingClientRect().width) {
@@ -203,75 +278,107 @@ export class fxTable {
         }
 
         if (fc) {
-            elements.scrollBody.style.width = elements.container.getBoundingClientRect().width - elements.fixedBody.getBoundingClientRect().width - 2 + 'px';
+            scrollBody.style.width = elements.container.getBoundingClientRect().width - elements.fixedBody.getBoundingClientRect().width - 2 + 'px';
         }
 
-        elements.scrollBody.style.height = (options.rowHeight + 1) * options.displayRow + 'px';
+        scrollBody.style.height = options.rowHeight * options.displayRow - 1 + 'px';
 
-        if (elements.scrollBody.clientHeight <= (options.rowHeight + 1) * options.displayRow) {
-            elements.scrollBody.style.height = elements.scrollBody.offsetHeight + (elements.scrollBody.offsetHeight - elements.scrollBody.clientHeight) + 'px';
-        }
-
-        elements.scrollBody.dispatchEvent(new Event('resize'));
+        ko.utils.triggerEvent(scrollBody, 'resize');
 
         self.initial = null;
     }
 
     initTableContent(element: HTMLDivElement, contents: HTMLElement[], type: CONTENT_TYPE) {
-        let table = document.createElement('table'),
-            body = document.createElement([CONTENT_TYPE.FIXED_HEAD, CONTENT_TYPE.SCROLL_HEAD].indexOf(type) > -1 ? 'thead' : 'tbody');
+        let self = this,
+            elements = self.elements,
+            table = document.createElement('table'),
+            isHeader = [CONTENT_TYPE.FIXED_HEAD, CONTENT_TYPE.SCROLL_HEAD].indexOf(type) > -1,
+            body = document.createElement(isHeader ? 'thead' : 'tbody');
 
-        table.setAttribute('class', 'fx-table');
+        table.setAttribute('class', elements.table.className);
+
+        table.style.minWidth = "100%"
 
         table.appendChild(body);
 
         element.appendChild(table);
 
-        contents.forEach((content: HTMLElement) => body.appendChild(content));
+        contents.forEach((row: HTMLElement, i: number) => {
+            body.appendChild(row);
+
+            row.style.display = 'block';
+            if (isHeader && i == contents.length - 1) {
+                row.style.borderBottom = null;
+            }
+        });
     }
 
     createElements() {
-        let container = document.createElement('div'),
+        let self = this,
+            options = self.options,
+            container = document.createElement('div'),
             rowHeader = document.createElement('div'),
             fixedHeader = document.createElement('div'),
             scrollHeader = document.createElement('div'),
             rowBody = document.createElement('div'),
             fixedBody = document.createElement('div'),
             scrollBody = document.createElement('div'),
+            fixedFooter = document.createElement('div'),
+            scrollFooter = document.createElement('div'),
+            rowFooter = document.createElement('div'),
             cf = document.createElement('div');
 
         cf.style.clear = 'both';
 
         container.setAttribute('class', 'fx-container');
-        container.style.border = '1px solid #ccc';
+        container.style.border = options.border;
         container.style.marginBottom = '25px';
 
         rowHeader.setAttribute('class', 'fx-row-header');
 
-        rowBody.style.borderTop = '1px solid #ccc';
+        rowBody.style.borderTop = options.border;
         rowBody.setAttribute('class', 'fx-row-body');
+
+        rowFooter.style.borderTop = options.border;
+        rowFooter.setAttribute('class', 'fx-row-footer');
 
         fixedHeader.style.cssFloat = 'left';
         fixedHeader.style.verticalAlign = 'top';
         fixedHeader.setAttribute('class', 'fx-fixed-header');
 
         scrollHeader.style.cssFloat = 'left';
-        scrollHeader.style.borderLeft = '2px solid #ccc';
+        scrollHeader.style.borderLeft = options.border;
+        scrollHeader.style.borderRight = options.border;
         scrollHeader.setAttribute('class', 'fx-scroll-header');
 
         fixedBody.style.cssFloat = 'left';
         fixedBody.style.verticalAlign = 'top';
-        fixedBody.style.borderBottom = '1px solid #ccc';
+        //fixedBody.style.borderBottom = '1px solid #eee';
         fixedBody.setAttribute('class', 'fx-fixed-body');
 
         scrollBody.style.cssFloat = 'float';
-        scrollBody.style.overflow = 'auto';
-        scrollBody.style.borderLeft = '2px solid #ccc';
+        scrollBody.style.overflow = 'hidden';
+        scrollBody.style.overflowY = 'auto';
+        scrollBody.style.borderBottom = '0px';
+        scrollBody.style.borderLeft = options.border;
         scrollBody.setAttribute('class', 'fx-scroll-body');
+
+        fixedFooter.style.cssFloat = 'left';
+        fixedFooter.style.verticalAlign = 'top';
+        //fixedFooter.style.borderBottom = options.border;
+        fixedFooter.setAttribute('class', 'fx-fixed-footer');
+
+        scrollFooter.style.cssFloat = 'left';
+        scrollFooter.style.overflow = 'hidden';
+        scrollFooter.style.overflowX = 'auto';
+        scrollFooter.style.borderLeft = options.border;
+        scrollFooter.style.borderRight = options.border;
+        scrollFooter.setAttribute('class', 'fx-scroll-footer');
 
         // add row;
         container.appendChild(rowHeader);
         container.appendChild(rowBody);
+        container.appendChild(rowFooter);
 
         rowHeader.appendChild(fixedHeader);
         rowHeader.appendChild(scrollHeader);
@@ -281,71 +388,93 @@ export class fxTable {
         rowBody.appendChild(scrollBody);
         rowBody.appendChild(cf.cloneNode());
 
+        rowFooter.appendChild(fixedFooter);
+        rowFooter.appendChild(scrollFooter);
+        rowFooter.appendChild(cf.cloneNode());
+
         container.style.overflow = "hidden";
         fixedHeader.style.overflow = "hidden";
         scrollHeader.style.overflow = "hidden";
         fixedBody.style.overflow = "hidden";
 
-        scrollBody.addEventListener('resize', (evt: Event) => {
-            fixedBody.style.height = scrollBody.clientHeight + 1 + 'px';
-            scrollHeader.style.width = scrollBody.clientWidth + 2 + 'px';
+        ko.utils.registerEventHandler(fixedBody, 'resize', (evt: Event) => {
+            fixedHeader.style.width = fixedBody.clientWidth + 'px';
+            fixedFooter.style.width = fixedBody.clientWidth + 'px';
         });
 
-        scrollBody.addEventListener('scroll', function (evt: Event) {
-            scrollHeader.scrollLeft = scrollBody.scrollLeft;
+        ko.utils.registerEventHandler(scrollBody, 'resize', (evt: Event) => {
+            let scrollY = scrollBody.offsetWidth - scrollBody.clientWidth > 1,
+                scrollX = scrollBody.offsetHeight - scrollBody.clientHeight > 0;
+
+            if (!scrollX) {
+                scrollBody.style.overflowY = 'auto';
+            } else {
+                scrollBody.style.overflowY = 'hidden';
+            }
+
+            if (!scrollY) {
+                scrollHeader.style.borderRight = '0px';
+                scrollFooter.style.borderRight = '0px';
+            } else {
+                scrollHeader.style.borderRight = options.border;
+                scrollFooter.style.borderRight = options.border;
+            }
+
+            fixedBody.style.height = scrollBody.offsetHeight + 'px';
+
+            scrollHeader.style.width = scrollBody.clientWidth + (scrollY ? 2 : 1) + 'px';
+            scrollFooter.style.width = scrollBody.clientWidth + (scrollY ? 2 : 1) + 'px';
+
+            ko.utils.triggerEvent(fixedBody, 'resize');
+        });
+
+        ko.utils.registerEventHandler(scrollBody, 'scroll', (evt: Event) => {
             fixedBody.scrollTop = scrollBody.scrollTop;
 
+            scrollHeader.scrollLeft = scrollBody.scrollLeft;
+            scrollFooter.scrollLeft = scrollBody.scrollLeft;
+
             // cancel all scroll event of parents
             evt.preventDefault();
         });
 
-        fixedBody.addEventListener('scroll', function (evt: Event) {
+        ko.utils.registerEventHandler(fixedBody, 'scroll', (evt: Event) => {
             scrollBody.scrollTop = fixedBody.scrollTop;
+
+            // cancel all scroll event of parents
+            evt.preventDefault();
         });
 
-        scrollBody.addEventListener('wheel', (evt: WheelEvent) => {
-            let step = evt.deltaY ? 125 : 40,
-                wheel = (evt.deltaY || evt.wheelDeltaY);
+        ko.utils.registerEventHandler(scrollFooter, 'scroll', (evt: Event) => {
+            scrollBody.scrollLeft = scrollFooter.scrollLeft;
+            scrollHeader.scrollLeft = scrollFooter.scrollLeft;
 
-            if (!evt.shiftKey) {
+            // cancel all scroll event of parents
+            evt.preventDefault();
+        });
+
+        ko.utils.registerEventHandler(container, 'wheel', (evt: WheelEvent) => {
+            let step = evt.deltaY ? 125 : 40,
+                wheel = (evt.deltaY || evt.wheelDeltaY),
+                scrollY = scrollBody.offsetWidth - scrollBody.clientWidth > 1;
+
+            if (evt.shiftKey || !scrollY) {
                 if (wheel > 0) {
-                    scrollBody.scrollTop -= step;
+                    scrollBody.scrollLeft += step;
                 } else {
-                    scrollBody.scrollTop += step;
+                    scrollBody.scrollLeft -= step;
                 }
             } else {
                 if (wheel > 0) {
-                    scrollBody.scrollLeft -= step;
+                    scrollBody.scrollTop += step;
                 } else {
-                    scrollBody.scrollLeft += step;
+                    scrollBody.scrollTop -= step;
                 }
             }
 
             // cancel all scroll event of parents
             evt.preventDefault();
         });
-
-        fixedBody.addEventListener('wheel', (evt: WheelEvent) => {
-            let step = evt.deltaY ? 125 : 40,
-                wheel = (evt.deltaY || evt.wheelDeltaY);
-
-            if (!evt.shiftKey) {
-                if (wheel > 0) {
-                    scrollBody.scrollTop -= step;
-                } else {
-                    scrollBody.scrollTop += step;
-                }
-            } else {
-                if (wheel > 0) {
-                    scrollBody.scrollLeft -= step;
-                } else {
-                    scrollBody.scrollLeft += step;
-                }
-            }
-
-            // cancel all scroll event of parents
-            evt.preventDefault();
-        })
 
         return {
             container: container,
@@ -353,70 +482,177 @@ export class fxTable {
             scrollHeader: scrollHeader,
             fixedBody: fixedBody,
             scrollBody: scrollBody,
+            fixedFooter: fixedFooter,
+            scrollFooter: scrollFooter,
             table: document.createElement('table')
         };
     }
 
     clearStyle() {
         let self = this,
-            head = self.elements.table.querySelector('thead'),
-            body = self.elements.table.querySelector('tbody');
+            options = self.options,
+            elements = self.elements,
+            container = elements.container,
+            head = elements.table.querySelector('thead'),
+            body = elements.table.querySelector('tbody'),
+            foot = elements.table.querySelector('tfoot');
 
-        [].slice.call(head!.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
-            [].slice.call(tr.querySelectorAll('th')).forEach((th: any, i: number) => {
-                let d = ko.utils.domData.get(tr, 'delete_cell' + i),
-                    r = ko.utils.domData.get(tr, 'restore_cell' + i);
+        if (!head) {
+            (container.querySelector('.fx-row-body') as HTMLElement).style.borderTop = '0px';
+        } else {
+            [].slice.call(head!.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+                if (tr) {
+                    [].slice.call(tr.querySelectorAll('th')).forEach((th: any, i: number) => {
+                        if (th) {
+                            let d = ko.utils.domData.get(tr, 'delete_cell' + i),
+                                r = ko.utils.domData.get(tr, 'restore_cell' + i);
 
-                if (d && r) {
-                    tr.replaceChild(r, d);
+                            if (d && r) {
+                                tr.replaceChild(r, d);
+                            }
+                        }
+                    });
                 }
             });
-        });
+            (container.querySelector('.fx-row-body') as HTMLElement).style.borderTop = options.border;
+        }
 
-        [].slice.call(body!.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
-            [].slice.call(tr.querySelectorAll('td')).forEach((td: any, i: number) => {
-                let d = ko.utils.domData.get(tr, 'delete_cell' + i),
-                    r = ko.utils.domData.get(tr, 'restore_cell' + i);
+        if (body) {
+            let trs = [].slice.call(body.querySelectorAll('tr'));
 
-                if (d && r) {
-                    tr.replaceChild(r, d);
+            trs.forEach((tr: HTMLTableRowElement) => {
+                if (tr) {
+                    [].slice.call(tr.querySelectorAll('td')).forEach((td: any, i: number) => {
+                        if (td) {
+                            let d = ko.utils.domData.get(tr, 'delete_cell' + i),
+                                r = ko.utils.domData.get(tr, 'restore_cell' + i);
+
+                            if (d && r) {
+                                tr.replaceChild(r, d);
+                            }
+                        }
+                    });
                 }
             });
-        });
+        }
 
-        self.elements.table.removeAttribute('style');
+        if (foot) {
+            [].slice.call(foot.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+                if (tr) {
+                    [].slice.call(tr.querySelectorAll('th')).forEach((th: any, i: number) => {
+                        if (th) {
+                            let d = ko.utils.domData.get(tr, 'delete_cell' + i),
+                                r = ko.utils.domData.get(tr, 'restore_cell' + i);
+
+                            if (d && r) {
+                                tr.replaceChild(r, d);
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        elements.table.removeAttribute('style');
+        elements.table.style.minWidth = "100%";
 
         if (head) {
             head.removeAttribute('style');
 
             [].slice.call(head.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
-                tr.removeAttribute('style');
+                if (tr) {
+                    tr.removeAttribute('style');
+                    tr.style.display = 'block';
+                    tr.style.borderBottom = options.border;
+                    tr.style.minHeight = options.rowHeight + 'px';
 
-                [].slice.call(tr.querySelectorAll('th')).forEach((th: HTMLTableHeaderCellElement) => {
-                    th.removeAttribute('style');
-                    th.style.overflow = 'hidden';
-                    th.style.textOverflow = 'ellipsis';
-                })
+                    let ths = [].slice.call(tr.querySelectorAll('th'));
+                    ths.forEach((th: HTMLTableHeaderCellElement, j: number) => {
+                        if (th) {
+                            th.removeAttribute('style');
+                            th.style.boxSizing = 'border-box';
+                            th.style.overflow = 'hidden';
+                            th.style.textOverflow = 'ellipsis';
+
+                            if (j == ths.length - 1) {
+                                th.style.borderRight = '0px';
+                            }
+                        }
+                    });
+                }
             });
         }
 
         if (body) {
             body.setAttribute('style', '');
+            let trs = [].slice.call(body.querySelectorAll('tr'));
 
-            [].slice.call(body.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement, i: number) => {
-                tr.removeAttribute('style');
-                tr.setAttribute('row', `${i}`);
+            trs.forEach((tr: HTMLTableRowElement, i: number) => {
+                if (tr) {
 
-                [].slice.call(tr.querySelectorAll('td')).forEach((td: HTMLTableDataCellElement, j: number) => {
-                    td.removeAttribute('style');
-                    td.setAttribute('column', `${j}`);
-                })
+                    tr.removeAttribute('style');
+
+                    tr.style.display = 'block';
+
+                    if (i + 1 >= options.displayRow && i == trs.length - 1) {
+                        tr.style.borderBottom = '0px';
+                    } else {
+                        tr.style.borderBottom = options.border;
+                    }
+
+                    tr.style.minHeight = options.rowHeight + 'px';
+
+                    tr.setAttribute('row', `${i}`);
+
+                    let tds = [].slice.call(tr.querySelectorAll('td'));
+
+                    tds.forEach((td: HTMLTableDataCellElement, j: number) => {
+                        if (td) {
+                            td.removeAttribute('style');
+                            td.style.boxSizing = 'border-box';
+                            td.setAttribute('column', `${j}`);
+
+                            if (j == tds.length - 1) {
+                                td.style.borderRight = '0px';
+                            }
+                        }
+                    });
+                }
             });
         }
 
-        self.elements.fixedBody.innerHTML = '';
-        self.elements.fixedHeader.innerHTML = '';
-        self.elements.scrollHeader.innerHTML = '';
+        if (foot) {
+            foot.removeAttribute('style');
+
+            [].slice.call(foot.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+                if (tr) {
+                    tr.removeAttribute('style');
+                    tr.style.display = 'block';
+                    tr.style.borderBottom = options.border;
+                    tr.style.minHeight = options.rowHeight + 'px';
+
+                    let ths = [].slice.call(tr.querySelectorAll('th'));
+                    ths.forEach((th: HTMLTableHeaderCellElement, j: number) => {
+                        if (th) {
+                            th.removeAttribute('style');
+                            th.style.boxSizing = 'border-box';
+                            th.style.overflow = 'hidden';
+                            th.style.textOverflow = 'ellipsis';
+
+                            if (j == ths.length - 1) {
+                                th.style.borderRight = '0px';
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        elements.fixedBody.innerHTML = '';
+        elements.fixedHeader.innerHTML = '';
+        elements.scrollHeader.innerHTML = '';
+        elements.fixedFooter.innerHTML = '';
+        elements.scrollFooter.innerHTML = '';
     }
 }
 
@@ -425,4 +661,6 @@ enum CONTENT_TYPE {
     SCROLL_HEAD = <any>'SCROLL_HEAD',
     FIXED_BODY = <any>'FIXED_BODY',
     SCROLL_BODY = <any>'SCROLL_BODY',
+    FIXED_FOOT = <any>'FIXED_FOOT',
+    SCROLL_FOOT = <any>'SCROLL_FOOT'
 }
