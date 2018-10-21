@@ -1,64 +1,30 @@
-import { ko, $ } from '@app/providers';
+import { ko } from '@app/providers';
+
+let domData = ko.utils.domData;
 
 export class fxTable {
     initial: number | null = null;
+    container: HTMLDivElement = document.createElement('div');
 
-    options: {
-        width: number | string;
-        displayRow: number;
-        fixedColumn: number;
-        rowHeight: number;
-        autoWidth: boolean;
-        border: string;
-    } = {
-            width: 400,
-            displayRow: 10,
-            fixedColumn: 0,
-            rowHeight: 30,
-            autoWidth: false,
-            border: '1px solid #dcdcdc'
-        };
+    options: IOptions = {
+        width: 0,
+        displayRow: 10,
+        fixedColumn: 0,
+        rowHeight: 0,
+        columns: []
+    };
 
-    elements: {
-        container: HTMLDivElement;
-        fixedHeader: HTMLDivElement;
-        scrollHeader: HTMLDivElement;
-        fixedBody: HTMLDivElement;
-        scrollBody: HTMLDivElement;
-        fixedFooter: HTMLDivElement;
-        scrollFooter: HTMLDivElement;
-        table: HTMLTableElement;
-    } = {
-            container: document.createElement('div'),
-            fixedHeader: document.createElement('div'),
-            scrollHeader: document.createElement('div'),
-            fixedBody: document.createElement('div'),
-            scrollBody: document.createElement('div'),
-            fixedFooter: document.createElement('div'),
-            scrollFooter: document.createElement('div'),
-            table: document.createElement('table')
-        };
+    constructor(table: HTMLTableElement, options?: IOptions) {
+        // init default elements;
+        this.createElements();
 
-    constructor(table: HTMLTableElement, options?: {
-        width: number | string;
-        displayRow: number;
-        fixedColumn: number;
-    }) {
-        let self = this;
+        let self = this,
+            elements = self.elements,
+            dtbl = elements.tables.table,
+            sbody = elements.body.scrollable;
 
         options = options || self.options;
-
         ko.utils.extend(self.options, options);
-
-        if (!self.options.width) {
-            self.options.autoWidth = true;
-            ko.utils.extend(self.options, {
-                width: table.getBoundingClientRect().width
-            });
-        }
-
-        self.elements = self.createElements();
-        self.elements.table = table;
 
         if (!table.className) {
             table.className = 'fx-table';
@@ -66,29 +32,28 @@ export class fxTable {
             table.classList.add('fx-table');
         }
 
-        table.parentElement!.replaceChild(self.elements.container, table);
+        table.parentElement!.replaceChild(self.container, table);
 
-        self.elements.scrollBody.appendChild(table);
-
-        self.elements.container.style.width = `${self.options.width}px`;
-
-        /*if (self.options.autoWidth && self.elements.scrollBody.clientWidth - self.elements.scrollBody.scrollWidth < 20) {
-            if (!self.initial) {
-                self.initial = setTimeout(function () {
-                    self.initial = null;
-                    let body = self.elements.scrollBody;
-                    self.elements.container.style.width = self.elements.container.scrollWidth + (body.scrollWidth - body.clientWidth) + 'px';
-                }, 500);
-            }
-        }*/
+        sbody.replaceChild(table, dtbl);
 
         self.initLayout();
 
-        let body = self.elements.table.querySelector('tbody');
+        // reload elements
+        elements = self.elements;
 
+        // reinit layout if window resize
+        window.addEventListener('resize', () => {
+            if (!self.initial) {
+                self.initial = setTimeout(function () {
+                    self.initLayout();
+                }, 500);
+            }
+        });
+
+        // reinit layout if render body again
         ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => {
-            if (body) {
-                body.addEventListener(evt, (evt) => {
+            if (elements.tables.body) {
+                elements.tables.body.addEventListener(evt, () => {
                     if (!self.initial) {
                         self.initial = setTimeout(function () {
                             self.initLayout();
@@ -102,278 +67,749 @@ export class fxTable {
     initLayout() {
         let self = this,
             options = self.options,
-            elements = self.elements,
-            fc = options.fixedColumn,
-            table = self.elements.table,
-            thead = table.querySelector('thead'),
-            tbody = table.querySelector('tbody'),
-            tfoot = table.querySelector('tfoot'),
-            scrollBody = elements.scrollBody;
+            elements = self.elements;
 
-        self.clearStyle();
+        self.clearStyle(elements);
 
-        // copy and restyle all element
-        if (thead) {
-            let ftrs: HTMLTableRowElement[] = [],
-                strs: HTMLTableRowElement[] = [];
+        self.roleBackItem(elements.tables);
 
-            [].slice.call(thead.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
-                if (tr) {
-                    let frow = document.createElement('tr'),
-                        srow = document.createElement('tr');
+        self.getRowHeight(elements.tables);
 
-                    frow.style.borderBottom = options.border;
-                    srow.style.borderBottom = options.border;
+        self.moveFixedItem(elements, options);
 
-                    //frow.style.height = tr.getBoundingClientRect().height + 'px';
-                    //srow.style.height = tr.getBoundingClientRect().height + 'px';
+        self.headStyle(elements);
+        self.footStyle(elements);
+        self.fixedStyle(elements);
 
-                    [].slice.call(tr.querySelectorAll('th')).forEach((th: HTMLTableHeaderCellElement, i: number) => {
-                        if (th) {
-                            //th.style.minWidth = th.getBoundingClientRect().width + 'px';
-
-                            if (i < fc) {
-                                let cth = document.createElement('th');
-                                cth.style.display = "none";
-
-                                th.parentElement!.replaceChild(cth, th);
-
-                                frow.appendChild(th);
-
-                                ko.utils.domData.set(tr, 'delete_cell' + i, cth);
-                                ko.utils.domData.set(tr, 'restore_cell' + i, th);
-                            } else {
-                                let cth = document.createElement('th');
-                                cth.style.display = "none";
-
-                                th.parentElement!.replaceChild(cth, th);
-
-                                srow.appendChild(th);
-
-                                ko.utils.domData.set(tr, 'delete_cell' + i, cth);
-                                ko.utils.domData.set(tr, 'restore_cell' + i, th);
-                            }
-                        }
-                    });
-
-                    ftrs.push(frow);
-                    strs.push(srow);
-                }
-            });
-
-            if (!fc) {
-                elements.fixedHeader.setAttribute('style', 'display: none');
-                elements.scrollHeader.style.borderLeft = null;
-            } else {
-                self.initTableContent(elements.fixedHeader, ftrs, CONTENT_TYPE.FIXED_HEAD);
-            }
-
-            self.initTableContent(elements.scrollHeader, strs, CONTENT_TYPE.SCROLL_HEAD);
-
-            thead.style.display = "none";
-        }
-
-        if (tbody) {
-            let trs: HTMLTableRowElement[] = [].slice.call(tbody.querySelectorAll('tr')),
-                ftds: HTMLTableRowElement[] = [],
-                fr = tbody.querySelector('tr') as HTMLTableRowElement;
-
-            if (fr) {
-                options.rowHeight = fr.offsetHeight;
-            }
-
-            trs.forEach((tr: HTMLTableRowElement) => {
-                if (tr) {
-                    let row = document.createElement('tr');
-
-                    //row.style.height = tr.getBoundingClientRect().height + 'px';
-
-                    [].slice.call(tr.querySelectorAll('td')).forEach((td: HTMLTableDataCellElement, i: number) => {
-                        if (td && i < fc) {
-                            let ctd = document.createElement('td');
-
-                            ctd.style.display = "none";
-                            td.style.minWidth = td.width + 'px';
-                            //td.style.height = td.height + 'px';
-                            td.parentElement!.replaceChild(ctd, td);
-
-                            row.appendChild(td);
-
-                            ko.utils.domData.set(tr, 'delete_cell' + i, ctd);
-                            ko.utils.domData.set(tr, 'restore_cell' + i, td);
-                        }
-                    });
-
-                    ftds.push(row);
-                }
-            });
-
-            if (!fc) {
-                elements.fixedBody.setAttribute('style', 'display: none');
-                scrollBody.style.borderLeft = null;
-            } else {
-                self.initTableContent(elements.fixedBody, ftds, CONTENT_TYPE.FIXED_BODY);
-            }
-        }
-
-        if (tfoot) {
-            let ftrs: HTMLTableRowElement[] = [],
-                strs: HTMLTableRowElement[] = [];
-
-            [].slice.call(tfoot.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
-                if (tr) {
-                    let frow = document.createElement('tr'),
-                        srow = document.createElement('tr');
-
-                    frow.style.borderBottom = options.border;
-                    srow.style.borderBottom = options.border;
-
-                    frow.style.height = tr.getBoundingClientRect().height + 'px';
-                    srow.style.height = tr.getBoundingClientRect().height + 'px';
-
-                    [].slice.call(tr.querySelectorAll('th')).forEach((th: HTMLTableHeaderCellElement, i: number) => {
-                        if (th) {
-                            if (i < fc) {
-                                let cth = document.createElement('th');
-                                cth.style.display = "none";
-
-                                th.parentElement!.replaceChild(cth, th);
-
-                                frow.appendChild(th);
-
-                                ko.utils.domData.set(tr, 'delete_cell' + i, cth);
-                                ko.utils.domData.set(tr, 'restore_cell' + i, th);
-                            } else {
-                                let cth = document.createElement('th');
-                                cth.style.display = "none";
-
-                                th.parentElement!.replaceChild(cth, th);
-
-                                srow.appendChild(th);
-
-                                ko.utils.domData.set(tr, 'delete_cell' + i, cth);
-                                ko.utils.domData.set(tr, 'restore_cell' + i, th);
-                            }
-                        }
-                    });
-
-                    ftrs.push(frow);
-                    strs.push(srow);
-                }
-            });
-
-            if (fc) {
-                self.initTableContent(elements.fixedFooter, ftrs, CONTENT_TYPE.FIXED_FOOT);
-            }
-
-            self.initTableContent(elements.scrollFooter, strs, CONTENT_TYPE.SCROLL_FOOT);
-
-            tfoot.style.display = "none";
-        }
-
-        if (elements.fixedHeader.getBoundingClientRect().width < elements.fixedBody.getBoundingClientRect().width) {
-            elements.fixedHeader.style.width = elements.fixedBody.getBoundingClientRect().width + 'px';
-        } else {
-            elements.fixedBody.style.width = elements.fixedHeader.getBoundingClientRect().width + 'px';
-        }
-
-        if (fc) {
-            scrollBody.style.width = elements.container.getBoundingClientRect().width - elements.fixedBody.getBoundingClientRect().width - 2 + 'px';
-        }
-
-        scrollBody.style.height = options.rowHeight * options.displayRow - 1 + 'px';
-
-        ko.utils.triggerEvent(scrollBody, 'resize');
+        self.layoutStyle(elements);
+        self.scrollStyle(elements);
 
         self.initial = null;
     }
 
-    initTableContent(element: HTMLDivElement, contents: HTMLElement[], type: CONTENT_TYPE) {
+    clearStyle(elements: IElements) {
         let self = this,
-            elements = self.elements,
-            table = document.createElement('table'),
-            isHeader = [CONTENT_TYPE.FIXED_HEAD, CONTENT_TYPE.SCROLL_HEAD].indexOf(type) > -1,
-            body = document.createElement(isHeader ? 'thead' : 'tbody');
+            head = elements.head,
+            body = elements.body,
+            foot = elements.foot,
+            tables = elements.tables;
 
-        table.setAttribute('class', elements.table.className);
+        self.roleBackItem(tables);
 
-        table.style.minWidth = "100%"
+        head.row.removeAttribute('style');
+        head.fixed.removeAttribute('style');
+        head.scrollable.removeAttribute('style');
 
-        table.appendChild(body);
+        body.row.removeAttribute('style');
+        body.fixed.removeAttribute('style');
+        body.scrollable.removeAttribute('style');
 
-        element.appendChild(table);
+        foot.row.removeAttribute('style');
+        foot.fixed.removeAttribute('style');
+        foot.scrollable.removeAttribute('style');
 
-        contents.forEach((row: HTMLElement, i: number) => {
-            body.appendChild(row);
+        tables.table.removeAttribute('style');
 
-            row.style.display = 'block';
-            if (isHeader && i == contents.length - 1) {
-                row.style.borderBottom = null;
-            }
-        });
+        if (tables.head) {
+            tables.head.removeAttribute('style');
+
+            [].slice.call(tables.head.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+                tr.removeAttribute('style');
+
+                let ths = [].slice.call(tr.querySelectorAll('th'));
+                ths.forEach((th: HTMLTableHeaderCellElement, j: number) => {
+                    th.removeAttribute('style');
+                });
+            });
+        }
+
+        if (tables.body) {
+            tables.body.setAttribute('style', '');
+            let trs = [].slice.call(tables.body.querySelectorAll('tr'));
+
+            trs.forEach((tr: HTMLTableRowElement, i: number) => {
+                tr.removeAttribute('style');
+
+                tr.setAttribute('row', `${i}`);
+
+                let tds = [].slice.call(tr.querySelectorAll('td'));
+
+                tds.forEach((td: HTMLTableDataCellElement, j: number) => {
+                    td.removeAttribute('style');
+                    td.setAttribute('column', `${j}`);
+                });
+            });
+        }
+
+        if (tables.foot) {
+            tables.foot.removeAttribute('style');
+
+            [].slice.call(tables.foot.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+                tr.removeAttribute('style');
+
+                let ths = [].slice.call(tr.querySelectorAll('th'));
+                ths.forEach((th: HTMLTableHeaderCellElement, j: number) => {
+                    th.removeAttribute('style');
+                });
+            });
+        }
+
+        head.fixed.innerHTML = '';
+        head.scrollable.innerHTML = '';
+
+        body.fixed.innerHTML = '';
+
+        foot.fixed.innerHTML = '';
+        foot.scrollable.innerHTML = '';
+
+        ko.utils.triggerEvent(body.scrollable, 'resize');
     }
 
-    createElements() {
+    headStyle(elements: IElements) {
+        let self = this,
+            container = self.container,
+            head = elements.head.row,
+            hasHead = [].slice.call(head.querySelectorAll('table')).length > 0;
+
+        if (hasHead) {
+            container.classList.add('has-header');
+        } else {
+            container.classList.remove('has-header');
+        }
+    }
+
+    fixedStyle(elements: IElements) {
+        let self = this,
+            container = self.container,
+            fixedHead = elements.head.fixed,
+            fixedBody = elements.body.fixed,
+            fixedFoot = elements.foot.fixed,
+            listFixed = [
+                [].slice.call(fixedHead.querySelectorAll('table')).length,
+                [].slice.call(fixedBody.querySelectorAll('table')).length,
+                [].slice.call(fixedFoot.querySelectorAll('table')).length
+            ];
+
+        if (!!listFixed[0] || !!listFixed[1] || !!listFixed[2]) {
+            container.classList.add('has-fixed');
+        } else {
+            container.classList.remove('has-fixed');
+        }
+    }
+
+    footStyle(elements: IElements) {
+        let self = this,
+            container = self.container,
+            foot = elements.foot.row,
+            hasFoot = [].slice.call(foot.querySelectorAll('table')).length > 0;
+
+        if (hasFoot) {
+            container.classList.add('has-footer');
+        } else {
+            container.classList.remove('has-footer');
+        }
+    }
+
+    layoutStyle(elements: IElements) {
         let self = this,
             options = self.options,
+            container = self.container;
+
+        [].slice.call(container.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+            let colSpan = -1;
+            [].slice.call(tr.querySelectorAll('th, td')).forEach((t: HTMLTableCellElement, i: number) => {
+                colSpan += t.colSpan;
+
+                if (!t.classList.contains('fx-hidden')) {
+                    let width = 0,
+                        height = 0,
+                        col = Math.max(i, colSpan);
+
+                    for (let c = col; c < col + t.colSpan; c++) {
+                        width += (options.columns[col] || 100);
+                    }
+
+                    t.style.minWidth = width + 'px';
+                    t.style.maxWidth = width + 'px';
+
+                    for (let r = 1; r <= t.rowSpan; r++) {
+                        height += self.options.rowHeight;
+                    }
+
+                    t.style.height = height + 'px';
+                }
+            });
+        });
+
+        self.layoutWidth(elements);
+    }
+
+    scrollStyle(elements: IElements) {
+        let self = this,
+            options = self.options,
+            container = self.container,
+            body = elements.tables.body;
+
+        let scrollHeadW = elements.head.scrollable.scrollWidth,
+            scrollBodyW = elements.body.scrollable.scrollWidth,
+            scrollFootW = elements.foot.scrollable.scrollWidth,
+            scrollWidth = Math.max(scrollHeadW, scrollBodyW, scrollFootW),
+
+            clientHeadW = elements.head.scrollable.clientWidth,
+            clientBodyW = elements.body.scrollable.clientWidth,
+            clientFootW = elements.foot.scrollable.clientWidth,
+            clientWidth = Math.max(clientHeadW, clientBodyW, clientFootW);
+
+        if (clientWidth < scrollWidth) {
+            container.classList.add('has-scroll-x');
+        } else {
+            container.classList.remove('has-scroll-x');
+        }
+
+        if (body) {
+            let row = [].slice.call(body.querySelectorAll('tr')).length;
+
+            if (row > options.displayRow) {
+                container.classList.add('has-scroll-y');
+
+                if (!options.width) {
+                    if (row == options.displayRow + 1) {
+                        let scroll = self.getScroll(elements),
+                            borders = self.getBorder(elements.body.scrollable),
+                            fixedHeadW = elements.head.fixed.offsetWidth,
+                            fixedBodyW = elements.body.fixed.offsetWidth,
+                            fixedFootW = elements.foot.fixed.offsetWidth,
+                            fixedWidth = Math.max(fixedHeadW, fixedBodyW, fixedFootW),
+                            offsetWidth = elements.tables.table.offsetWidth;
+
+                        if (container.offsetWidth < fixedWidth + offsetWidth + scroll.y) {
+                            container.style.width = fixedWidth + offsetWidth + scroll.y + 'px';
+                            elements.body.scrollable.style.width = offsetWidth + scroll.y - borders.x + 'px';
+                        }
+                    }
+                }
+            } else {
+                container.classList.remove('has-scroll-y');
+
+                if (!options.width) {
+                    if (row == options.displayRow) {
+                        let borderc = self.getBorder(container),
+                            borders = self.getBorder(elements.body.scrollable),
+                            fixedHeadW = elements.head.fixed.offsetWidth,
+                            fixedBodyW = elements.body.fixed.offsetWidth,
+                            fixedFootW = elements.foot.fixed.offsetWidth,
+                            fixedWidth = Math.max(fixedHeadW, fixedBodyW, fixedFootW),
+                            offsetWidth = elements.tables.table.offsetWidth;
+
+                        if (container.clientWidth > fixedWidth + offsetWidth) {
+                            container.style.width = fixedWidth + offsetWidth + borders.x + borderc.x + 'px';
+                            elements.body.scrollable.style.width = offsetWidth + borders.x + 'px';
+                        }
+                    }
+                }
+            }
+
+            let scroll = self.getScroll(elements),
+                borders = self.getBorder(elements.body.scrollable);
+
+            // get border-size replace 2 value
+            elements.head.scrollable.style.width = elements.body.scrollable.offsetWidth - scroll.y + (scroll.y ? borders.x + 1 : 0) + 'px';
+            elements.foot.scrollable.style.width = elements.body.scrollable.offsetWidth - scroll.y + (scroll.y ? borders.x + 1 : 0) + 'px';
+
+            elements.body.fixed.style.height = options.displayRow * options.rowHeight + (scroll.x ? borders.y : 0) + 'px';
+            elements.body.scrollable.style.height = options.displayRow * options.rowHeight + scroll.x + 'px';
+        }
+    }
+
+    layoutWidth(elements: IElements) {
+        let self = this,
+            options = self.options,
+            container = self.container,
+            fixedHeadW = elements.head.fixed.offsetWidth,
+            fixedBodyW = elements.body.fixed.offsetWidth,
+            fixedFootW = elements.foot.fixed.offsetWidth,
+            fixedWidth = Math.max(fixedHeadW, fixedBodyW, fixedFootW);
+
+        if (options.width) {
+            container.style.width = Math.abs(options.width) + 'px';
+        } else {
+            let border = self.getBorder(container),
+                scrollHeadW = elements.head.scrollable.offsetWidth,
+                scrollBodyW = elements.body.scrollable.offsetWidth,
+                scrollFootW = elements.foot.scrollable.offsetWidth,
+                scrollWidth = Math.max(scrollHeadW, scrollBodyW, scrollFootW);
+
+            container.style.width = fixedWidth + scrollWidth + border.x + 'px';
+        }
+
+        let totalWidth = container.clientWidth;
+
+        elements.head.fixed.style.width = fixedWidth + 'px';
+        elements.body.fixed.style.width = fixedWidth + 'px';
+        elements.foot.fixed.style.width = fixedWidth + 'px';
+
+        elements.head.scrollable.style.width = totalWidth - fixedWidth + 'px';
+        elements.body.scrollable.style.width = totalWidth - fixedWidth + 'px';
+        elements.foot.scrollable.style.width = totalWidth - fixedWidth + 'px';
+
+    }
+
+    moveFixedItem(elements: IElements, options: IOptions) {
+        let tables = elements.tables,
+            tbName = tables.table.className,
+            fixedColumn = options.fixedColumn,
+            initTableContent = (contents: HTMLElement[], type: CONTENT_TYPE) => {
+                let heads = [
+                    CONTENT_TYPE.FIXED_HEAD,
+                    CONTENT_TYPE.SCROLL_HEAD
+                ], foots = [
+                    CONTENT_TYPE.FIXED_FOOT,
+                    CONTENT_TYPE.SCROLL_FOOT
+                ],
+                    isHeader = heads.indexOf(type) > -1,
+                    isFooter = foots.indexOf(type) > -1,
+                    table = document.createElement('table'),
+                    body = document.createElement(isHeader ? 'thead' : (isFooter ? 'tfoot' : 'tbody'));
+
+                table.className = tbName;
+
+                table.appendChild(body);
+
+                contents.forEach((row: HTMLElement, i: number) => body.appendChild(row));
+
+                switch (type) {
+                    case CONTENT_TYPE.FIXED_HEAD:
+                        elements.head.fixed.appendChild(table)
+                        break;
+                    case CONTENT_TYPE.SCROLL_HEAD:
+                        elements.head.scrollable.appendChild(table)
+                        break;
+                    case CONTENT_TYPE.FIXED_BODY:
+                        elements.body.fixed.appendChild(table)
+                        break;
+                    case CONTENT_TYPE.FIXED_FOOT:
+                        elements.foot.fixed.appendChild(table)
+                        break;
+                    case CONTENT_TYPE.SCROLL_FOOT:
+                        elements.foot.scrollable.appendChild(table)
+                        break;
+                }
+            };
+
+        // copy and restyle all element
+        if (tables.head) {
+            let ftrs: HTMLTableRowElement[] = [],
+                strs: HTMLTableRowElement[] = [],
+                trs: HTMLTableRowElement[] = [].slice.call(tables.head.querySelectorAll('tr'));
+
+            trs.forEach((tr: HTMLTableRowElement) => {
+                let fc: number = domData.get(tr, 'fixed_counts') || 0,
+                    frow = document.createElement('tr'),
+                    srow = document.createElement('tr');
+
+                [].slice.call(tr.querySelectorAll('th')).forEach((oth: HTMLTableHeaderCellElement, i: number) => {
+                    let cth = document.createElement('th'),
+                        colSpan = oth.colSpan || 1,
+                        rowSpan = oth.rowSpan || 1;
+
+                    fc += colSpan;
+
+                    if (rowSpan > 1) {
+                        for (let k = i + 1; k <= i + rowSpan - 1; k++) {
+                            let nextRow = trs[k];
+
+                            if (nextRow) {
+                                let cs: number = domData.get(trs[k], 'fixed_counts') || 0;
+
+                                domData.set(nextRow, 'fixed_counts', cs + colSpan);
+                            }
+                        }
+                    }
+
+                    cth.className = oth.className;
+                    oth.parentElement!.replaceChild(cth, oth);
+
+                    if (fc <= fixedColumn) {
+                        let hth = oth.cloneNode() as HTMLTableHeaderCellElement;
+
+                        hth.removeAttribute('data-bind');
+                        hth.innerHTML = '&nbsp;';
+                        hth.className = oth.className;
+
+                        if (!hth.className) {
+                            hth.className = 'fx-hidden';
+                        } else {
+                            hth.classList.add('fx-hidden');
+                        }
+
+                        frow.appendChild(oth);
+                        srow.appendChild(hth);
+                    } else {
+                        let hth = oth.cloneNode() as HTMLTableHeaderCellElement;
+
+                        hth.removeAttribute('data-bind');
+                        hth.innerHTML = '&nbsp;';
+                        hth.className = oth.className;
+
+                        if (!hth.className) {
+                            hth.className = 'fx-hidden';
+                        } else {
+                            hth.classList.add('fx-hidden');
+                        }
+
+                        frow.appendChild(hth);
+                        srow.appendChild(oth);
+                    }
+
+                    domData.set(tr, 'delete_cell' + i, cth);
+                    domData.set(tr, 'restore_cell' + i, oth);
+                });
+
+                ftrs.push(frow);
+                strs.push(srow);
+            });
+
+            if (fixedColumn) {
+                initTableContent(ftrs, CONTENT_TYPE.FIXED_HEAD);
+            }
+
+            initTableContent(strs, CONTENT_TYPE.SCROLL_HEAD);
+        }
+
+        if (tables.body) {
+            let trs: HTMLTableRowElement[] = [].slice.call(tables.body.querySelectorAll('tr')),
+                ftds: HTMLTableRowElement[] = [];
+
+            trs.forEach((tr: HTMLTableRowElement, r: number) => {
+                let fc: number = domData.get(tr, 'fixed_counts') || 0,
+                    row: HTMLTableRowElement = document.createElement('tr');
+
+                [].slice.call(tr.querySelectorAll('th, td')).forEach((td: HTMLTableDataCellElement, i: number) => {
+                    let ctd = document.createElement('td'),
+                        colSpan = td.colSpan || 1,
+                        rowSpan = td.rowSpan || 1;
+
+                    fc += colSpan;
+
+                    if (rowSpan > 1) {
+                        for (let k = i + 1; k <= i + rowSpan - 1; k++) {
+                            let nextRow = trs[k];
+
+                            if (nextRow) {
+                                let cs: number = domData.get(trs[k], 'fixed_counts') || 0;
+
+                                domData.set(nextRow, 'fixed_counts', cs + colSpan);
+                            }
+                        }
+                    }
+
+                    ctd.className = td.className;
+                    if (td && fc <= fixedColumn) {
+                        ctd.classList.add('fx-hidden');
+                        td.parentElement!.replaceChild(ctd, td);
+
+                        row.appendChild(td);
+
+                        domData.set(tr, 'delete_cell' + i, ctd);
+                        domData.set(tr, 'restore_cell' + i, td);
+                    }
+                });
+
+                ftds.push(row);
+            });
+
+            if (fixedColumn) {
+                initTableContent(ftds, CONTENT_TYPE.FIXED_BODY);
+            }
+        }
+
+        if (tables.foot) {
+            let ftrs: HTMLTableRowElement[] = [],
+                strs: HTMLTableRowElement[] = [],
+                trs: HTMLTableRowElement[] = [].slice.call(tables.foot.querySelectorAll('tr'));
+
+            trs.forEach((tr: HTMLTableRowElement) => {
+                let fc: number = domData.get(tr, 'fixed_counts') || 0,
+                    frow = document.createElement('tr'),
+                    srow = document.createElement('tr');
+
+                [].slice.call(tr.querySelectorAll('th')).forEach((oth: HTMLTableHeaderCellElement, i: number) => {
+                    let cth = document.createElement('th'),
+                        colSpan = oth.colSpan || 1,
+                        rowSpan = oth.rowSpan || 1;
+
+                    fc += colSpan;
+
+                    if (rowSpan > 1) {
+                        for (let k = i + 1; k <= i + rowSpan - 1; k++) {
+                            let nextRow = trs[k];
+
+                            if (nextRow) {
+                                let cs: number = domData.get(trs[k], 'fixed_counts') || 0;
+
+                                domData.set(nextRow, 'fixed_counts', cs + colSpan);
+                            }
+                        }
+                    }
+
+                    cth.className = oth.className;
+                    oth.parentElement!.replaceChild(cth, oth);
+
+                    if (fc <= fixedColumn) {
+                        let hth = oth.cloneNode() as HTMLTableHeaderCellElement;
+
+                        hth.removeAttribute('data-bind');
+                        hth.innerHTML = '&nbsp;';
+                        hth.className = oth.className;
+
+                        if (!hth.className) {
+                            hth.className = 'fx-hidden';
+                        } else {
+                            hth.classList.add('fx-hidden');
+                        }
+
+                        frow.appendChild(oth);
+                        srow.appendChild(hth);
+                    } else {
+                        let hth = oth.cloneNode() as HTMLTableHeaderCellElement;
+
+                        hth.removeAttribute('data-bind');
+                        hth.innerHTML = '&nbsp;';
+                        hth.className = oth.className;
+
+                        if (!hth.className) {
+                            hth.className = 'fx-hidden';
+                        } else {
+                            hth.classList.add('fx-hidden');
+                        }
+
+                        frow.appendChild(hth);
+                        srow.appendChild(oth);
+                    }
+
+                    domData.set(tr, 'delete_cell' + i, cth);
+                    domData.set(tr, 'restore_cell' + i, oth);
+                });
+
+                ftrs.push(frow);
+                strs.push(srow);
+            });
+
+            if (fixedColumn) {
+                initTableContent(ftrs, CONTENT_TYPE.FIXED_FOOT);
+            }
+
+            initTableContent(strs, CONTENT_TYPE.SCROLL_FOOT);
+        }
+    }
+
+    /**
+     * 
+     * @param tables Main elements of table
+     */
+    roleBackItem(tables: ITableElement) {
+        if (tables.head) {
+            [].slice.call(tables.head!.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+                [].slice.call(tr.querySelectorAll('th')).forEach((th: any, i: number) => {
+                    let d = domData.get(tr, 'delete_cell' + i),
+                        r = domData.get(tr, 'restore_cell' + i);
+
+                    if (d && r && d.parentElement == tr) {
+                        tr.replaceChild(r, d);
+                    }
+                });
+                // clear old data
+                domData.clear(tr);
+            });
+        }
+
+        if (tables.body) {
+            [].slice.call(tables.body.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+                [].slice.call(tr.querySelectorAll('td')).forEach((td: any, i: number) => {
+                    let d = domData.get(tr, 'delete_cell' + i),
+                        r = domData.get(tr, 'restore_cell' + i);
+
+                    if (d && r && d.parentElement == tr) {
+                        tr.replaceChild(r, d);
+                    }
+                });
+                // clear old data
+                domData.clear(tr);
+            });
+        }
+
+        if (tables.foot) {
+            [].slice.call(tables.foot.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
+                [].slice.call(tr.querySelectorAll('th')).forEach((th: any, i: number) => {
+                    let d = domData.get(tr, 'delete_cell' + i),
+                        r = domData.get(tr, 'restore_cell' + i);
+
+                    if (d && r && d.parentElement == tr) {
+                        tr.replaceChild(r, d);
+                    }
+                });
+                // clear old data
+                domData.clear(tr);
+            });
+        }
+    }
+
+    getRowHeight(tables: ITableElement) {
+        let self = this,
+            row = tables.body!.querySelector('tr') || tables.head!.querySelector('tr') || tables.foot!.querySelector('tr');
+
+        if (!self.options.rowHeight) {
+            if (!row) {
+                self.options.rowHeight = 30;
+            } else {
+                self.options.rowHeight = row.offsetHeight;
+            }
+        }
+    }
+
+    getBorder(element: HTMLElement): {
+        x: number;
+        y: number;
+    } {
+        let borders = {
+            x: 0,
+            y: 0
+        }, overflow = element.style.overflow,
+            overflowX = element.style.overflowX,
+            overflowY = element.style.overflowY;
+
+        element.style.overflow = 'hidden';
+        element.style.overflowX = 'hidden';
+        element.style.overflowY = 'hidden';
+
+        borders.x = element.offsetWidth - element.clientWidth;
+        borders.y = element.offsetHeight - element.clientHeight;
+
+        element.style.overflow = overflow || null;
+        element.style.overflowX = overflowX || null;
+        element.style.overflowY = overflowY || null;
+
+        return borders;
+    }
+
+    getScroll(elements: IElements): {
+        x: number;
+        y: number;
+        default: number;
+    } {
+        let self = this,
+            scroll = { x: 0, y: 0, default: 0 },
+            container = self.container,
+            body = elements.body.scrollable,
+            classList = container.classList;
+
+        body.style.overflowY = 'scroll';
+        scroll.default = body.offsetWidth - body.clientWidth;
+        body.style.overflowY = null;
+
+        if (classList.contains('has-scroll-y')) {
+            if (classList.contains('has-scroll-x')) {
+                scroll.y = body.offsetWidth - body.clientWidth;
+                scroll.x = body.offsetHeight - body.clientHeight;
+            } else {
+                scroll.y = body.offsetWidth - body.clientWidth;
+            }
+        } else if (classList.contains('has-scroll-x')) {
+            if (classList.contains('has-scroll-y')) {
+                scroll.y = body.offsetWidth - body.clientWidth;
+                scroll.x = body.offsetHeight - body.clientHeight;
+            } else {
+                scroll.x = body.offsetHeight - body.clientHeight;
+            }
+        }
+
+        return scroll;
+    }
+
+    get elements(): IElements {
+        let self = this,
+            container = self.container,
+            // head
+            hrow = container.querySelector('.fx-row-header') as HTMLDivElement,
+            hfixed = container.querySelector('.fx-fixed-header') as HTMLDivElement,
+            hscroll = container.querySelector('.fx-scroll-header') as HTMLDivElement,
+            // body
+            brow = container.querySelector('.fx-row-body') as HTMLDivElement,
+            bfixed = container.querySelector('.fx-fixed-body') as HTMLDivElement,
+            bscroll = container.querySelector('.fx-scroll-body') as HTMLDivElement,
+            // foot
+            frow = container.querySelector('.fx-row-footer') as HTMLDivElement,
+            ffixed = container.querySelector('.fx-fixed-footer') as HTMLDivElement,
+            fscroll = container.querySelector('.fx-scroll-footer') as HTMLDivElement,
+            // table
+            ttbl = bscroll.querySelector('table') as HTMLTableElement,
+            thead = bscroll.querySelector('thead'),
+            tbody = bscroll.querySelector('tbody'),
+            tfoot = bscroll.querySelector('tfoot');
+
+        return {
+            head: {
+                row: hrow,
+                fixed: hfixed,
+                scrollable: hscroll
+            },
+            body: {
+                row: brow,
+                fixed: bfixed,
+                scrollable: bscroll
+            },
+            foot: {
+                row: frow,
+                fixed: ffixed,
+                scrollable: fscroll
+            },
+            tables: {
+                table: ttbl,
+                head: thead,
+                body: tbody,
+                foot: tfoot
+            }
+        };
+    }
+
+    /**
+     * Init all elements of fixed table layout
+     */
+    createElements() {
+        let self = this,
+            // other elements
+            cf = document.createElement('div'),
+            table = document.createElement('table'),
+            // main container
             container = document.createElement('div'),
+            // header elements
             rowHeader = document.createElement('div'),
             fixedHeader = document.createElement('div'),
             scrollHeader = document.createElement('div'),
+            // body elements
             rowBody = document.createElement('div'),
             fixedBody = document.createElement('div'),
             scrollBody = document.createElement('div'),
+            // footer elements
             fixedFooter = document.createElement('div'),
             scrollFooter = document.createElement('div'),
-            rowFooter = document.createElement('div'),
-            cf = document.createElement('div');
+            rowFooter = document.createElement('div');
 
-        cf.style.clear = 'both';
+        cf.className = 'fx-clear';
+        container.className = 'fx-container';
 
-        container.setAttribute('class', 'fx-container');
-        container.style.border = options.border;
-        container.style.marginBottom = '25px';
+        rowHeader.className = 'fx-row-header';
+        rowBody.className = 'fx-row-body';
+        rowFooter.className = 'fx-row-footer';
 
-        rowHeader.setAttribute('class', 'fx-row-header');
+        fixedHeader.className = 'fx-fixed-header';
+        scrollHeader.className = 'fx-scroll-header';
 
-        rowBody.style.borderTop = options.border;
-        rowBody.setAttribute('class', 'fx-row-body');
+        fixedBody.className = 'fx-fixed-body';
+        scrollBody.className = 'fx-scroll-body';
 
-        rowFooter.style.borderTop = options.border;
-        rowFooter.setAttribute('class', 'fx-row-footer');
-
-        fixedHeader.style.cssFloat = 'left';
-        fixedHeader.style.verticalAlign = 'top';
-        fixedHeader.setAttribute('class', 'fx-fixed-header');
-
-        scrollHeader.style.cssFloat = 'left';
-        scrollHeader.style.borderLeft = options.border;
-        scrollHeader.style.borderRight = options.border;
-        scrollHeader.setAttribute('class', 'fx-scroll-header');
-
-        fixedBody.style.cssFloat = 'left';
-        fixedBody.style.verticalAlign = 'top';
-        //fixedBody.style.borderBottom = '1px solid #eee';
-        fixedBody.setAttribute('class', 'fx-fixed-body');
-
-        scrollBody.style.cssFloat = 'float';
-        scrollBody.style.overflow = 'hidden';
-        scrollBody.style.overflowY = 'auto';
-        scrollBody.style.borderBottom = '0px';
-        scrollBody.style.borderLeft = options.border;
-        scrollBody.setAttribute('class', 'fx-scroll-body');
-
-        fixedFooter.style.cssFloat = 'left';
-        fixedFooter.style.verticalAlign = 'top';
-        //fixedFooter.style.borderBottom = options.border;
-        fixedFooter.setAttribute('class', 'fx-fixed-footer');
-
-        scrollFooter.style.cssFloat = 'left';
-        scrollFooter.style.overflow = 'hidden';
-        scrollFooter.style.overflowX = 'auto';
-        scrollFooter.style.borderLeft = options.border;
-        scrollFooter.style.borderRight = options.border;
-        scrollFooter.setAttribute('class', 'fx-scroll-footer');
+        fixedFooter.className = 'fx-fixed-footer';
+        scrollFooter.className = 'fx-scroll-footer';
 
         // add row;
         container.appendChild(rowHeader);
@@ -392,41 +828,8 @@ export class fxTable {
         rowFooter.appendChild(scrollFooter);
         rowFooter.appendChild(cf.cloneNode());
 
-        container.style.overflow = "hidden";
-        fixedHeader.style.overflow = "hidden";
-        scrollHeader.style.overflow = "hidden";
-        fixedBody.style.overflow = "hidden";
-
-        ko.utils.registerEventHandler(fixedBody, 'resize', (evt: Event) => {
-            fixedHeader.style.width = fixedBody.clientWidth + 'px';
-            fixedFooter.style.width = fixedBody.clientWidth + 'px';
-        });
-
-        ko.utils.registerEventHandler(scrollBody, 'resize', (evt: Event) => {
-            let scrollY = scrollBody.offsetWidth - scrollBody.clientWidth > 1,
-                scrollX = scrollBody.offsetHeight - scrollBody.clientHeight > 0;
-
-            if (!scrollX) {
-                scrollBody.style.overflowY = 'auto';
-            } else {
-                scrollBody.style.overflowY = 'hidden';
-            }
-
-            if (!scrollY) {
-                scrollHeader.style.borderRight = '0px';
-                scrollFooter.style.borderRight = '0px';
-            } else {
-                scrollHeader.style.borderRight = options.border;
-                scrollFooter.style.borderRight = options.border;
-            }
-
-            fixedBody.style.height = scrollBody.offsetHeight + 'px';
-
-            scrollHeader.style.width = scrollBody.clientWidth + (scrollY ? 2 : 1) + 'px';
-            scrollFooter.style.width = scrollBody.clientWidth + (scrollY ? 2 : 1) + 'px';
-
-            ko.utils.triggerEvent(fixedBody, 'resize');
-        });
+        // init default table (prevent exception)
+        scrollBody.appendChild(table);
 
         ko.utils.registerEventHandler(scrollBody, 'scroll', (evt: Event) => {
             fixedBody.scrollTop = scrollBody.scrollTop;
@@ -446,9 +849,10 @@ export class fxTable {
         });
 
         ko.utils.registerEventHandler(scrollFooter, 'scroll', (evt: Event) => {
-            scrollBody.scrollLeft = scrollFooter.scrollLeft;
-            scrollHeader.scrollLeft = scrollFooter.scrollLeft;
-
+            if (container.classList.contains('has-footer')) {
+                scrollBody.scrollLeft = scrollFooter.scrollLeft;
+                scrollHeader.scrollLeft = scrollFooter.scrollLeft;
+            }
             // cancel all scroll event of parents
             evt.preventDefault();
         });
@@ -476,183 +880,8 @@ export class fxTable {
             evt.preventDefault();
         });
 
-        return {
-            container: container,
-            fixedHeader: fixedHeader,
-            scrollHeader: scrollHeader,
-            fixedBody: fixedBody,
-            scrollBody: scrollBody,
-            fixedFooter: fixedFooter,
-            scrollFooter: scrollFooter,
-            table: document.createElement('table')
-        };
-    }
-
-    clearStyle() {
-        let self = this,
-            options = self.options,
-            elements = self.elements,
-            container = elements.container,
-            head = elements.table.querySelector('thead'),
-            body = elements.table.querySelector('tbody'),
-            foot = elements.table.querySelector('tfoot');
-
-        if (!head) {
-            (container.querySelector('.fx-row-body') as HTMLElement).style.borderTop = '0px';
-        } else {
-            [].slice.call(head!.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
-                if (tr) {
-                    [].slice.call(tr.querySelectorAll('th')).forEach((th: any, i: number) => {
-                        if (th) {
-                            let d = ko.utils.domData.get(tr, 'delete_cell' + i),
-                                r = ko.utils.domData.get(tr, 'restore_cell' + i);
-
-                            if (d && r) {
-                                tr.replaceChild(r, d);
-                            }
-                        }
-                    });
-                }
-            });
-            (container.querySelector('.fx-row-body') as HTMLElement).style.borderTop = options.border;
-        }
-
-        if (body) {
-            let trs = [].slice.call(body.querySelectorAll('tr'));
-
-            trs.forEach((tr: HTMLTableRowElement) => {
-                if (tr) {
-                    [].slice.call(tr.querySelectorAll('td')).forEach((td: any, i: number) => {
-                        if (td) {
-                            let d = ko.utils.domData.get(tr, 'delete_cell' + i),
-                                r = ko.utils.domData.get(tr, 'restore_cell' + i);
-
-                            if (d && r) {
-                                tr.replaceChild(r, d);
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-        if (foot) {
-            [].slice.call(foot.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
-                if (tr) {
-                    [].slice.call(tr.querySelectorAll('th')).forEach((th: any, i: number) => {
-                        if (th) {
-                            let d = ko.utils.domData.get(tr, 'delete_cell' + i),
-                                r = ko.utils.domData.get(tr, 'restore_cell' + i);
-
-                            if (d && r) {
-                                tr.replaceChild(r, d);
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-        elements.table.removeAttribute('style');
-        elements.table.style.minWidth = "100%";
-
-        if (head) {
-            head.removeAttribute('style');
-
-            [].slice.call(head.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
-                if (tr) {
-                    tr.removeAttribute('style');
-                    tr.style.display = 'block';
-                    tr.style.borderBottom = options.border;
-                    tr.style.minHeight = options.rowHeight + 'px';
-
-                    let ths = [].slice.call(tr.querySelectorAll('th'));
-                    ths.forEach((th: HTMLTableHeaderCellElement, j: number) => {
-                        if (th) {
-                            th.removeAttribute('style');
-                            th.style.boxSizing = 'border-box';
-                            th.style.overflow = 'hidden';
-                            th.style.textOverflow = 'ellipsis';
-
-                            if (j == ths.length - 1) {
-                                th.style.borderRight = '0px';
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-        if (body) {
-            body.setAttribute('style', '');
-            let trs = [].slice.call(body.querySelectorAll('tr'));
-
-            trs.forEach((tr: HTMLTableRowElement, i: number) => {
-                if (tr) {
-
-                    tr.removeAttribute('style');
-
-                    tr.style.display = 'block';
-
-                    if (i + 1 >= options.displayRow && i == trs.length - 1) {
-                        tr.style.borderBottom = '0px';
-                    } else {
-                        tr.style.borderBottom = options.border;
-                    }
-
-                    tr.style.minHeight = options.rowHeight + 'px';
-
-                    tr.setAttribute('row', `${i}`);
-
-                    let tds = [].slice.call(tr.querySelectorAll('td'));
-
-                    tds.forEach((td: HTMLTableDataCellElement, j: number) => {
-                        if (td) {
-                            td.removeAttribute('style');
-                            td.style.boxSizing = 'border-box';
-                            td.setAttribute('column', `${j}`);
-
-                            if (j == tds.length - 1) {
-                                td.style.borderRight = '0px';
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-        if (foot) {
-            foot.removeAttribute('style');
-
-            [].slice.call(foot.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
-                if (tr) {
-                    tr.removeAttribute('style');
-                    tr.style.display = 'block';
-                    tr.style.borderBottom = options.border;
-                    tr.style.minHeight = options.rowHeight + 'px';
-
-                    let ths = [].slice.call(tr.querySelectorAll('th'));
-                    ths.forEach((th: HTMLTableHeaderCellElement, j: number) => {
-                        if (th) {
-                            th.removeAttribute('style');
-                            th.style.boxSizing = 'border-box';
-                            th.style.overflow = 'hidden';
-                            th.style.textOverflow = 'ellipsis';
-
-                            if (j == ths.length - 1) {
-                                th.style.borderRight = '0px';
-                            }
-                        }
-                    });
-                }
-            });
-        }
-
-        elements.fixedBody.innerHTML = '';
-        elements.fixedHeader.innerHTML = '';
-        elements.scrollHeader.innerHTML = '';
-        elements.fixedFooter.innerHTML = '';
-        elements.scrollFooter.innerHTML = '';
+        // set container to self
+        self.container = container;
     }
 }
 
@@ -663,4 +892,32 @@ enum CONTENT_TYPE {
     SCROLL_BODY = <any>'SCROLL_BODY',
     FIXED_FOOT = <any>'FIXED_FOOT',
     SCROLL_FOOT = <any>'SCROLL_FOOT'
+}
+
+interface IElements {
+    head: IBlockElement;
+    body: IBlockElement;
+    foot: IBlockElement;
+    tables: ITableElement;
+}
+
+interface IBlockElement {
+    row: HTMLDivElement;
+    fixed: HTMLDivElement;
+    scrollable: HTMLDivElement;
+}
+
+interface ITableElement {
+    table: HTMLTableElement;
+    head: HTMLTableSectionElement | null;
+    body: HTMLTableSectionElement | null;
+    foot: HTMLTableSectionElement | null;
+}
+
+interface IOptions {
+    width: number;
+    displayRow: number;
+    fixedColumn: number;
+    rowHeight: number;
+    columns: number[];
 }
