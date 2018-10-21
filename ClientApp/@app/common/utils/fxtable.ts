@@ -275,6 +275,7 @@ export class fxTable {
                 if (!options.width) {
                     if (row == options.displayRow + 1) {
                         let scroll = self.getScroll(elements),
+                            borderc = self.getBorder(container),
                             borders = self.getBorder(elements.body.scrollable),
                             fixedHeadW = elements.head.fixed.offsetWidth,
                             fixedBodyW = elements.body.fixed.offsetWidth,
@@ -283,8 +284,8 @@ export class fxTable {
                             offsetWidth = elements.tables.table.offsetWidth;
 
                         if (container.offsetWidth < fixedWidth + offsetWidth + scroll.y) {
-                            container.style.width = fixedWidth + offsetWidth + scroll.y + 'px';
-                            elements.body.scrollable.style.width = offsetWidth + scroll.y - borders.x + 'px';
+                            container.style.width = fixedWidth + offsetWidth + scroll.y + borderc.x + 'px';
+                            elements.body.scrollable.style.width = offsetWidth + scroll.y + borders.x + 'px';
                         }
                     }
                 }
