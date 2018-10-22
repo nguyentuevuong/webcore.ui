@@ -1,4 +1,5 @@
 import { ko } from '@app/providers';
+import { random } from '@app/common/id/random';
 
 let domData = ko.utils.domData;
 
@@ -40,7 +41,7 @@ export class fxTable {
             self.initLayout();
 
             // reinit layout if window resize
-            window.addEventListener('resize', () => self.initLayout());
+            //window.addEventListener('resize', () => self.initLayout());
 
             // reinit layout if render body again
             let body = table.querySelector('tbody');
@@ -66,6 +67,8 @@ export class fxTable {
 
                 self.getRowHeight(elements.tables);
 
+                self.columnStyles(elements.styles);
+
                 self.moveFixedItem(elements, options);
 
                 self.headStyle(elements);
@@ -75,7 +78,7 @@ export class fxTable {
                 self.layoutStyle(elements);
                 self.scrollStyle(elements);
 
-                self.tableWidth();
+                //self.tableWidth();
 
                 domData.set(container, ki, false);
             }, 50);
@@ -90,6 +93,8 @@ export class fxTable {
             tables = elements.tables;
 
         self.roleBackItem(tables);
+
+        elements.styles.clear();
 
         head.row.removeAttribute('style');
         head.fixed.removeAttribute('style');
@@ -125,13 +130,10 @@ export class fxTable {
             trs.forEach((tr: HTMLTableRowElement, i: number) => {
                 tr.removeAttribute('style');
 
-                tr.setAttribute('row', `${i}`);
-
                 let tds = [].slice.call(tr.querySelectorAll('td'));
 
                 tds.forEach((td: HTMLTableDataCellElement, j: number) => {
                     td.removeAttribute('style');
-                    td.setAttribute('column', `${j}`);
                 });
             });
         }
@@ -203,6 +205,30 @@ export class fxTable {
         }
     }
 
+    columnStyles(element: IStyle) {
+        let self = this,
+            style = '',
+            options = self.options,
+            columns = options.columns;
+
+        style += `\n{role} tr { height: ${options.rowHeight}px }`;
+        style += `\n{role} .fx-row-footer .fx-table { margin-top: -${options.rowHeight}px }`;
+        style += `\n{role} .fx-row-header .fx-table { margin-bottom: -${options.rowHeight}px }`;
+        style += `\n{role} tr>th[column='hide'], {role} tr>td[column='hide'] { display: none; }`;
+
+        if (columns.length) {
+            columns.forEach((v: number, i: number) => {
+                if (!v) {
+                    style += `\n{role} tr>th[column='${i}'], {role} tr>td[column='${i}'] { display: none; } `;
+                } else {
+                    style += `\n{role} tr>th[column='${i}'], {role} tr>td[column='${i}'] { min-width: ${v}px; max-width: ${v}px; }`;
+                }
+            });
+        }
+
+        element.apply(style);
+    }
+
     layoutStyle(elements: IElements) {
         let self = this,
             options = self.options,
@@ -214,22 +240,21 @@ export class fxTable {
                 colSpan += t.colSpan;
 
                 if (!t.classList.contains('fx-hidden')) {
-                    let width = 0,
-                        height = 0,
-                        col = Math.max(i, colSpan);
+                    let col = Math.max(i, colSpan);
 
-                    for (let c = col; c < col + t.colSpan; c++) {
-                        width += (options.columns[col] || 100);
+                    if (col < options.columns.length) {
+                        if (t.colSpan <= 1) {
+                            t.setAttribute('column', `${col}`);
+                        }
+                    } else {
+                        if (i < options.columns.length - 1) {
+                            if (t.colSpan <= 1) {
+                                t.setAttribute('column', `${col}`);
+                            }
+                        } else {
+                            t.setAttribute('column', 'hide');
+                        }
                     }
-
-                    t.style.minWidth = width + 'px';
-                    t.style.maxWidth = width + 'px';
-
-                    for (let r = 1; r <= t.rowSpan; r++) {
-                        height += self.options.rowHeight;
-                    }
-
-                    t.style.height = height + 'px';
                 }
             });
         });
@@ -363,7 +388,8 @@ export class fxTable {
     }
 
     moveFixedItem(elements: IElements, options: IOptions) {
-        let tables = elements.tables,
+        let self = this,
+            tables = elements.tables,
             tbName = tables.table.className,
             fixedColumn = options.fixedColumn,
             initTableContent = (contents: HTMLElement[], type: CONTENT_TYPE) => {
@@ -387,19 +413,23 @@ export class fxTable {
 
                 switch (type) {
                     case CONTENT_TYPE.FIXED_HEAD:
-                        elements.head.fixed.appendChild(table)
+                        table.appendChild(self.getTemplate(options.fixedColumn));
+                        elements.head.fixed.appendChild(table);
                         break;
                     case CONTENT_TYPE.SCROLL_HEAD:
-                        elements.head.scrollable.appendChild(table)
+                        table.appendChild(self.getTemplate(-options.fixedColumn));
+                        elements.head.scrollable.appendChild(table);
                         break;
                     case CONTENT_TYPE.FIXED_BODY:
-                        elements.body.fixed.appendChild(table)
+                        elements.body.fixed.appendChild(table);
                         break;
                     case CONTENT_TYPE.FIXED_FOOT:
-                        elements.foot.fixed.appendChild(table)
+                        elements.foot.fixed.appendChild(table);
+                        table.appendChild(self.getTemplate(options.fixedColumn));
                         break;
                     case CONTENT_TYPE.SCROLL_FOOT:
-                        elements.foot.scrollable.appendChild(table)
+                        elements.foot.scrollable.appendChild(table);
+                        table.appendChild(self.getTemplate(-options.fixedColumn));
                         break;
                 }
             };
@@ -742,9 +772,52 @@ export class fxTable {
         return scroll;
     }
 
+    getTemplate(fixed: number) {
+        let self = this,
+            options = self.options,
+            row = document.createElement('tr'),
+            body = document.createElement('tbody');
+
+        body.appendChild(row);
+
+        options.columns.forEach((v: number, i: number) => {
+            let cell = document.createElement('td');
+
+            cell.innerHTML = '&nbsp;';
+
+            if (!fixed) {
+                cell.setAttribute('column', `${i}`);
+            } else {
+                let hr = fixed > 0,
+                    fx = Math.abs(fixed);
+
+                if (hr) {
+                    if (fx <= i) {
+                        cell.className = 'fx-hidden';
+                    } else {
+                        cell.setAttribute('column', `${i}`);
+                    }
+                } else {
+                    if (fx > i) {
+                        cell.className = 'fx-hidden';
+                    } else {
+                        cell.setAttribute('column', `${i}`);
+                    }
+                }
+
+            }
+
+            row.appendChild(cell);
+        });
+
+        return body;
+    }
+
     get elements(): IElements {
         let self = this,
             container = self.container,
+            id = container.getAttribute('role'),
+            styleEl = container.querySelector('style') as HTMLStyleElement,
             // head
             hrow = container.querySelector('.fx-row-header') as HTMLDivElement,
             hfixed = container.querySelector('.fx-fixed-header') as HTMLDivElement,
@@ -764,6 +837,18 @@ export class fxTable {
             tfoot = bscroll.querySelector('tfoot');
 
         return {
+            styles: {
+                el: styleEl,
+                clear: () => {
+                    styleEl.innerHTML = '';
+                },
+                apply: (data: string) => {
+                    data = data || '';
+                    data = data.replace(/{role}/g, `[role='${id}']`);
+
+                    styleEl.appendChild(document.createTextNode(data));
+                }
+            },
             head: {
                 row: hrow,
                 fixed: hfixed,
@@ -798,6 +883,8 @@ export class fxTable {
             table = document.createElement('table'),
             // main container
             container = document.createElement('div'),
+            // style
+            style = document.createElement('style'),
             // header elements
             rowHeader = document.createElement('div'),
             fixedHeader = document.createElement('div'),
@@ -813,6 +900,10 @@ export class fxTable {
 
         cf.className = 'fx-clear';
         container.className = 'fx-container';
+        container.setAttribute('role', random.id);
+
+        style.type = 'text/css';
+        container.appendChild(style);
 
         rowHeader.className = 'fx-row-header';
         rowBody.className = 'fx-row-body';
@@ -916,6 +1007,7 @@ enum CONTENT_TYPE {
 }
 
 interface IElements {
+    styles: IStyle;
     head: IBlockElement;
     body: IBlockElement;
     foot: IBlockElement;
@@ -933,6 +1025,12 @@ interface ITableElement {
     head: HTMLTableSectionElement | null;
     body: HTMLTableSectionElement | null;
     foot: HTMLTableSectionElement | null;
+}
+
+interface IStyle {
+    el: HTMLStyleElement;
+    clear: () => void;
+    apply: (data: string) => void;
 }
 
 interface IOptions {
