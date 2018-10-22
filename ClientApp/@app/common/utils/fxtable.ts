@@ -3,7 +3,6 @@ import { ko } from '@app/providers';
 let domData = ko.utils.domData;
 
 export class fxTable {
-    initial: number | null = null;
     container: HTMLDivElement = document.createElement('div');
 
     options: IOptions = {
@@ -36,55 +35,52 @@ export class fxTable {
 
         sbody.replaceChild(table, dtbl);
 
-        self.initLayout();
-
         // reload elements
         elements = self.elements;
 
+        self.initLayout(elements);
+
         // reinit layout if window resize
-        window.addEventListener('resize', () => {
-            if (!self.initial) {
-                self.initial = setTimeout(function () {
-                    self.initLayout();
-                }, 500);
-            }
-        });
+        window.addEventListener('resize', () => self.initLayout(elements));
 
         // reinit layout if render body again
-        ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => {
-            if (elements.tables.body) {
-                elements.tables.body.addEventListener(evt, () => {
-                    if (!self.initial) {
-                        self.initial = setTimeout(function () {
-                            self.initLayout();
-                        }, 10);
-                    }
-                });
-            }
-        });
+        let body = elements.tables.body;
+        ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => body && body.addEventListener(evt, () => self.initLayout(elements)));
     }
 
-    initLayout() {
+    initLayout(elements: IElements) {
         let self = this,
+            ki = '__initialize__',
             options = self.options,
-            elements = self.elements;
+            container = self.container,
+            initialize = domData.get(container, ki);
 
-        self.clearStyle(elements);
+        if (initialize) {
+            return;
+        }
 
-        self.roleBackItem(elements.tables);
+        domData.set(container, ki, true);
 
-        self.getRowHeight(elements.tables);
+        setTimeout(() => {
+            self.clearStyle(elements);
 
-        self.moveFixedItem(elements, options);
+            self.roleBackItem(elements.tables);
 
-        self.headStyle(elements);
-        self.footStyle(elements);
-        self.fixedStyle(elements);
+            self.getRowHeight(elements.tables);
 
-        self.layoutStyle(elements);
-        self.scrollStyle(elements);
+            self.moveFixedItem(elements, options);
 
-        self.initial = null;
+            self.headStyle(elements);
+            self.footStyle(elements);
+            self.fixedStyle(elements);
+
+            self.layoutStyle(elements);
+            self.scrollStyle(elements);
+
+            self.tableWidth();
+            
+            domData.set(container, ki, false);
+        }, 50);
     }
 
     clearStyle(elements: IElements) {
@@ -161,8 +157,6 @@ export class fxTable {
 
         foot.fixed.innerHTML = '';
         foot.scrollable.innerHTML = '';
-
-        ko.utils.triggerEvent(body.scrollable, 'resize');
     }
 
     headStyle(elements: IElements) {
@@ -284,8 +278,8 @@ export class fxTable {
                             offsetWidth = elements.tables.table.offsetWidth;
 
                         if (container.offsetWidth < fixedWidth + offsetWidth + scroll.y) {
-                            container.style.width = fixedWidth + offsetWidth + scroll.y + borderc.x + 'px';
                             elements.body.scrollable.style.width = offsetWidth + scroll.y + borders.x + 'px';
+                            container.style.width = fixedWidth + offsetWidth + scroll.y + (!options.width ? borders.x : 0) + borderc.x + 'px';
                         }
                     }
                 }
@@ -353,6 +347,18 @@ export class fxTable {
         elements.body.scrollable.style.width = totalWidth - fixedWidth + 'px';
         elements.foot.scrollable.style.width = totalWidth - fixedWidth + 'px';
 
+    }
+
+    tableWidth() {
+        let self = this,
+            container = self.container,
+            classList = container.classList;
+
+        if (!(classList.contains('has-scroll-x') && classList.contains('has-scroll-y'))) {
+            [].slice.call(container.querySelectorAll('table')).forEach((table: HTMLTableElement) => {
+                table.style.width = '100%';
+            });
+        }
     }
 
     moveFixedItem(elements: IElements, options: IOptions) {
@@ -702,11 +708,12 @@ export class fxTable {
             scroll = { x: 0, y: 0, default: 0 },
             container = self.container,
             body = elements.body.scrollable,
-            classList = container.classList;
+            classList = container.classList,
+            overflowY = body.style.overflowY;
 
         body.style.overflowY = 'scroll';
         scroll.default = body.offsetWidth - body.clientWidth;
-        body.style.overflowY = null;
+        body.style.overflowY = overflowY || null;
 
         if (classList.contains('has-scroll-y')) {
             if (classList.contains('has-scroll-x')) {
@@ -859,21 +866,26 @@ export class fxTable {
         });
 
         ko.utils.registerEventHandler(container, 'wheel', (evt: WheelEvent) => {
-            let step = evt.deltaY ? 125 : 40,
+            let cls = container.classList,
+                step = evt.deltaY ? 125 : 40,
                 wheel = (evt.deltaY || evt.wheelDeltaY),
-                scrollY = scrollBody.offsetWidth - scrollBody.clientWidth > 1;
+                scrollY = cls.contains('has-scroll-y');
 
             if (evt.shiftKey || !scrollY) {
-                if (wheel > 0) {
-                    scrollBody.scrollLeft += step;
-                } else {
-                    scrollBody.scrollLeft -= step;
+                if (cls.contains('has-scroll-x')) {
+                    if (wheel > 0) {
+                        scrollBody.scrollLeft += step;
+                    } else {
+                        scrollBody.scrollLeft -= step;
+                    }
                 }
             } else {
-                if (wheel > 0) {
-                    scrollBody.scrollTop += step;
-                } else {
-                    scrollBody.scrollTop -= step;
+                if (cls.contains('has-scroll-y')) {
+                    if (wheel > 0) {
+                        scrollBody.scrollTop += step;
+                    } else {
+                        scrollBody.scrollTop -= step;
+                    }
                 }
             }
 
