@@ -19,6 +19,7 @@ export class fxTable {
 
         let self = this,
             elements = self.elements,
+            rctnr = table.parentElement,
             dtbl = elements.tables.table,
             sbody = elements.body.scrollable;
 
@@ -31,18 +32,20 @@ export class fxTable {
             table.classList.add('fx-table');
         }
 
-        table.parentElement!.replaceChild(self.container, table);
+        if (rctnr) {
+            rctnr.replaceChild(self.container, table);
 
-        sbody.replaceChild(table, dtbl);
+            sbody.replaceChild(table, dtbl);
 
-        self.initLayout();
+            self.initLayout();
 
-        // reinit layout if window resize
-        window.addEventListener('resize', () => self.initLayout());
+            // reinit layout if window resize
+            window.addEventListener('resize', () => self.initLayout());
 
-        // reinit layout if render body again
-        let body = self.elements.tables.body;
-        ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => body && body.addEventListener(evt, () => self.initLayout()));
+            // reinit layout if render body again
+            let body = table.querySelector('tbody');
+            ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => body && body.addEventListener(evt, () => self.initLayout()));
+        }
     }
 
     initLayout() {
@@ -53,32 +56,30 @@ export class fxTable {
             container = self.container,
             initialize = domData.get(container, ki);
 
-        if (initialize) {
-            return;
+        if (!initialize) {
+            domData.set(container, ki, true);
+
+            setTimeout(() => {
+                self.clearStyle(elements);
+
+                self.roleBackItem(elements.tables);
+
+                self.getRowHeight(elements.tables);
+
+                self.moveFixedItem(elements, options);
+
+                self.headStyle(elements);
+                self.footStyle(elements);
+                self.fixedStyle(elements);
+
+                self.layoutStyle(elements);
+                self.scrollStyle(elements);
+
+                self.tableWidth();
+
+                domData.set(container, ki, false);
+            }, 50);
         }
-
-        domData.set(container, ki, true);
-
-        setTimeout(() => {
-            self.clearStyle(elements);
-
-            self.roleBackItem(elements.tables);
-
-            self.getRowHeight(elements.tables);
-
-            self.moveFixedItem(elements, options);
-
-            self.headStyle(elements);
-            self.footStyle(elements);
-            self.fixedStyle(elements);
-
-            self.layoutStyle(elements);
-            self.scrollStyle(elements);
-
-            self.tableWidth();
-
-            domData.set(container, ki, false);
-        }, 50);
     }
 
     clearStyle(elements: IElements) {
@@ -259,13 +260,15 @@ export class fxTable {
         }
 
         if (body) {
-            let row = [].slice.call(body.querySelectorAll('tr')).length;
+            let row = [].slice.call(body.querySelectorAll('tr')).length,
+                maxDispRow = Math.abs(options.displayRow),
+                displayRow = maxDispRow == options.displayRow ? maxDispRow : Math.min(row, maxDispRow);
 
-            if (row > options.displayRow) {
+            if (row > displayRow) {
                 container.classList.add('has-scroll-y');
 
                 if (!options.width) {
-                    if (row == options.displayRow + 1) {
+                    if (row == displayRow + 1) {
                         let scroll = self.getScroll(elements),
                             borderc = self.getBorder(container),
                             borders = self.getBorder(elements.body.scrollable),
@@ -285,7 +288,7 @@ export class fxTable {
                 container.classList.remove('has-scroll-y');
 
                 if (!options.width) {
-                    if (row == options.displayRow) {
+                    if (row == displayRow) {
                         let borderc = self.getBorder(container),
                             borders = self.getBorder(elements.body.scrollable),
                             fixedHeadW = elements.head.fixed.offsetWidth,
@@ -309,8 +312,8 @@ export class fxTable {
             elements.head.scrollable.style.width = elements.body.scrollable.offsetWidth - scroll.y + (scroll.y ? borders.x + 1 : 0) + 'px';
             elements.foot.scrollable.style.width = elements.body.scrollable.offsetWidth - scroll.y + (scroll.y ? borders.x + 1 : 0) + 'px';
 
-            elements.body.fixed.style.height = options.displayRow * options.rowHeight + (scroll.x ? borders.y : 0) + 'px';
-            elements.body.scrollable.style.height = options.displayRow * options.rowHeight + scroll.x + 'px';
+            elements.body.fixed.style.height = (displayRow || 1) * options.rowHeight + (scroll.x ? borders.y : 0) + 'px';
+            elements.body.scrollable.style.height = (displayRow || 1) * options.rowHeight + scroll.x + 'px';
         }
     }
 
