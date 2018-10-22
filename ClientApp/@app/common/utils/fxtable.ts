@@ -35,23 +35,21 @@ export class fxTable {
 
         sbody.replaceChild(table, dtbl);
 
-        // reload elements
-        elements = self.elements;
-
-        self.initLayout(elements);
+        self.initLayout();
 
         // reinit layout if window resize
-        window.addEventListener('resize', () => self.initLayout(elements));
+        window.addEventListener('resize', () => self.initLayout());
 
         // reinit layout if render body again
-        let body = elements.tables.body;
-        ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => body && body.addEventListener(evt, () => self.initLayout(elements)));
+        let body = self.elements.tables.body;
+        ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => body && body.addEventListener(evt, () => self.initLayout()));
     }
 
-    initLayout(elements: IElements) {
+    initLayout() {
         let self = this,
             ki = '__initialize__',
             options = self.options,
+            elements = self.elements,
             container = self.container,
             initialize = domData.get(container, ki);
 
@@ -78,7 +76,7 @@ export class fxTable {
             self.scrollStyle(elements);
 
             self.tableWidth();
-            
+
             domData.set(container, ki, false);
         }, 50);
     }
