@@ -682,9 +682,8 @@ export class fxTable {
         let borders = {
             x: 0,
             y: 0
-        }, overflow = element.style.overflow,
-            overflowX = element.style.overflowX,
-            overflowY = element.style.overflowY;
+        }, width = element.style.width,
+            height = element.style.height;
 
         element.style.overflow = 'hidden';
         element.style.overflowX = 'hidden';
@@ -693,9 +692,10 @@ export class fxTable {
         borders.x = element.offsetWidth - element.clientWidth;
         borders.y = element.offsetHeight - element.clientHeight;
 
-        element.style.overflow = overflow || null;
-        element.style.overflowX = overflowX || null;
-        element.style.overflowY = overflowY || null;
+        element.setAttribute('style', '');
+
+        element.style.width = width;
+        element.style.height = height;
 
         return borders;
     }
@@ -710,11 +710,18 @@ export class fxTable {
             container = self.container,
             body = elements.body.scrollable,
             classList = container.classList,
-            overflowY = body.style.overflowY;
+            width = body.style.width,
+            height = body.style.height;
 
+        body.style.overflow = 'hidden';
         body.style.overflowY = 'scroll';
+
         scroll.default = body.offsetWidth - body.clientWidth;
-        body.style.overflowY = overflowY || null;
+
+        body.setAttribute('style', '');
+
+        body.style.width = width;
+        body.style.height = height;
 
         if (classList.contains('has-scroll-y')) {
             if (classList.contains('has-scroll-x')) {
