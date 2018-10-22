@@ -58,6 +58,8 @@
     &.has-scroll-y {
         .fx-scroll-body {
             overflow-y: scroll;
+            -ms-overflow-y: scroll;
+            -ms-overflow-style: auto;
         }
         .fx-scroll-header {
             border-right: 1px solid #ddd;
@@ -70,6 +72,8 @@
         &.has-footer {
             .fx-scroll-footer {
                 overflow-x: scroll;
+                -ms-overflow-x: scroll;
+                -ms-overflow-style: auto;
             }
             .fx-fixed-footer {
                 border-bottom: 1px solid #ddd;
@@ -81,6 +85,8 @@
             }
             .fx-scroll-body {
                 overflow-x: scroll;
+                -ms-overflow-x: scroll;
+                -ms-overflow-style: auto;
             }
         }
     }
@@ -88,6 +94,7 @@
     .fx-row-body,
     .fx-row-footer {
         overflow: hidden;
+        -ms-overflow-style: none;
     }
     .fx-fixed-header,
     .fx-fixed-body,
@@ -97,6 +104,7 @@
     .fx-scroll-footer {
         float: left;
         overflow: hidden;
+        -ms-overflow-style: none;
     }
     /* custom style*/
     /*.fx-row-header {
