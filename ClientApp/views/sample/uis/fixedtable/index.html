@@ -1,6 +1,6 @@
 <button class="btn btn-secondary" data-bind="i18n: '#add_data', click: $vm.addData, timeClick: -1"></button>
 <hr />
-<table class="tbl-employees table table-bordered" data-bind="fxtable: { width: 0, displayRow: 10, fixedColumn: 2, columns: [70, 170, 100, 100, 150, 150] }">
+<table class="tbl-employees" data-bind="fxtable: { width: 600, displayRow: 10, fixedColumn: 2, columns: [70, 170, 100, 100, 150, 150] }">
     <thead>
         <tr>
             <th colspan="2">Cols 1</th>
@@ -28,17 +28,19 @@
             <td><input type="text" data-bind="value: $data.value5" /></td>
         </tr>
     </tbody>
-    <tfoot>
+    <!--<tfoot>
         <tr>
-            <th colspan="2" rowspan="2">Cols 1</th>
+            <th colspan="2">Cols 1</th>
             <th colspan="5">Cols 2</th>
         </tr>
         <tr>
+            <th>Index</th>
+            <th>Value 1</th>
             <th colspan="2">Value 2</th>
             <th class="time">Value 3</th>
             <th class="time">Value 4</th>
         </tr>
-    </tfoot>
+    </tfoot>-->
 </table>
 
 <!--<table data-bind="fxtable: { width: 300, fixedColumn: 2 }">

@@ -41,7 +41,7 @@ export class fxTable {
             self.initLayout();
 
             // reinit layout if window resize
-            //window.addEventListener('resize', () => self.initLayout());
+            window.addEventListener('resize', () => self.initLayout());
 
             // reinit layout if render body again
             let body = table.querySelector('tbody');
@@ -67,18 +67,17 @@ export class fxTable {
 
                 self.getRowHeight(elements.tables);
 
-                self.columnStyles(elements.styles);
-
                 self.moveFixedItem(elements, options);
+
+                self.layoutStyle();
 
                 self.headStyle(elements);
                 self.footStyle(elements);
                 self.fixedStyle(elements);
 
-                self.layoutStyle(elements);
                 self.scrollStyle(elements);
 
-                //self.tableWidth();
+                self.columnStyles(elements);
 
                 domData.set(container, ki, false);
             }, 50);
@@ -205,31 +204,59 @@ export class fxTable {
         }
     }
 
-    columnStyles(element: IStyle) {
+    columnStyles(elements: IElements) {
         let self = this,
-            style = '',
+            styles = '',
+            sscroll = self.getScroll(elements),
+            cborder = self.getBorder(self.container),
+            fborder = self.getBorder(elements.body.fixed),
+            sborder = self.getBorder(elements.body.scrollable),
             options = self.options,
-            columns = options.columns;
+            columns = options.columns,
+            fixedW = columns
+                .filter((v: number, i: number) => i < options.fixedColumn)
+                .reduce((a, b) => a + b, 0),
+            scrollW = columns
+                .filter((v: number, i: number) => i >= options.fixedColumn)
+                .reduce((a, b) => a + b, 0),
+            totalW = options.width || (fixedW + scrollW),
+            viewedW = totalW - fixedW;
 
-        style += `\n{role} tr { height: ${options.rowHeight}px }`;
-        style += `\n{role} .fx-row-footer .fx-table { margin-top: -${options.rowHeight}px }`;
-        style += `\n{role} .fx-row-header .fx-table { margin-bottom: -${options.rowHeight}px }`;
-        style += `\n{role} tr>th[column='hide'], {role} tr>td[column='hide'] { display: none; }`;
+        styles += `\n{role}.fx-container { width: ${totalW + (!options.width ? cborder.x : 0) + (!options.width ? sscroll.y : 0)}px; }`;
+        styles += `\n{role} .fx-fixed-header, {role} .fx-fixed-body, {role} .fx-fixed-footer { width: ${fixedW}px; }`;
+        styles += `\n{role} .fx-scroll-body { width: ${viewedW + (!options.width ? sscroll.y : 0) - (options.width ? cborder.x : (!sscroll.y ? cborder.x : 0))}px; }`;
+        styles += `\n{role} .fx-scroll-header, {role} .fx-scroll-footer { width: ${viewedW - (options.width ? sscroll.y : -sborder.x) - (sscroll.y ? (options.width ? 0 : -1) : cborder.x)}px; }`;
+
+        console.log((fborder.x + sborder.x + cborder.x))
+
+        styles += `\n{role} .fx-fixed-body { height: ${options.displayRow * options.rowHeight + (sscroll.x ? 1 : 0)}px; }`;
+        styles += `\n{role} .fx-scroll-body { height: ${options.displayRow * options.rowHeight + sscroll.x}px; }`;
+        styles += `\n{role} div[class^='fx-row'] { position: relative; }`;
+        styles += `\n{role} tbody>tr { height: ${options.rowHeight}px }`;
+        styles += `\n{role} .fx-row-header, {role} .fx-row-footer { z-index: 1 }`;
+        styles += `\n{role} .fx-row-body { z-index: 2; background-color: #fff; }`;
+        styles += `\n{role}.has-header .fx-row-body { margin-top: -${options.rowHeight}px; }`;
+        styles += `\n{role}.has-footer .fx-row-body { margin-bottom: -${options.rowHeight}px; }`;
+        styles += `\n\n{role} tr>th[column='hide'], {role} tr>td[column='hide'] { display: none; }`;
 
         if (columns.length) {
             columns.forEach((v: number, i: number) => {
                 if (!v) {
-                    style += `\n{role} tr>th[column='${i}'], {role} tr>td[column='${i}'] { display: none; } `;
+                    styles += `\n{role} tr>th[column='${i}'], {role} tr>td[column='${i}'] { display: none; } `;
                 } else {
-                    style += `\n{role} tr>th[column='${i}'], {role} tr>td[column='${i}'] { min-width: ${v}px; max-width: ${v}px; }`;
+                    styles += `\n{role} tr>th[column='${i}'], {role} tr>td[column='${i}'] { min-width: ${v}px; max-width: ${v}px; }`;
                 }
             });
         }
 
-        element.apply(style);
+        for (var i = 2; i <= 15; i++) {
+            styles += `\n{role} tbody th[rowspan='${i}'],{role} tbody td[rowspan='${i}'] { height: ${options.rowHeight * i}px; }`;
+        }
+
+        elements.styles.apply(styles);
     }
 
-    layoutStyle(elements: IElements) {
+    layoutStyle() {
         let self = this,
             options = self.options,
             container = self.container;
@@ -258,31 +285,23 @@ export class fxTable {
                 }
             });
         });
-
-        self.layoutWidth(elements);
     }
 
     scrollStyle(elements: IElements) {
         let self = this,
             options = self.options,
             container = self.container,
-            body = elements.tables.body;
-
-        let scrollHeadW = elements.head.scrollable.scrollWidth,
-            scrollBodyW = elements.body.scrollable.scrollWidth,
-            scrollFootW = elements.foot.scrollable.scrollWidth,
-            scrollWidth = Math.max(scrollHeadW, scrollBodyW, scrollFootW),
-
-            clientHeadW = elements.head.scrollable.clientWidth,
-            clientBodyW = elements.body.scrollable.clientWidth,
-            clientFootW = elements.foot.scrollable.clientWidth,
-            clientWidth = Math.max(clientHeadW, clientBodyW, clientFootW);
-
-        if (clientWidth < scrollWidth) {
-            container.classList.add('has-scroll-x');
-        } else {
-            container.classList.remove('has-scroll-x');
-        }
+            body = elements.tables.body,
+            columns = options.columns,
+            cborder = self.getBorder(self.container),
+            fborder = self.getBorder(elements.body.fixed),
+            sborder = self.getBorder(elements.body.scrollable),
+            fixedW = columns
+                .filter((v: number, i: number) => i < options.fixedColumn)
+                .reduce((a, b) => a + b, 0),
+            scrollW = columns
+                .filter((v: number, i: number) => i >= options.fixedColumn)
+                .reduce((a, b) => a + b, 0);
 
         if (body) {
             let row = [].slice.call(body.querySelectorAll('tr')).length,
@@ -291,99 +310,17 @@ export class fxTable {
 
             if (row > displayRow) {
                 container.classList.add('has-scroll-y');
-
-                if (!options.width) {
-                    if (row == displayRow + 1) {
-                        let scroll = self.getScroll(elements),
-                            borderc = self.getBorder(container),
-                            borders = self.getBorder(elements.body.scrollable),
-                            fixedHeadW = elements.head.fixed.offsetWidth,
-                            fixedBodyW = elements.body.fixed.offsetWidth,
-                            fixedFootW = elements.foot.fixed.offsetWidth,
-                            fixedWidth = Math.max(fixedHeadW, fixedBodyW, fixedFootW),
-                            offsetWidth = elements.tables.table.offsetWidth;
-
-                        if (container.offsetWidth < fixedWidth + offsetWidth + scroll.y) {
-                            elements.body.scrollable.style.width = offsetWidth + scroll.y + borders.x + 'px';
-                            container.style.width = fixedWidth + offsetWidth + scroll.y + (!options.width ? borders.x : 0) + borderc.x + 'px';
-                        }
-                    }
-                }
             } else {
                 container.classList.remove('has-scroll-y');
-
-                if (!options.width) {
-                    if (row == displayRow) {
-                        let borderc = self.getBorder(container),
-                            borders = self.getBorder(elements.body.scrollable),
-                            fixedHeadW = elements.head.fixed.offsetWidth,
-                            fixedBodyW = elements.body.fixed.offsetWidth,
-                            fixedFootW = elements.foot.fixed.offsetWidth,
-                            fixedWidth = Math.max(fixedHeadW, fixedBodyW, fixedFootW),
-                            offsetWidth = elements.tables.table.offsetWidth;
-
-                        if (container.clientWidth > fixedWidth + offsetWidth) {
-                            container.style.width = fixedWidth + offsetWidth + borders.x + borderc.x + 'px';
-                            elements.body.scrollable.style.width = offsetWidth + borders.x + 'px';
-                        }
-                    }
-                }
             }
-
-            let scroll = self.getScroll(elements),
-                borders = self.getBorder(elements.body.scrollable);
-
-            // get border-size replace 2 value
-            elements.head.scrollable.style.width = elements.body.scrollable.offsetWidth - scroll.y + (scroll.y ? borders.x + 1 : 0) + 'px';
-            elements.foot.scrollable.style.width = elements.body.scrollable.offsetWidth - scroll.y + (scroll.y ? borders.x + 1 : 0) + 'px';
-
-            elements.body.fixed.style.height = (displayRow || 1) * options.rowHeight + (scroll.x ? borders.y : 0) + 'px';
-            elements.body.scrollable.style.height = (displayRow || 1) * options.rowHeight + scroll.x + 'px';
         }
-    }
+        let cscroll = self.getScroll(elements),
+            totalW = options.width || (fixedW + scrollW + fborder.x + sborder.x + cscroll.y);
 
-    layoutWidth(elements: IElements) {
-        let self = this,
-            options = self.options,
-            container = self.container,
-            fixedHeadW = elements.head.fixed.offsetWidth,
-            fixedBodyW = elements.body.fixed.offsetWidth,
-            fixedFootW = elements.foot.fixed.offsetWidth,
-            fixedWidth = Math.max(fixedHeadW, fixedBodyW, fixedFootW);
-
-        if (options.width) {
-            container.style.width = Math.abs(options.width) + 'px';
+        if (totalW - cborder.x < fixedW + scrollW) {
+            container.classList.add('has-scroll-x');
         } else {
-            let border = self.getBorder(container),
-                scrollHeadW = elements.head.scrollable.offsetWidth,
-                scrollBodyW = elements.body.scrollable.offsetWidth,
-                scrollFootW = elements.foot.scrollable.offsetWidth,
-                scrollWidth = Math.max(scrollHeadW, scrollBodyW, scrollFootW);
-
-            container.style.width = fixedWidth + scrollWidth + border.x + 'px';
-        }
-
-        let totalWidth = container.clientWidth;
-
-        elements.head.fixed.style.width = fixedWidth + 'px';
-        elements.body.fixed.style.width = fixedWidth + 'px';
-        elements.foot.fixed.style.width = fixedWidth + 'px';
-
-        elements.head.scrollable.style.width = totalWidth - fixedWidth + 'px';
-        elements.body.scrollable.style.width = totalWidth - fixedWidth + 'px';
-        elements.foot.scrollable.style.width = totalWidth - fixedWidth + 'px';
-
-    }
-
-    tableWidth() {
-        let self = this,
-            container = self.container,
-            classList = container.classList;
-
-        if (!(classList.contains('has-scroll-x') && classList.contains('has-scroll-y'))) {
-            [].slice.call(container.querySelectorAll('table')).forEach((table: HTMLTableElement) => {
-                table.style.width = '100%';
-            });
+            container.classList.remove('has-scroll-x');
         }
     }
 
@@ -468,34 +405,8 @@ export class fxTable {
                     oth.parentElement!.replaceChild(cth, oth);
 
                     if (fc <= fixedColumn) {
-                        let hth = oth.cloneNode() as HTMLTableHeaderCellElement;
-
-                        hth.removeAttribute('data-bind');
-                        hth.innerHTML = '&nbsp;';
-                        hth.className = oth.className;
-
-                        if (!hth.className) {
-                            hth.className = 'fx-hidden';
-                        } else {
-                            hth.classList.add('fx-hidden');
-                        }
-
                         frow.appendChild(oth);
-                        srow.appendChild(hth);
                     } else {
-                        let hth = oth.cloneNode() as HTMLTableHeaderCellElement;
-
-                        hth.removeAttribute('data-bind');
-                        hth.innerHTML = '&nbsp;';
-                        hth.className = oth.className;
-
-                        if (!hth.className) {
-                            hth.className = 'fx-hidden';
-                        } else {
-                            hth.classList.add('fx-hidden');
-                        }
-
-                        frow.appendChild(hth);
                         srow.appendChild(oth);
                     }
 
@@ -594,34 +505,8 @@ export class fxTable {
                     oth.parentElement!.replaceChild(cth, oth);
 
                     if (fc <= fixedColumn) {
-                        let hth = oth.cloneNode() as HTMLTableHeaderCellElement;
-
-                        hth.removeAttribute('data-bind');
-                        hth.innerHTML = '&nbsp;';
-                        hth.className = oth.className;
-
-                        if (!hth.className) {
-                            hth.className = 'fx-hidden';
-                        } else {
-                            hth.classList.add('fx-hidden');
-                        }
-
                         frow.appendChild(oth);
-                        srow.appendChild(hth);
                     } else {
-                        let hth = oth.cloneNode() as HTMLTableHeaderCellElement;
-
-                        hth.removeAttribute('data-bind');
-                        hth.innerHTML = '&nbsp;';
-                        hth.className = oth.className;
-
-                        if (!hth.className) {
-                            hth.className = 'fx-hidden';
-                        } else {
-                            hth.classList.add('fx-hidden');
-                        }
-
-                        frow.appendChild(hth);
                         srow.appendChild(oth);
                     }
 

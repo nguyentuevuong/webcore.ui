@@ -12,6 +12,7 @@
             white-space: nowrap;
             box-sizing: border-box;
             text-overflow: ellipsis;
+            border: 1px solid #ddd;
         }
     }
     .fx-clear {
@@ -42,16 +43,16 @@
     }
     &.has-fixed {
         .fx-scroll-body {
-            border-left: 2px solid #ddd;
+            border-left: 1px solid #ddd;
         }
         &.has-header {
             .fx-scroll-header {
-                border-left: 2px solid #ddd;
+                border-left: 1px solid #ddd;
             }
         }
         &.has-footer {
             .fx-scroll-footer {
-                border-left: 2px solid #ddd;
+                border-left: 1px solid #ddd;
             }
         }
     }
@@ -154,5 +155,25 @@
     }*/
     input[type=text] {
         width: 100%;
+    }
+    .fx-table {
+        border: 0;
+        tr {
+            &:first-child {
+                th,
+                td {
+                    border-top: 0;
+                }
+            }
+            th,
+            td {
+                &:first-child {
+                    border-left: 0;
+                }
+                &:last-child {
+                    border-right: 0;
+                }
+            }
+        }
     }
 }
