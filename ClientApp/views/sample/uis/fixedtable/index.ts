@@ -19,11 +19,11 @@ import { component } from '@app/common/ko';
 })
 export class SampleFixedTableViewModel {
     dataSource: KnockoutObservableArray<{
-        id: number,
-        value1: KnockoutObservable<number>,
-        value2: KnockoutObservable<number>,
-        value3: KnockoutObservable<number>,
-        value4: KnockoutObservable<number>,
+        id: number;
+        value1: KnockoutObservable<number>;
+        value2: KnockoutObservable<number>;
+        value3: KnockoutObservable<number>;
+        value4: KnockoutObservable<number>;
         value5: KnockoutObservable<number>
     }> = ko.observableArrayOrig([]).extend({ deferred: true });
 
@@ -32,7 +32,7 @@ export class SampleFixedTableViewModel {
 
         let ds = [];
 
-        for (var i = 1; i <= 10; i++) {
+        for (var i = 1; i <= 25; i++) {
             ds.push({
                 id: i,
                 value1: ko.observableOrig(i),
@@ -52,11 +52,11 @@ export class SampleFixedTableViewModel {
 
         self.dataSource.push({
             id: i,
-            value1: ko.observableOrig(0),
-            value2: ko.observableOrig(0),
-            value3: ko.observableOrig(0),
-            value4: ko.observableOrig(0),
-            value5: ko.observableOrig(0),
+            value1: ko.observableOrig(i),
+            value2: ko.observableOrig(i),
+            value3: ko.observableOrig(i),
+            value4: ko.observableOrig(i),
+            value5: ko.observableOrig(i),
         });
     }
 }

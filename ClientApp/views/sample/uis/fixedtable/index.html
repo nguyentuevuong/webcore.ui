@@ -1,6 +1,6 @@
 <button class="btn btn-secondary" data-bind="i18n: '#add_data', click: $vm.addData, timeClick: -1"></button>
 <hr />
-<table class="tbl-employees table table-bordered" data-bind="fxtable: { width: 0, displayRow: 10, fixedColumn: 0, columns: [70, 70, 100, 100, 100, 100] }">
+<table class="tbl-employees table table-bordered" data-bind="fxtable: { width: 400, displayRow: 10, fixedColumn: 2, columns: [70, 70, 100, 100, 100, 100] }">
     <thead>
         <tr>
             <th colspan="2">Cols 1</th>
@@ -19,11 +19,11 @@
             <td>
                 <i class="fa fa-trash" data-bind="click: $vm.dataSource.remove.bind($vm.dataSource, $data)"></i>
             </td>
-            <td data-bind="text: $data.value1"></td>
-            <td data-bind="text: $data.value2"></td>
-            <td data-bind="text: $data.value3"></td>
-            <td data-bind="text: $data.value4"></td>
-            <td data-bind="text: $data.value5"></td>
+            <td><input type="text" data-bind="value: $data.value1" /></td>
+            <td><input type="text" data-bind="value: $data.value2" /></td>
+            <td><input type="text" data-bind="value: $data.value3" /></td>
+            <td><input type="text" data-bind="value: $data.value4" /></td>
+            <td><input type="text" data-bind="value: $data.value5" /></td>
         </tr>
     </tbody>
     <tfoot>
