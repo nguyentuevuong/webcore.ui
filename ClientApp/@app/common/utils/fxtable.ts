@@ -1,8 +1,9 @@
 import { ko } from '@app/providers';
 import { random } from '@app/common/id/random';
 
-let domData = ko.utils.domData,
-    triggerEvent = ko.utils.triggerEvent,
+let extend = ko.utils.extend,
+    domData = ko.utils.domData,
+    //triggerEvent = ko.utils.triggerEvent,
     registerEvent = ko.utils.registerEventHandler;
 
 export class fxTable {
@@ -16,7 +17,12 @@ export class fxTable {
         columns: []
     };
 
-    constructor(table: HTMLTableElement, options?: IOptions) {
+    constructor(table: HTMLTableElement, options?: {
+        width: number;
+        displayRow: number;
+        fixedColumn: number;
+        columns: Array<number>;
+    }) {
         // init default elements;
         this.createElements();
 
@@ -26,8 +32,8 @@ export class fxTable {
             dtbl = elements.tables.table,
             sbody = elements.body.scrollable;
 
-        options = options || self.options;
-        ko.utils.extend(self.options, options);
+        // extend external options
+        extend(self.options, options || self.options);
 
         if (!table.className) {
             table.className = 'fx-table';
@@ -43,11 +49,11 @@ export class fxTable {
             self.initLayout();
 
             // reinit layout if window resize
-            window.addEventListener('resize', () => self.initLayout());
+            registerEvent(window, 'resize', () => self.initLayout());
 
             // reinit layout if render body again
             let body = table.querySelector('tbody');
-            ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => body && body.addEventListener(evt, () => self.initLayout()));
+            ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => registerEvent(body, evt, () => self.initLayout()));
         }
     }
 
@@ -221,7 +227,9 @@ export class fxTable {
                 .filter((v: number, i: number) => i >= options.fixedColumn)
                 .reduce((a, b) => a + b, 0),
             totalW = options.width || Math.min(defaultW, (fixedW + scrollW + sborder.x + cborder.x + sscroll.y)),
-            viewedW = totalW - (fixedW + cborder.x);
+            viewedW = totalW - (fixedW + cborder.x),
+            fixedH = Math.abs(options.displayRow) === options.displayRow,
+            maxHeight = options.rowHeight * Math.abs(options.displayRow);
 
         styles += `\n{role}.fx-container { width: ${totalW}px; }`;
         styles += `\n{role} .fx-fixed-header, {role} .fx-fixed-body, {role} .fx-fixed-footer { width: ${fixedW}px; }`;
@@ -229,8 +237,14 @@ export class fxTable {
         styles += `\n{role} .fx-scroll-body { width: ${viewedW}px; }`;
         styles += `\n{role} .fx-scroll-header, {role} .fx-scroll-footer { width: ${viewedW - sscroll.y + (sscroll.y ? (sborder.x + 1) : 0)}px; }`;
 
-        styles += `\n{role} .fx-fixed-body { height: ${options.displayRow * options.rowHeight + (sscroll.x ? 1 : 0)}px; }`;
-        styles += `\n{role} .fx-scroll-body { height: ${options.displayRow * options.rowHeight + sscroll.x}px; }`;
+        if (!fixedH) {
+            styles += `\n{role} .fx-fixed-body { min-height: ${options.rowHeight + (sscroll.x ? 1 : 0)}px; max-height: ${maxHeight + (sscroll.x ? 1 : 0)}px; }`;
+            styles += `\n{role} .fx-scroll-body { min-height: ${options.rowHeight + sscroll.x}px; max-height: ${maxHeight + sscroll.x}px; }`;
+
+        } else {
+            styles += `\n{role} .fx-fixed-body { height: ${maxHeight + (sscroll.x ? 1 : 0)}px; }`;
+            styles += `\n{role} .fx-scroll-body { height: ${maxHeight + sscroll.x}px; }`;
+        }
 
         styles += '\n';
 
@@ -800,6 +814,9 @@ export class fxTable {
             scrollFooter = document.createElement('div'),
             rowFooter = document.createElement('div');
 
+        // set container to self
+        self.container = container;
+
         cf.className = 'fx-clear';
         container.className = 'fx-container';
         container.setAttribute('role', random.id);
@@ -893,9 +910,6 @@ export class fxTable {
             // cancel all scroll event of parents
             evt.preventDefault();
         });
-
-        // set container to self
-        self.container = container;
     }
 }
 
@@ -940,5 +954,5 @@ interface IOptions {
     displayRow: number;
     fixedColumn: number;
     rowHeight: number;
-    columns: number[];
+    columns: Array<number>;
 }
