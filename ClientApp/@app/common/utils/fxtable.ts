@@ -7,7 +7,7 @@ let extend = ko.utils.extend,
     registerEvent = ko.utils.registerEventHandler;
 
 export class fxTable {
-    container: HTMLDivElement = document.createElement('div');
+    private container: HTMLDivElement = document.createElement('div');
 
     options: IOptions = {
         width: 0,
@@ -17,44 +17,63 @@ export class fxTable {
         columns: []
     };
 
-    constructor(table: HTMLTableElement, options?: {
+    constructor(table?: HTMLTableElement, options?: {
         width: number;
         displayRow: number;
         fixedColumn: number;
         columns: Array<number>;
     }) {
-        // init default elements;
-        this.createElements();
+        if (table) {
+            // init default elements;
+            this.createElements();
 
+            let self = this,
+                elements = self.elements,
+                rctnr = table.parentElement,
+                dtbl = elements.tables.table,
+                sbody = elements.body.scrollable;
+
+            // extend external options
+            self.updateOption(options || self.options);
+
+            if (!table.className) {
+                table.className = 'fx-table';
+            } else {
+                table.classList.add('fx-table');
+            }
+
+            if (rctnr) {
+                rctnr.replaceChild(self.container, table);
+
+                sbody.replaceChild(table, dtbl);
+
+                self.initLayout();
+
+                // reinit layout if window resize
+                registerEvent(window, 'resize', () => self.initLayout());
+
+                // reinit layout if render body again
+                let body = table.querySelector('tbody');
+                ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => registerEvent(body, evt, () => self.initLayout()));
+            }
+        }
+    }
+
+    updateOption(options: {
+        width?: number;
+        displayRow?: number;
+        fixedColumn?: number;
+        columns?: Array<number>;
+    }) {
         let self = this,
-            elements = self.elements,
-            rctnr = table.parentElement,
-            dtbl = elements.tables.table,
-            sbody = elements.body.scrollable;
+            updOpt = {
+                width: options.width,
+                displayRow: options.displayRow,
+                fixedColumn: options.fixedColumn,
+                columns: options.columns
+            };
 
-        // extend external options
-        extend(self.options, options || self.options);
-
-        if (!table.className) {
-            table.className = 'fx-table';
-        } else {
-            table.classList.add('fx-table');
-        }
-
-        if (rctnr) {
-            rctnr.replaceChild(self.container, table);
-
-            sbody.replaceChild(table, dtbl);
-
-            self.initLayout();
-
-            // reinit layout if window resize
-            registerEvent(window, 'resize', () => self.initLayout());
-
-            // reinit layout if render body again
-            let body = table.querySelector('tbody');
-            ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => registerEvent(body, evt, () => self.initLayout()));
-        }
+        extend(self.options, updOpt);
     }
 
     initLayout() {
@@ -89,7 +108,7 @@ export class fxTable {
         }
     }
 
-    clearStyle(elements: IElements) {
+    private clearStyle(elements: IElements) {
         let self = this,
             head = elements.head,
             body = elements.body,
@@ -164,7 +183,7 @@ export class fxTable {
         foot.scrollable.innerHTML = '';
     }
 
-    headStyle(elements: IElements) {
+    private headStyle(elements: IElements) {
         let self = this,
             ctner = self.container,
             head = elements.head.row,
@@ -177,7 +196,7 @@ export class fxTable {
         }
     }
 
-    fixedStyle(elements: IElements) {
+    private fixedStyle(elements: IElements) {
         let self = this,
             ctner = self.container,
             fixedHead = elements.head.fixed,
@@ -196,7 +215,7 @@ export class fxTable {
         }
     }
 
-    footStyle(elements: IElements) {
+    private footStyle(elements: IElements) {
         let self = this,
             ctner = self.container,
             foot = elements.foot.row,
@@ -209,7 +228,7 @@ export class fxTable {
         }
     }
 
-    layoutStyles(elements: IElements) {
+    private layoutStyles(elements: IElements) {
         let self = this,
             styles = '',
             sscroll = self.getScroll(elements),
@@ -281,7 +300,7 @@ export class fxTable {
         elements.styles.apply(styles);
     }
 
-    setColumnStyles() {
+    private setColumnStyles() {
         let self = this,
             options = self.options,
             container = self.container;
@@ -312,7 +331,7 @@ export class fxTable {
         });
     }
 
-    scrollStyle(elements: IElements) {
+    private scrollStyle(elements: IElements) {
         let self = this,
             options = self.options,
             container = self.container,
@@ -350,7 +369,7 @@ export class fxTable {
         }
     }
 
-    moveFixedItems(elements: IElements, options: IOptions) {
+    private moveFixedItems(elements: IElements, options: IOptions) {
         let self = this,
             tables = elements.tables,
             tbName = tables.table.className,
@@ -556,7 +575,7 @@ export class fxTable {
      * 
      * @param tables Main elements of table
      */
-    roleBackItems(tables: ITableElement) {
+    private roleBackItems(tables: ITableElement) {
         if (tables.head) {
             [].slice.call(tables.head!.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
                 [].slice.call(tr.querySelectorAll('th')).forEach((th: any, i: number) => {
@@ -603,7 +622,7 @@ export class fxTable {
         }
     }
 
-    getAvgRowHeight(tables: ITableElement) {
+    private getAvgRowHeight(tables: ITableElement) {
         let self = this,
             row = tables.body!.querySelector('tr') || tables.head!.querySelector('tr') || tables.foot!.querySelector('tr');
 
@@ -616,7 +635,7 @@ export class fxTable {
         }
     }
 
-    getBorder(element: HTMLElement): {
+    private getBorder(element: HTMLElement): {
         x: number;
         y: number;
     } {
@@ -643,7 +662,7 @@ export class fxTable {
         return borders;
     }
 
-    getScroll(elements: IElements): {
+    private getScroll(elements: IElements): {
         x: number;
         y: number;
         default: number;
@@ -687,7 +706,7 @@ export class fxTable {
         return scroll;
     }
 
-    getTemplate(fixed: number) {
+    private getTemplate(fixed: number) {
         let self = this,
             options = self.options,
             row = document.createElement('tr'),
@@ -728,7 +747,7 @@ export class fxTable {
         return body;
     }
 
-    get elements(): IElements {
+    private get elements(): IElements {
         let self = this,
             container = self.container,
             id = container.getAttribute('role'),
@@ -791,7 +810,7 @@ export class fxTable {
     /**
      * Init all elements of fixed table layout
      */
-    createElements() {
+    private createElements() {
         let self = this,
             // other elements
             cf = document.createElement('div'),
