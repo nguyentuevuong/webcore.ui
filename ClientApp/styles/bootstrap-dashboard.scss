@@ -1139,6 +1139,110 @@ pre {
     }
 }
 
+/* -- fixed table -- */
+
+.fx-container {
+    overflow: hidden;
+    margin-bottom: 25px;
+    border: 1px solid #ddd;
+    .fx-table {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        th,
+        td {
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+            text-overflow: ellipsis;
+        }
+    }
+    .fx-clear {
+        clear: both;
+    }
+    .fx-hidden {
+        display: none;
+    }
+    &.has-header {
+        .fx-scroll-body {
+            thead {
+                display: none;
+            }
+        }
+        .fx-row-body {
+            border-top: 1px solid #ddd;
+        }
+    }
+    &.has-footer {
+        .fx-scroll-body {
+            tfoot {
+                display: none;
+            }
+        }
+        .fx-row-body {
+            border-bottom: 1px solid #ddd;
+        }
+    }
+    &.has-fixed {
+        .fx-scroll-body {
+            border-left: 1px solid #ddd;
+        }
+        &.has-header {
+            .fx-scroll-header {
+                border-left: 1px solid #ddd;
+            }
+        }
+        &.has-footer {
+            .fx-scroll-footer {
+                border-left: 1px solid #ddd;
+            }
+        }
+    }
+    &.has-scroll-y {
+        .fx-scroll-body {
+            overflow-y: scroll;
+        }
+        .fx-scroll-header {
+            border-right: 1px solid #ddd;
+        }
+        .fx-scroll-footer {
+            border-right: 1px solid #ddd;
+        }
+    }
+    &.has-scroll-x {
+        &.has-footer {
+            .fx-scroll-footer {
+                overflow-x: scroll;
+            }
+            .fx-fixed-footer {
+                border-bottom: 1px solid #ddd;
+            }
+        }
+        &:not(.has-footer) {
+            .fx-fixed-body {
+                border-bottom: 1px solid #ddd;
+            }
+            .fx-scroll-body {
+                overflow-x: scroll;
+            }
+        }
+    }
+    .fx-row-header,
+    .fx-row-body,
+    .fx-row-footer {
+        overflow: hidden;
+    }
+    .fx-fixed-header,
+    .fx-fixed-body,
+    .fx-fixed-footer,
+    .fx-scroll-header,
+    .fx-scroll-body,
+    .fx-scroll-footer {
+        float: left;
+        overflow: hidden;
+    }
+}
+
 /* -- header-panel -- */
 
 .header-panel {

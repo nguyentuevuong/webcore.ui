@@ -904,7 +904,7 @@ export class fxTable {
         registerEvent(container, 'wheel', (evt: WheelEvent) => {
             let cls = container.classList,
                 step = evt.deltaY ? 125 : 40,
-                wheel = (evt.deltaY || evt.wheelDeltaY),
+                wheel = (evt.deltaY || evt.wheelDelta),
                 scrollY = cls.contains('has-scroll-y');
 
             if (evt.shiftKey || !scrollY) {
