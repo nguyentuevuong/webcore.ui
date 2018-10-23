@@ -240,7 +240,6 @@ export class fxTable {
         if (!fixedH) {
             styles += `\n{role} .fx-fixed-body { min-height: ${options.rowHeight + (sscroll.x ? 1 : 0)}px; max-height: ${maxHeight + (sscroll.x ? 1 : 0)}px; }`;
             styles += `\n{role} .fx-scroll-body { min-height: ${options.rowHeight + sscroll.x}px; max-height: ${maxHeight + sscroll.x}px; }`;
-
         } else {
             styles += `\n{role} .fx-fixed-body { height: ${maxHeight + (sscroll.x ? 1 : 0)}px; }`;
             styles += `\n{role} .fx-scroll-body { height: ${maxHeight + sscroll.x}px; }`;
