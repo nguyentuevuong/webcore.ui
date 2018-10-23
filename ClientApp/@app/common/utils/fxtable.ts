@@ -1,7 +1,9 @@
 import { ko } from '@app/providers';
 import { random } from '@app/common/id/random';
 
-let domData = ko.utils.domData;
+let domData = ko.utils.domData,
+    triggerEvent = ko.utils.triggerEvent,
+    registerEvent = ko.utils.registerEventHandler;
 
 export class fxTable {
     container: HTMLDivElement = document.createElement('div');
@@ -63,21 +65,18 @@ export class fxTable {
             setTimeout(() => {
                 self.clearStyle(elements);
 
-                self.roleBackItem(elements.tables);
+                self.roleBackItems(elements.tables);
+                self.getAvgRowHeight(elements.tables);
+                self.moveFixedItems(elements, options);
 
-                self.getRowHeight(elements.tables);
-
-                self.moveFixedItem(elements, options);
-
-                self.layoutStyle();
+                self.setColumnStyles();
 
                 self.headStyle(elements);
                 self.footStyle(elements);
                 self.fixedStyle(elements);
 
                 self.scrollStyle(elements);
-
-                self.columnStyles(elements);
+                self.layoutStyles(elements);
 
                 domData.set(container, ki, false);
             }, 50);
@@ -91,7 +90,7 @@ export class fxTable {
             foot = elements.foot,
             tables = elements.tables;
 
-        self.roleBackItem(tables);
+        self.roleBackItems(tables);
 
         elements.styles.clear();
 
@@ -161,20 +160,20 @@ export class fxTable {
 
     headStyle(elements: IElements) {
         let self = this,
-            container = self.container,
+            ctner = self.container,
             head = elements.head.row,
             hasHead = [].slice.call(head.querySelectorAll('table')).length > 0;
 
         if (hasHead) {
-            container.classList.add('has-header');
+            ctner.classList.add('has-header');
         } else {
-            container.classList.remove('has-header');
+            ctner.classList.remove('has-header');
         }
     }
 
     fixedStyle(elements: IElements) {
         let self = this,
-            container = self.container,
+            ctner = self.container,
             fixedHead = elements.head.fixed,
             fixedBody = elements.body.fixed,
             fixedFoot = elements.foot.fixed,
@@ -185,59 +184,70 @@ export class fxTable {
             ];
 
         if (!!listFixed[0] || !!listFixed[1] || !!listFixed[2]) {
-            container.classList.add('has-fixed');
+            ctner.classList.add('has-fixed');
         } else {
-            container.classList.remove('has-fixed');
+            ctner.classList.remove('has-fixed');
         }
     }
 
     footStyle(elements: IElements) {
         let self = this,
-            container = self.container,
+            ctner = self.container,
             foot = elements.foot.row,
             hasFoot = [].slice.call(foot.querySelectorAll('table')).length > 0;
 
         if (hasFoot) {
-            container.classList.add('has-footer');
+            ctner.classList.add('has-footer');
         } else {
-            container.classList.remove('has-footer');
+            ctner.classList.remove('has-footer');
         }
     }
 
-    columnStyles(elements: IElements) {
+    layoutStyles(elements: IElements) {
         let self = this,
             styles = '',
             sscroll = self.getScroll(elements),
             cborder = self.getBorder(self.container),
-            fborder = self.getBorder(elements.body.fixed),
             sborder = self.getBorder(elements.body.scrollable),
+            hborder = self.getBorder(elements.head.row),
+            fborder = self.getBorder(elements.foot.row),
             options = self.options,
             columns = options.columns,
+            defaultW = self.container.offsetWidth,
             fixedW = columns
                 .filter((v: number, i: number) => i < options.fixedColumn)
                 .reduce((a, b) => a + b, 0),
             scrollW = columns
                 .filter((v: number, i: number) => i >= options.fixedColumn)
                 .reduce((a, b) => a + b, 0),
-            totalW = options.width || (fixedW + scrollW),
-            viewedW = totalW - fixedW;
+            totalW = options.width || Math.min(defaultW, (fixedW + scrollW + sborder.x + cborder.x + sscroll.y)),
+            viewedW = totalW - (fixedW + cborder.x);
 
-        styles += `\n{role}.fx-container { width: ${totalW + (!options.width ? cborder.x : 0) + (!options.width ? sscroll.y : 0)}px; }`;
+        styles += `\n{role}.fx-container { width: ${totalW}px; }`;
         styles += `\n{role} .fx-fixed-header, {role} .fx-fixed-body, {role} .fx-fixed-footer { width: ${fixedW}px; }`;
-        styles += `\n{role} .fx-scroll-body { width: ${viewedW + (!options.width ? sscroll.y : 0) - (options.width ? cborder.x : (!sscroll.y ? cborder.x : 0))}px; }`;
-        styles += `\n{role} .fx-scroll-header, {role} .fx-scroll-footer { width: ${viewedW - (options.width ? sscroll.y : -sborder.x) - (sscroll.y ? (options.width ? 0 : -1) : cborder.x)}px; }`;
 
-        console.log((fborder.x + sborder.x + cborder.x))
+        styles += `\n{role} .fx-scroll-body { width: ${viewedW}px; }`;
+        styles += `\n{role} .fx-scroll-header, {role} .fx-scroll-footer { width: ${viewedW - sscroll.y + (sscroll.y ? (sborder.x + 1) : 0)}px; }`;
 
         styles += `\n{role} .fx-fixed-body { height: ${options.displayRow * options.rowHeight + (sscroll.x ? 1 : 0)}px; }`;
         styles += `\n{role} .fx-scroll-body { height: ${options.displayRow * options.rowHeight + sscroll.x}px; }`;
+
+        styles += '\n';
+
         styles += `\n{role} div[class^='fx-row'] { position: relative; }`;
         styles += `\n{role} tbody>tr { height: ${options.rowHeight}px }`;
+
         styles += `\n{role} .fx-row-header, {role} .fx-row-footer { z-index: 1 }`;
         styles += `\n{role} .fx-row-body { z-index: 2; background-color: #fff; }`;
-        styles += `\n{role}.has-header .fx-row-body { margin-top: -${options.rowHeight}px; }`;
-        styles += `\n{role}.has-footer .fx-row-body { margin-bottom: -${options.rowHeight}px; }`;
-        styles += `\n\n{role} tr>th[column='hide'], {role} tr>td[column='hide'] { display: none; }`;
+
+        styles += `\n{role}.has-header .fx-row-body { margin-top: -${options.rowHeight + hborder.y}px; }`;
+        styles += `\n{role}.has-footer .fx-row-body { margin-bottom: -${options.rowHeight + fborder.y}px; }`;
+
+        styles += '\n';
+
+        styles += `\n{role} tr>th[column='hide'], {role} tr>td[column='hide'] { display: none; }`;
+
+        styles += '\n';
 
         if (columns.length) {
             columns.forEach((v: number, i: number) => {
@@ -249,14 +259,16 @@ export class fxTable {
             });
         }
 
+        styles += '\n';
+
         for (var i = 2; i <= 15; i++) {
-            styles += `\n{role} tbody th[rowspan='${i}'],{role} tbody td[rowspan='${i}'] { height: ${options.rowHeight * i}px; }`;
+            styles += `\n{role} tbody th[rowspan='${i}'], {role} tbody td[rowspan='${i}'] { height: ${options.rowHeight * i}px; }`;
         }
 
         elements.styles.apply(styles);
     }
 
-    layoutStyle() {
+    setColumnStyles() {
         let self = this,
             options = self.options,
             container = self.container;
@@ -294,8 +306,8 @@ export class fxTable {
             body = elements.tables.body,
             columns = options.columns,
             cborder = self.getBorder(self.container),
-            fborder = self.getBorder(elements.body.fixed),
             sborder = self.getBorder(elements.body.scrollable),
+            defaultW = self.container.offsetWidth,
             fixedW = columns
                 .filter((v: number, i: number) => i < options.fixedColumn)
                 .reduce((a, b) => a + b, 0),
@@ -314,8 +326,9 @@ export class fxTable {
                 container.classList.remove('has-scroll-y');
             }
         }
+
         let cscroll = self.getScroll(elements),
-            totalW = options.width || (fixedW + scrollW + fborder.x + sborder.x + cscroll.y);
+            totalW = options.width || Math.min(defaultW, (fixedW + scrollW + sborder.x + cborder.x + cscroll.y));
 
         if (totalW - cborder.x < fixedW + scrollW) {
             container.classList.add('has-scroll-x');
@@ -324,7 +337,7 @@ export class fxTable {
         }
     }
 
-    moveFixedItem(elements: IElements, options: IOptions) {
+    moveFixedItems(elements: IElements, options: IOptions) {
         let self = this,
             tables = elements.tables,
             tbName = tables.table.className,
@@ -530,7 +543,7 @@ export class fxTable {
      * 
      * @param tables Main elements of table
      */
-    roleBackItem(tables: ITableElement) {
+    roleBackItems(tables: ITableElement) {
         if (tables.head) {
             [].slice.call(tables.head!.querySelectorAll('tr')).forEach((tr: HTMLTableRowElement) => {
                 [].slice.call(tr.querySelectorAll('th')).forEach((th: any, i: number) => {
@@ -577,7 +590,7 @@ export class fxTable {
         }
     }
 
-    getRowHeight(tables: ITableElement) {
+    getAvgRowHeight(tables: ITableElement) {
         let self = this,
             row = tables.body!.querySelector('tr') || tables.head!.querySelector('tr') || tables.foot!.querySelector('tr');
 
@@ -607,10 +620,12 @@ export class fxTable {
         borders.x = element.offsetWidth - element.clientWidth;
         borders.y = element.offsetHeight - element.clientHeight;
 
-        element.setAttribute('style', '');
+        element.removeAttribute('style');
 
-        element.style.width = width;
-        element.style.height = height;
+        if (width || height) {
+            element.style.width = width;
+            element.style.height = height;
+        }
 
         return borders;
     }
@@ -633,10 +648,12 @@ export class fxTable {
 
         scroll.default = body.offsetWidth - body.clientWidth;
 
-        body.setAttribute('style', '');
+        body.removeAttribute('style');
 
-        body.style.width = width;
-        body.style.height = height;
+        if (width || height) {
+            body.style.width = width;
+            body.style.height = height;
+        }
 
         if (classList.contains('has-scroll-y')) {
             if (classList.contains('has-scroll-x')) {
@@ -823,7 +840,7 @@ export class fxTable {
         // init default table (prevent exception)
         scrollBody.appendChild(table);
 
-        ko.utils.registerEventHandler(scrollBody, 'scroll', (evt: Event) => {
+        registerEvent(scrollBody, 'scroll', (evt: Event) => {
             fixedBody.scrollTop = scrollBody.scrollTop;
 
             scrollHeader.scrollLeft = scrollBody.scrollLeft;
@@ -833,14 +850,14 @@ export class fxTable {
             evt.preventDefault();
         });
 
-        ko.utils.registerEventHandler(fixedBody, 'scroll', (evt: Event) => {
+        registerEvent(fixedBody, 'scroll', (evt: Event) => {
             scrollBody.scrollTop = fixedBody.scrollTop;
 
             // cancel all scroll event of parents
             evt.preventDefault();
         });
 
-        ko.utils.registerEventHandler(scrollFooter, 'scroll', (evt: Event) => {
+        registerEvent(scrollFooter, 'scroll', (evt: Event) => {
             if (container.classList.contains('has-footer')) {
                 scrollBody.scrollLeft = scrollFooter.scrollLeft;
                 scrollHeader.scrollLeft = scrollFooter.scrollLeft;
@@ -849,7 +866,7 @@ export class fxTable {
             evt.preventDefault();
         });
 
-        ko.utils.registerEventHandler(container, 'wheel', (evt: WheelEvent) => {
+        registerEvent(container, 'wheel', (evt: WheelEvent) => {
             let cls = container.classList,
                 step = evt.deltaY ? 125 : 40,
                 wheel = (evt.deltaY || evt.wheelDeltaY),
