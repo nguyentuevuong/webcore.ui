@@ -1,0 +1,11 @@
+nts-selection .form-check-label span {
+    display: inline-block;
+    min-width: 45px;
+}
+
+.fx-selection {
+    cursor: pointer;
+    .selected {
+        background-color: #ccc;
+    }
+}

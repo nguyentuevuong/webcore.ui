@@ -6,16 +6,16 @@ import { component } from '@app/common/ko';
     url: 'sample/selection/listbox',
     title: 'Listbox',
     icon: 'fa fa-list',
-    styles: require('./style.css'),
+    styles: require('./style.scss'),
     template: require('./index.html')
 })
-class SampleListboxViewModel {
+export class SampleListboxViewModel {
     employee: KnockoutObservable<Employee> = ko.observable(new Employee());
     employees: KnockoutObservableArray<IEmployee> = ko.observableArray([]);
 
     constructor(params: any, element: HTMLElement) {
         let self = this;
-
+        
         $.getJSON('/json/employee.json', {}, self.employees);
     }
 }

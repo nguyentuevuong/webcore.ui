@@ -20,6 +20,13 @@ export class FixedTableBindingHandler implements KnockoutBindingHandler {
                 }
             });
 
+        if (!element.className) {
+            element.className = 'fx-selection noselect';
+        } else {
+            element.classList.add('noselect');
+            element.classList.add('fx-selection');
+        }
+
         ko.bindingHandlers.template.init!(element, newAccessor, allBindingsAccessor, viewModel, bindingContext);
         ko.bindingHandlers.template.update!(element, newAccessor, allBindingsAccessor, viewModel, bindingContext);
 
