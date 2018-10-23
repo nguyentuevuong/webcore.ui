@@ -15,7 +15,7 @@ export const getText: any = (resource: string, params?: { [key: string]: string 
         .replace(/#{.+}/g, (match: string) => {
             let key = match.replace(/[\#\{\}]/g, '');
 
-            return getText((groups[key] || i18lang[key] || '').replace(/^#/, ''), groups);
+            return getText((groups[key] || key || '').replace(/^#/, ''), groups);
         }) || resource).toString();
 }
 
