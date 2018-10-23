@@ -11,9 +11,21 @@ import { component } from '@app/common/ko';
     template: require('./index.html'),
     resources: {
         'en': {
-            'sample|navigate': 'Navigate controls'
+            'width': 'Width',
+            'display_row': 'Display rows',
+            'fixed_column': 'Fixed columns #{default_0}',
+            'default_0': '(default: 0)',
+            'default_10': '(default: 10)',
+            'negative_is_auto': 'Negative is auto #{default_10}',
+            'zero_is_auto': 'Zero is auto #{default_0}'
         }, 'vi': {
-            'sample|navigate': 'Điểu khiển điều hướng'
+            'width': 'Độ rộng',
+            'display_row': 'Số dòng hiển thị',
+            'fixed_column': 'Số cột đứng #{default_0}',
+            'default_0': '(mặc định: 0)',
+            'default_10': '(mặc định: 10)',
+            'negative_is_auto': 'Giá trị âm thì tự động #{default_10}',
+            'zero_is_auto': 'Giá trị 0 thì tự động #{default_0}'
         }
     }
 })
