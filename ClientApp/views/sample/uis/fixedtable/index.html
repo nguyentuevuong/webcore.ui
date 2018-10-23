@@ -1,6 +1,20 @@
 <button class="btn btn-secondary" data-bind="i18n: '#add_data', click: $vm.addData, timeClick: -1"></button>
 <hr />
-<table class="tbl-employees" data-bind="fxtable: { width: 0, displayRow: -10, fixedColumn: 2, columns: [32, 170, 100, 100, 150, 150] }">
+<div class="row">
+    <div class="col-md-2 form-group">
+        <div data-bind="label: $vm.width"></div>
+        <select class="form-control" data-bind="options: $vm.width.dataSources, value: $vm.width"></select>
+    </div>
+    <div class="col-md-2 form-group">
+        <div data-bind="label: $vm.displayRow"></div>
+        <select class="form-control" data-bind="options: $vm.displayRow.dataSources, value: $vm.displayRow"></select>
+    </div>
+    <div class="col-md-2 form-group">
+        <div data-bind="label: $vm.fixedColumn"></div>
+        <select class="form-control" data-bind="options: $vm.fixedColumn.dataSources, value: $vm.fixedColumn"></select>
+    </div>
+</div>
+<table class="tbl-employees" data-bind="fxtable: { width: $vm.width, displayRow: $vm.displayRow, fixedColumn: $vm.fixedColumn, columns: [32, 170, 100, 100, 150, 150, 100] }">
     <thead>
         <tr>
             <th colspan="2">Cols 1</th>

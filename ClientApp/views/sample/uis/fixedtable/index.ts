@@ -27,6 +27,10 @@ export class SampleFixedTableViewModel {
         value5: KnockoutObservable<number>
     }> = ko.observableArrayOrig([]).extend({ deferred: true });
 
+    width: KnockoutObservableSelection = ko.observableSelection(0).extend({ $name: '#width', $constraint: '#zero_is_auto', dataSources: [0, 600, 700, 800] });
+    displayRow: KnockoutObservableSelection = ko.observableSelection(10).extend({ $name: '#display_row', $constraint: '#negative_is_auto',  dataSources: [-10, -5, 5, 10, 15] });
+    fixedColumn: KnockoutObservableSelection = ko.observableSelection(2).extend({ $name: '#fixed_column',  dataSources: [0, 1, 2, 3] });
+
     constructor(params: any, private element: HTMLElement) {
         ko.utils.extend(window, { $vm: this });
 
