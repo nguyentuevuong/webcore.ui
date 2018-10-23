@@ -3,7 +3,6 @@ import { handler } from '@app/common/ko';
 import { fxTable } from '@app/common/utils/fxtable';
 
 let ki = '__fxtable__',
-    nasc = '__fxaccessor__',
     extend = ko.utils.extend,
     domData = ko.utils.domData,
     unwrapObs = ko.utils.unwrapObservable;
