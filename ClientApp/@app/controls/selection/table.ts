@@ -9,7 +9,7 @@ let ki = '__fxtable__',
 
 @handler({
     virtual: false,
-    bindingName: 'fxtable'
+    bindingName: 'table'
 })
 export class FixedTableBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLTableElement, valueAccessor: () => { width: number; displayRow: number; fixedColumn: number; columns: Array<number>; }, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
