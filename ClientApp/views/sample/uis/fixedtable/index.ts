@@ -16,7 +16,7 @@ import { component } from '@app/common/ko';
             'fixed_column': 'Fixed columns #{default_0}',
             'default_0': '(default: 0)',
             'default_10': '(default: 10)',
-            'negative_is_auto': 'Negative is auto #{default_10}',
+            'negative_is_auto': 'Negative is allow lower #{default_10}',
             'zero_is_auto': 'Zero is auto #{default_0}'
         }, 'vi': {
             'width': 'Độ rộng',
@@ -24,7 +24,7 @@ import { component } from '@app/common/ko';
             'fixed_column': 'Số cột đứng #{default_0}',
             'default_0': '(mặc định: 0)',
             'default_10': '(mặc định: 10)',
-            'negative_is_auto': 'Giá trị âm thì tự động #{default_10}',
+            'negative_is_auto': 'Giá trị âm thì chấp nhận nhỏ hơn #{default_10}',
             'zero_is_auto': 'Giá trị 0 thì tự động #{default_0}'
         }
     }
@@ -41,7 +41,7 @@ export class SampleFixedTableViewModel {
 
     width: KnockoutObservableSelection = ko.observableSelection(0).extend({ $name: '#width', $constraint: '#zero_is_auto', dataSources: [0, 600, 700, 800] });
     displayRow: KnockoutObservableSelection = ko.observableSelection(10).extend({ $name: '#display_row', $constraint: '#negative_is_auto',  dataSources: [-10, -5, 5, 10, 15] });
-    fixedColumn: KnockoutObservableSelection = ko.observableSelection(2).extend({ $name: '#fixed_column',  dataSources: [0, 1, 2, 3] });
+    fixedColumn: KnockoutObservableSelection = ko.observableSelection(0).extend({ $name: '#fixed_column',  dataSources: [0, 1, 2, 3] });
 
     constructor(params: any, private element: HTMLElement) {
         ko.utils.extend(window, { $vm: this });
