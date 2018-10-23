@@ -14,7 +14,7 @@
         <select class="form-control" data-bind="options: $vm.fixedColumn.dataSources, value: $vm.fixedColumn"></select>
     </div>
 </div>
-<table class="tbl-employees" data-bind="fxtable: { width: $vm.width, displayRow: $vm.displayRow, fixedColumn: $vm.fixedColumn, columns: [32, 170, 100, 100, 150, 150, 100] }">
+<table class="tbl-employees" data-bind="table: { width: $vm.width, displayRow: $vm.displayRow, fixedColumn: $vm.fixedColumn, columns: [32, 170, 100, 100, 150, 150, 100] }">
     <thead>
         <tr>
             <th colspan="2" data-bind="i18n: '#width'"></th>

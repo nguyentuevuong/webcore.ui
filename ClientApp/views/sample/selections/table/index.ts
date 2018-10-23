@@ -3,9 +3,9 @@ import { component } from '@app/common/ko';
 
 
 @component({
-    url: 'sample/selection/fixed-table',
+    url: 'sample/selection/table',
     name: 'sample-table',
-    title: '#fixed_table',
+    title: '#table',
     icon: 'fa fa-refresh',
     styles: require('./style.scss'),
     template: require('./index.html'),
