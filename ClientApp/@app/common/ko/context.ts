@@ -12,14 +12,6 @@ ko.utils.extend(ko, {
 
         origBinding2Desc(viewModelOrBindingContext, rootNode);
 
-        if (viewModelOrBindingContext.$vm) {
-            let ard = viewModelOrBindingContext.$vm.afterRender;
-
-            if (ard && ard.apply && !ard.runOne) {
-                ard.apply(viewModelOrBindingContext.$vm);
-
-                ko.utils.extend(ard, { runOne: true });
-            }
-        }
+        
     }
 });

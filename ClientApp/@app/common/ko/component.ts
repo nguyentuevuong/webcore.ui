@@ -129,7 +129,7 @@ export function component(params: IDecoratorComponent) {
                     return new constructor(_.omit(params, ['$raw', 'component']), element, templateNodes);
                 }
             },
-            template: `${params.styles || ''}${params.template || `<span data-bind="i18n: 'view_name'"></span>:&nbsp<span data-bind="i18n: '${viewName}'"></span>`}`,
+            template: `${params.styles || ''}<!-- ko template: { afterRender: ($vm.afterRender || function() {}).bind($vm) } -->${params.template || `<span data-bind="i18n: 'view_name'"></span>:&nbsp<span data-bind="i18n: '${viewName}'"></span>`}<!-- /ko -->`,
             synchronous: true,
         }, params.options as Object));
     };
