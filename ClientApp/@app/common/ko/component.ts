@@ -39,8 +39,7 @@ interface ElementRef {
  **/
 export function component(params: IDecoratorComponent) {
     return function (constructor: ComponentConstructor) {
-        let id = random.id,
-            hasUrl: boolean = !!params.url;
+        let id = random.id;
 
         // merge resources
         _.merge(i18n, params.resources);
@@ -100,6 +99,7 @@ export function component(params: IDecoratorComponent) {
             params.styles = `<style type='text/css'>${rid} ${params.styles}</style>`;
         }
 
+        let viewName = params.name;
         ko.components.register(params.name || id, ko.utils.extend({
             viewModel: {
                 createViewModel: (params: any, elementRef: ElementRef) => {
@@ -129,10 +129,7 @@ export function component(params: IDecoratorComponent) {
                     return new constructor(_.omit(params, ['$raw', 'component']), element, templateNodes);
                 }
             },
-            template: `${params.styles || ''}
-                <!-- ko init: { $vm: $data, $afterRender: ($data.afterRender || function() {}).bind($data) }, template: { afterRender: $afterRender } -->
-                ${params.template}
-                <!-- /ko -->`,
+            template: `${params.styles || ''}${params.template || `<span data-bind="i18n: 'view_name'"></span>:&nbsp<span data-bind="i18n: '${viewName}'"></span>`}`,
             synchronous: true,
         }, params.options as Object));
     };

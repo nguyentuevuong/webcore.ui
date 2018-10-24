@@ -1,4 +1,5 @@
 declare interface KnockoutStatic {
+    bindingContext: KnockoutBindingContext;
     // Extender observable (has some extend)
     observable: KnockoutObservableStatic;
     // Original observable

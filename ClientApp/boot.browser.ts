@@ -8,6 +8,7 @@ import * as crossroads from 'crossroads';
 import { createBrowserHistory } from 'history';
 
 // import external observable
+import '@app/common/ko/context';
 import '@app/common/ko/observable';
 
 import { Components } from '@app/common/ko';
