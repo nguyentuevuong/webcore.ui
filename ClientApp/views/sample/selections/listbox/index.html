@@ -1,10 +1,26 @@
 <hr />
 
-<table class="table table-hovered table-bordered" data-bind="listbox: { displayRow: -5, columns: [60, 200] }">
-    <tbody data-bind="foreach: $vm.employees">
-        <tr data-bind="select: $vm.employee, data: $data.id">
-            <td data-bind="text: $data.id"></td>
-            <td data-bind="text: $data.name"></td>
+<table class="table table-hovered table-bordered" data-bind="listbox: $vm.employee">
+    <tbody>
+        <tr data-bind="select: $vm.employee, data: $record">
+            <td data-bind="text: $record.id"></td>
+            <td data-bind="text: $record.name"></td>
         </tr>
     </tbody>
 </table>
+
+<table class="table table-hovered table-bordered" data-bind="listbox: $vm.employee, configs: { displayRow: 5, columns: [100, 200] }">
+    <thead>
+        <tr>
+            <th colspan="2" data-bind="i18n: '#list_box'"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-bind="select: $vm.employee, data: $record">
+            <td data-bind="text: $record.id"></td>
+            <td data-bind="text: $record.name"></td>
+        </tr>
+    </tbody>
+</table>
+
+<pre data-bind="code: $vm.employee"></pre>

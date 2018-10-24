@@ -18,9 +18,9 @@ export class fxTable {
     };
 
     constructor(table?: HTMLTableElement, options?: {
-        width: number;
-        displayRow: number;
-        fixedColumn: number;
+        width?: number;
+        displayRow?: number;
+        fixedColumn?: number;
         columns: Array<number>;
     }) {
         if (table) {
@@ -51,10 +51,6 @@ export class fxTable {
 
                 // reinit layout if window resize
                 registerEvent(window, 'resize', () => self.initLayout());
-
-                // reinit layout if render body again
-                let body = table.querySelector('tbody');
-                ['DOMNodeInserted', 'DOMNodeRemoved'].forEach((evt: string) => registerEvent(body, evt, () => self.initLayout()));
             }
         }
     }
@@ -67,9 +63,9 @@ export class fxTable {
     }) {
         let self = this,
             updOpt = {
-                width: options.width,
-                displayRow: options.displayRow,
-                fixedColumn: options.fixedColumn,
+                width: options.width || 0,
+                displayRow: options.displayRow || 10,
+                fixedColumn: options.fixedColumn || 0,
                 columns: options.columns
             };
 
@@ -87,24 +83,22 @@ export class fxTable {
         if (!initialize) {
             domData.set(container, ki, true);
 
-            setTimeout(() => {
-                self.clearStyle(elements);
+            self.clearStyle(elements);
 
-                self.roleBackItems(elements.tables);
-                self.getAvgRowHeight(elements.tables);
-                self.moveFixedItems(elements, options);
+            self.roleBackItems(elements.tables);
+            self.getAvgRowHeight(elements.tables);
+            self.moveFixedItems(elements, options);
 
-                self.setColumnStyles();
+            self.setColumnStyles();
 
-                self.headStyle(elements);
-                self.footStyle(elements);
-                self.fixedStyle(elements);
+            self.headStyle(elements);
+            self.footStyle(elements);
+            self.fixedStyle(elements);
 
-                self.scrollStyle(elements);
-                self.layoutStyles(elements);
+            self.scrollStyle(elements);
+            self.layoutStyles(elements);
 
-                domData.set(container, ki, false);
-            }, 100);
+            domData.set(container, ki, false);
         }
     }
 
@@ -352,7 +346,7 @@ export class fxTable {
                 maxDispRow = Math.abs(options.displayRow),
                 displayRow = maxDispRow == options.displayRow ? maxDispRow : Math.min(row, maxDispRow);
 
-            if (row > displayRow) {
+            if (row > displayRow || !options.width) {
                 container.classList.add('has-scroll-y');
             } else {
                 container.classList.remove('has-scroll-y');

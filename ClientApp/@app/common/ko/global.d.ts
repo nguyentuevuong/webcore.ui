@@ -44,6 +44,8 @@ declare interface KnockoutObservableBoolean extends KnockoutObservable<boolean |
 }
 
 declare interface KnockoutObservableSelection extends KnockoutObservable<any | undefined> {
+    dataSources: KnockoutObservableArray<any>;
+    extend(requestedExtenders: { [key: string]: any; }): KnockoutObservableSelection;
 }
 
 declare interface KnockoutObservableDateStatic {
@@ -100,6 +102,8 @@ declare interface KnockoutObservableSelectionStatic {
     <T = any>(value: T): KnockoutObservableSelection;
     <T = any>(value: null): KnockoutObservableSelection;
     <T = any>(): KnockoutObservableSelection;
+    
+    dataSources: KnockoutObservableArray<any>;
 }
 
 declare interface KnockoutObservableStatic {

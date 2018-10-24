@@ -10,13 +10,12 @@ import { component } from '@app/common/ko';
     template: require('./index.html')
 })
 export class SampleListboxViewModel {
-    employee: KnockoutObservable<Employee> = ko.observable(new Employee());
-    employees: KnockoutObservableArray<IEmployee> = ko.observableArray([]);
+    employee: KnockoutObservableSelection = ko.observableSelection(new Employee());
 
     constructor(params: any, element: HTMLElement) {
         let self = this;
         
-        $.getJSON('/json/employee.json', {}, self.employees);
+        $.getJSON('/json/employee.json', {}, self.employee.dataSources);
     }
 }
 
