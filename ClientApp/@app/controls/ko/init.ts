@@ -9,7 +9,7 @@ export class InitBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let accessor: IInit = valueAccessor();
         
-        _.forIn(accessor, (value: any, key: string) => {
+        ko.utils.objectForEach(accessor, (key: string, value: any) => {
             let obser = _.get(bindingContext, key);
 
             if (ko.isObservable(obser)) {
