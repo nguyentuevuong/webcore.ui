@@ -8,14 +8,14 @@ import { handler } from '@app/common/ko';
 export class InitBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let accessor: IInit = valueAccessor();
+        
+        _.forIn(accessor, (value: any, key: string) => {
+            let obser = _.get(bindingContext, key);
 
-        _.each(_.keys(accessor), (key: string) => {
-            let $getter = _.get(bindingContext, key, undefined);
-
-            if (ko.isObservable($getter)) {
-                $getter(ko.toJS(accessor[key]));
+            if (ko.isObservable(obser)) {
+                obser(ko.toJS(value));
             } else {
-                _.update(bindingContext, key, () => accessor[key]);
+                _.update(bindingContext, key, () => value);
             }
         });
     }
