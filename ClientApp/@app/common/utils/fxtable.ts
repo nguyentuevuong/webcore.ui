@@ -104,7 +104,7 @@ export class fxTable {
                 self.layoutStyles(elements);
 
                 domData.set(container, ki, false);
-            }, 50);
+            }, 100);
         }
     }
 
@@ -624,7 +624,8 @@ export class fxTable {
 
     private getAvgRowHeight(tables: ITableElement) {
         let self = this,
-            row = tables.body!.querySelector('tr') || tables.head!.querySelector('tr') || tables.foot!.querySelector('tr');
+            virtualB = document.createElement('tbody'),
+            row = (tables.body || virtualB).querySelector('tr') || (tables.head || virtualB).querySelector('tr') || (tables.foot || virtualB).querySelector('tr');
 
         if (!self.options.rowHeight) {
             if (!row) {
