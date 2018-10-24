@@ -57,11 +57,11 @@ export class Selectables {
             throw new Error(self.name + " :: no zone defined in options. Please use element with ID");
         }
 
-        _.defer(() => {
-            self.items = _.map(_.isString(self.options.zone) ?
+        setTimeout(() => {
+            self.items = [].slice.call(_.isString(self.options.zone) ?
                 document.querySelectorAll(`${self.options.zone} ${self.options.elements}`) :
-                (self.options.zone as HTMLElement).querySelectorAll(self.options.elements), m => m);
-        });
+                (self.options.zone as HTMLElement).querySelectorAll(self.options.elements));
+        }, 100);
 
         self.disable();
 
@@ -204,7 +204,7 @@ export class Selectables {
                 deselecteds: Array<HTMLElement> = _.filter(self.items, (el: HTMLElement) => !cross(a, el));
 
 
-            _.each(self.items, (el: HTMLElement) => {
+            [].slice.call(self.items).forEach((el: HTMLElement) => {
                 if (cross(a, el)) {
                     el.classList.add(sclass);
                 } else {

@@ -29,9 +29,7 @@ export class CheckBindingHandler implements KnockoutBindingHandler {
                 }
             };
 
-        ko.utils.extend(newAccessor, { timeClick: -1 });
-
-        ko.bindingHandlers.click.init!(element, () => newAccessor, allBindingsAccessor, viewModel, bindingContext);
+        ko.bindingHandlers.click.init!(element, () => newAccessor, ko.utils.extendAllBindingsAccessor(allBindingsAccessor, { timeClick: -1 }), viewModel, bindingContext);
     }
     update = (element: HTMLElement, valueAccessor: () => KnockoutObservable<any>, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         ko.unwrap(valueAccessor());

@@ -1,6 +1,7 @@
 import { ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 import { fxTable } from '@app/common/utils/fxtable';
+import { Selectables } from '@app/common/ui/selectable';
 
 let ki = '__fxlistbox__',
     extend = ko.utils.extend,
@@ -26,6 +27,8 @@ export class FixedTableBindingHandler implements KnockoutBindingHandler {
             element.classList.add('noselect');
             element.classList.add('fx-selection');
         }
+
+        new Selectables({ zone: element, elements: 'tr' });
 
         ko.bindingHandlers.template.init!(element, newAccessor, allBindingsAccessor, viewModel, bindingContext);
         ko.bindingHandlers.template.update!(element, newAccessor, allBindingsAccessor, viewModel, bindingContext);
