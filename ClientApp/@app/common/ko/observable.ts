@@ -3,12 +3,6 @@ import { random, randomId } from '@app/common/id';
 
 let orgSet = ko.utils.setPrototypeOfOrExtend;
 
-ko.utils.extend(ko.utils, {
-    has: (obj: any, prop: string) => {
-        return obj != null && Object.prototype.hasOwnProperty.call(obj, prop);
-    }
-})
-
 // default extender for all observable
 ko.utils.extend(ko.utils, {
     setPrototypeOfOrExtend: (obj: KnockoutObservable<any>, proto: any) => {

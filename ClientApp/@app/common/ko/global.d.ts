@@ -109,6 +109,7 @@ declare interface KnockoutObservableStatic {
 declare interface KnockoutUtils {
     has: (obj: any, prop: string) => boolean;
     setPrototypeOfOrExtend: (obj: KnockoutObservable<any>, proto: any) => KnockoutObservable<any>;
+    extendAllBindingsAccessor: (accessor: KnockoutAllBindingsAccessor, prop: any) => KnockoutAllBindingsAccessor;
 }
 
 declare interface KnockoutObservableError extends KnockoutObservableArray<KnockoutObservable<any>> {
