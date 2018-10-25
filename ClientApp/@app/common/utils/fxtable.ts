@@ -281,7 +281,7 @@ export class fxTable {
                 if (!v) {
                     styles += `\n{role} tr>th[column='${i}'], {role} tr>td[column='${i}'] { display: none; } `;
                 } else {
-                    styles += `\n{role} tr>th[column='${i}'], {role} tr>td[column='${i}'] { min-width: ${v}px; max-width: ${v}px; }`;
+                    styles += `\n{role} tr>th[column='${i}'], {role} tr>td[column='${i}'] { width: ${v}px; min-width: ${v}px; max-width: ${v}px; }`;
                 }
             });
         }
