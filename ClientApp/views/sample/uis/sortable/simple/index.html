@@ -1,35 +1,26 @@
-<div id="main">
-    <h3>High Priority</h3>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <h3>Sortable List 1</h3>
+        <ul id="list_1" class="list-group">
+            <li class="list-group-item">Item 01 &nbsp;-&nbsp; <a href="#1">Link 01</a></li>
+            <li class="list-group-item">Item 02 &nbsp;-&nbsp; <a href="#2">Link 02</a></li>
+            <li class="list-group-item">Item 03 &nbsp;-&nbsp; <a href="#3">Link 03</a></li>
+            <li class="list-group-item">Item 04 &nbsp;-&nbsp; <a href="#4">Link 04</a></li>
+            <li class="list-group-item">Item 05 &nbsp;-&nbsp; <a href="#5">Link 05</a></li>
+            <li class="list-group-item">Item 06 &nbsp;-&nbsp; <a href="#6">Link 06</a></li>
+        </ul>
+    </div>
 
-    <div class="high" data-bind="sortable: { template: 'taskTmpl', data: highPriorityTasks, afterMove: myDropCallback }"></div>
-
-    <h3>Normal Priority</h3>
-
-    <div data-bind="sortable: { template: 'taskTmpl', data: normalPriorityTasks, afterMove: myDropCallback }"></div>
-
-    <a href="#" data-bind="click: addTask">Add Task</a>
-    <hr />
-    <h3>Trash</h3>
-
-    <div class="trash" data-bind="sortable: trash"></div>
-
-    <script id="taskTmpl" type="text/html"><div class="item">
-             <span data-bind="visible: !$vm.isTaskSelected($data)">
-                <a href="#" data-bind="text: name, click: $vm.selectedTask"></a>
-            </span>
-            <span data-bind="visible: $vm.isTaskSelected($data)">
-                <input data-bind="value: name, event: { blur: $vm.clearTask }" />
-            </span>  
-        </div></script>
-</div>
-
-<div id="results">
-    <h3>High Priority</h3>
-    <ul data-bind="foreach: highPriorityTasks">
-        <li data-bind="text: name"></li>
-    </ul>
-    <h3>Normal Priority</h3>
-    <ul data-bind="foreach: normalPriorityTasks">
-        <li data-bind="text: name"></li>
-    </ul>
+    <div class="col-md-4">
+        <h3>Sortable List 2</h3>
+        <ul id="list_2" class="list-group">
+            <li class="list-group-item">Item 01 &nbsp;-&nbsp; <a href="#1">Link 01</a></li>
+            <li class="list-group-item">Item 02 &nbsp;-&nbsp; <a href="#2">Link 02</a></li>
+            <li class="list-group-item">Item 03 &nbsp;-&nbsp; <a href="#3">Link 03</a></li>
+            <li class="list-group-item">Item 04 &nbsp;-&nbsp; <a href="#4">Link 04</a></li>
+            <li class="list-group-item">Item 05 &nbsp;-&nbsp; <a href="#5">Link 05</a></li>
+            <li class="list-group-item">Item 06 &nbsp;-&nbsp; <a href="#6">Link 06</a></li>
+        </ul>
+    </div>
 </div>
