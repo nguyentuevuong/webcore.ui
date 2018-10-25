@@ -1,26 +1,67 @@
+<h2>List box</h2>
 <hr />
-
-<table class="table table-hovered table-bordered" data-bind="listbox: $vm.employee">
-    <tbody>
-        <tr data-bind="select: $vm.employee, data: $record">
-            <td data-bind="text: $record.id"></td>
-            <td data-bind="text: $record.name"></td>
-        </tr>
-    </tbody>
-</table>
-
-<table class="table table-hovered table-bordered" data-bind="listbox: $vm.employee, configs: { displayRow: 5, columns: [100, 200] }">
-    <thead>
-        <tr>
-            <th colspan="2" data-bind="i18n: '#list_box'"></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr data-bind="select: $vm.employee, data: $record">
-            <td data-bind="text: $record.id"></td>
-            <td data-bind="text: $record.name"></td>
-        </tr>
-    </tbody>
-</table>
-
-<pre data-bind="code: $vm.employee"></pre>
+<ul data-bind="init: { $tab: ko.observable('#sample') }, 
+    tabs: ['#sample', '#view', '#viewmodel', '#model', '#API'],
+    selected: $tab,
+    disableds: ['#API']"></ul>
+<div class="tab-content">
+    <!-- ko switch: $tab -->
+    <!-- ko case: '#sample' -->
+    <div class="row">
+        <div class="col-md-4">
+            <label data-bind="label: ko.observable().extend({ $name: '#without_title' })"></label>
+            <table class="table table-hovered table-bordered" data-bind="listbox: $vm.employee, configs: { displayRow: 5, columns: [100, 200] }">
+                <tbody>
+                    <tr data-bind="select: $vm.employee, data: $record">
+                        <td data-bind="text: $record.id"></td>
+                        <td data-bind="text: $record.name"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <label data-bind="label: ko.observable().extend({ $name: '#with_title' })"></label>
+            <table class="table table-hovered table-bordered" data-bind="listbox: $vm.employee, configs: { displayRow: 5, columns: [100, 200] }">
+                <thead>
+                    <tr>
+                        <th colspan="2" data-bind="i18n: '#list_box'"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-bind="select: $vm.employee, data: $record">
+                        <td data-bind="text: $record.id"></td>
+                        <td data-bind="text: $record.name"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <label data-bind="label: ko.observable().extend({ $name: '#with_title' })"></label>
+            <table class="table table-hovered table-bordered" data-bind="listbox: $vm.employee, configs: { displayRow: 5, columns: [100, 200] }">
+                <thead>
+                    <tr>
+                        <th data-bind="i18n: '#id'"></th>
+                        <th data-bind="i18n: '#name'"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-bind="select: $vm.employee, data: $record">
+                        <td data-bind="text: $record.id"></td>
+                        <td data-bind="text: $record.name"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <pre data-bind="code: $vm.employee"></pre>
+    <!-- /ko -->
+    <!-- ko case: '#view' -->
+    <!-- /ko -->
+    <!-- ko case: '#viewmodel' -->
+    <!-- /ko -->
+    <!-- ko case: '#model' -->
+    <!-- /ko -->
+    <!-- ko case: '#API' -->
+    <!-- /ko -->
+    <!-- /ko -->
+</div>

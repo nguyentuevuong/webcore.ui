@@ -21,7 +21,7 @@ export class ListBoxBindingHandler implements KnockoutBindingHandler {
                 displayRow: number;
                 fixedColumn: number;
                 columns: Array<number>;
-            } = allBindingsAccessor().configs || {
+            } = ko.toJS(allBindingsAccessor().configs) || {
                 width: 0,
                 displayRow: 10,
                 fixedColumn: 0,
@@ -29,20 +29,26 @@ export class ListBoxBindingHandler implements KnockoutBindingHandler {
             },
             childContext = bindingContext.createChildContext({
                 $$dataSources: dataSources,
-                $$afterRender: (el: HTMLTableRowElement, record: any) => {
-                    if (ko.utils.arrayIndexOf(dataSources(), record) == dataSources().length - 1) {
-                        if (!fxtable) {
-                            delete options.width;
-                            delete options.fixedColumn;
+                $$beforeRemove: (el: HTMLTableRowElement, index: number, record: any) => {
+                    el.parentElement!.removeChild(el);
 
-                            fxtable = new fxTable(element, options);
-                            domData.set(element, ki, fxtable);
-                        } else {
+                    setTimeout(() => {
+                        if (fxtable) {
+                            fxtable.initLayout();
+                        }
+                    }, 10);
+                },
+                $$afterRender: (el: HTMLTableRowElement, record: any) => {
+                    if (!fxtable && ko.utils.arrayIndexOf(dataSources(), record) == dataSources().length - 1) {
+                        fxtable = new fxTable(element, options);
+                        domData.set(element, ki, fxtable);
+                    } else {
+                        if (fxtable) {
                             fxtable.initLayout();
                         }
                     }
                 }
-            })
+            });
 
         if (body) {
             body.setAttribute('data-bind', "foreach: { data: $$dataSources, as: '$record', afterRender: $$afterRender }");
@@ -64,16 +70,16 @@ export class ListBoxBindingHandler implements KnockoutBindingHandler {
         let fxtable: fxTable = domData.get(element, ki),
             allBindings = allBindingsAccessor(),
             configs = allBindings.configs || {
-                width: ko.unwrap((allBindings.configs || {}).width),
-                displayRow: ko.unwrap((allBindings.configs || {}).displayRow),
-                fixedColumn: ko.unwrap((allBindings.configs || {}).fixedColumn),
-                columns: ko.unwrap((allBindings.configs || {}).columns)
+                width: ko.toJS(ko.unwrap((allBindings.configs || {}).width)),
+                displayRow: ko.toJS(ko.unwrap((allBindings.configs || {}).displayRow)),
+                fixedColumn: ko.toJS(ko.unwrap((allBindings.configs || {}).fixedColumn)),
+                columns: ko.toJS(ko.unwrap((allBindings.configs || {}).columns))
             };
 
         if (fxtable) {
             // update option of fxtable
-            delete configs.width;
-            delete configs.fixedColumn;
+            delete (configs.width);
+            delete (configs.fixedColumn);
 
             fxtable.updateOption(configs);
 

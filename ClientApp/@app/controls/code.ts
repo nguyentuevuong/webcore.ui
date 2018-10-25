@@ -71,7 +71,11 @@ export class I18nBindingHandler implements KnockoutBindingHandler {
         if (typeof code === 'string') {
             if (String(code).indexOf('#') == 0) {
                 type = "xml";
-                code = beautify.html(document.getElementById(String(code).replace(/#/, ''))!.outerHTML, beautify.configs);
+                let selector = document.querySelector(code);
+                if(selector) {
+                    ko.cleanNode(selector);
+                    code = beautify.html(selector.outerHTML, beautify.configs);
+                }
             } else {
                 lang = process(highlighter, String(code));
                 switch (type || lang.language) {

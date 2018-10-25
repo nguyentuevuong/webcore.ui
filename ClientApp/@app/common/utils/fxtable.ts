@@ -628,6 +628,8 @@ export class fxTable {
             } else {
                 self.options.rowHeight = row.offsetHeight;
             }
+        } else if (row) {
+            self.options.rowHeight = row.offsetHeight;
         }
     }
 
