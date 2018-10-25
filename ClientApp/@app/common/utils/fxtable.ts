@@ -1,7 +1,8 @@
 import { ko } from '@app/providers';
 import { random } from '@app/common/id/random';
 
-let extend = ko.utils.extend,
+let toJS = ko.toJS,
+    extend = ko.utils.extend,
     domData = ko.utils.domData,
     //triggerEvent = ko.utils.triggerEvent,
     registerEvent = ko.utils.registerEventHandler;
@@ -69,7 +70,7 @@ export class fxTable {
                 columns: options.columns
             };
 
-        extend(self.options, updOpt);
+        extend(self.options, toJS(updOpt));
     }
 
     initLayout() {

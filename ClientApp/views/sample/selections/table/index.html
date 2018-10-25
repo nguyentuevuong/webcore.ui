@@ -5,7 +5,7 @@
         <label data-bind="label: $vm.width"></label>
         <select class="form-control" data-bind="options: $vm.width.dataSources, value: $vm.width"></select>
     </div>
-    <div class="col-md-2 form-group">
+    <div class="col-md-3 form-group">
         <label data-bind="label: $vm.displayRow"></label>
         <select class="form-control" data-bind="options: $vm.displayRow.dataSources, value: $vm.displayRow"></select>
     </div>
@@ -13,8 +13,12 @@
         <label data-bind="label: $vm.fixedColumn"></label>
         <select class="form-control" data-bind="options: $vm.fixedColumn.dataSources, value: $vm.fixedColumn"></select>
     </div>
+    <div class="col-md-4 form-group">
+        <label data-bind="label: $vm.columns"></label>
+        <select class="form-control" data-bind="options: $vm.columns.dataSources, value: $vm.columns, optionsText: 'text', optionsValue: 'value'"></select>
+    </div>
 </div>
-<table class="tbl-employees" data-bind="table: { width: $vm.width, displayRow: $vm.displayRow, fixedColumn: $vm.fixedColumn, columns: [32, 170, 100, 100, 150, 150, 100] }">
+<table class="tbl-employees" data-bind="css: $vm.class, table: $vm.dataSource, configs: { width: $vm.width, displayRow: $vm.displayRow, fixedColumn: $vm.fixedColumn, columns: $vm.columns }">
     <thead>
         <tr>
             <th colspan="2" data-bind="i18n: '#width'"></th>
@@ -29,7 +33,7 @@
             <th>Value 5</th>
         </tr>
     </thead>
-    <tbody data-bind="foreach: $vm.dataSource">
+    <tbody>
         <tr>
             <td>
                 <i class="fa fa-trash" data-bind="click: $vm.dataSource.remove.bind($vm.dataSource, $data)"></i>

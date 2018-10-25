@@ -12,33 +12,68 @@ let ki = '__fxtable__',
     bindingName: 'table'
 })
 export class FixedTableBindingHandler implements KnockoutBindingHandler {
-    init = (element: HTMLTableElement, valueAccessor: () => { width: number; displayRow: number; fixedColumn: number; columns: Array<number>; }, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let asr = valueAccessor(),
-            newAccessor = () => ({
-                afterRender: () => {
-                    domData.set(element, ki, new fxTable(element, ko.toJS(asr)));
+    init = (element: HTMLTableElement, valueAccessor: () => KnockoutObservableArray<any>, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
+        let dataSources = valueAccessor(),
+            body = element.querySelector('tbody'),
+            fxtable: fxTable | undefined = undefined,
+            options: {
+                width: number;
+                displayRow: number;
+                fixedColumn: number;
+                columns: Array<number>;
+            } = ko.toJS(allBindingsAccessor().configs) || {
+                width: 0,
+                displayRow: 10,
+                fixedColumn: 0,
+                columns: [100, 200]
+            },
+            childContext = bindingContext.createChildContext({
+                $$dataSources: dataSources,
+                $$beforeRemove: (el: HTMLTableRowElement, index: number, record: any) => {
+                    el.parentElement!.removeChild(el);
+
+                    setTimeout(() => {
+                        if (fxtable) {
+                            fxtable.initLayout();
+                        }
+                    }, 10);
+                },
+                $$afterRender: (el: HTMLTableRowElement, record: any) => {
+                    if (!fxtable && ko.utils.arrayIndexOf(dataSources(), record) == dataSources().length - 1) {
+                        fxtable = new fxTable(element, options);
+                        domData.set(element, ki, fxtable);
+                    } else {
+                        if (fxtable) {
+                            fxtable.initLayout();
+                        }
+                    }
                 }
             });
 
-        ko.bindingHandlers.template.init!(element, newAccessor, allBindingsAccessor, viewModel, bindingContext);
-        ko.bindingHandlers.template.update!(element, newAccessor, allBindingsAccessor, viewModel, bindingContext);
+        if (body) {
+            body.setAttribute('data-bind', "foreach: { data: $$dataSources, as: '$record', afterRender: $$afterRender, beforeRemove: $$beforeRemove }");
+        }
+
+        ko.bindingHandlers.template.init!(element, () => ({}), allBindingsAccessor, {}, childContext);
+        ko.bindingHandlers.template.update!(element, () => ({}), allBindingsAccessor, {}, childContext);
 
         return { controlsDescendantBindings: true };
     }
-    update = (element: HTMLTableElement, valueAccessor: () => { width: number; displayRow: number; fixedColumn: number; columns: Array<number>; }, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let accessor = valueAccessor(),
-            fxt: fxTable = domData.get(element, ki),
-            options = {
-                width: unwrapObs(accessor.width),
-                columns: unwrapObs(accessor.columns),
-                displayRow: unwrapObs(accessor.displayRow),
-                fixedColumn: unwrapObs(accessor.fixedColumn)
+    update = (element: HTMLTableElement, valueAccessor: () => KnockoutObservableArray<any>, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
+        let fxtable: fxTable = domData.get(element, ki),
+            allBindings = allBindingsAccessor(),
+            configs = allBindings.configs || {
+                width: ko.toJS(ko.unwrap((allBindings.configs || {}).width)),
+                displayRow: ko.toJS(ko.unwrap((allBindings.configs || {}).displayRow)),
+                fixedColumn: ko.toJS(ko.unwrap((allBindings.configs || {}).fixedColumn)),
+                columns: ko.toJS(ko.unwrap((allBindings.configs || {}).columns))
             };
 
-        if (fxt) {
-            extend(fxt.options, options);
+        if (fxtable) {
+            // update option of fxtable
+            fxtable.updateOption(configs);
 
-            fxt.initLayout();
+            fxtable.initLayout();
         }
     }
 }

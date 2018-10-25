@@ -21,7 +21,7 @@ import { component } from '@app/common/ko';
         }, 'vi': {
             'width': 'Độ rộng',
             'display_row': 'Số dòng hiển thị',
-            'fixed_column': 'Số cột đứng #{default_0}',
+            'fixed_column': 'Số cột cố định #{default_0}',
             'default_0': '(mặc định: 0)',
             'default_10': '(mặc định: 10)',
             'negative_is_auto': 'Giá trị âm thì chấp nhận nhỏ hơn #{default_10}',
@@ -40,8 +40,34 @@ export class SampleFixedTableViewModel {
     }> = ko.observableArrayOrig([]).extend({ deferred: true });
 
     width: KnockoutObservableSelection = ko.observableSelection(0).extend({ $name: '#width', $constraint: '#zero_is_auto', dataSources: [0, 600, 700, 800] });
-    displayRow: KnockoutObservableSelection = ko.observableSelection(10).extend({ $name: '#display_row', $constraint: '#negative_is_auto',  dataSources: [-10, -5, 5, 10, 15] });
-    fixedColumn: KnockoutObservableSelection = ko.observableSelection(0).extend({ $name: '#fixed_column',  dataSources: [0, 1, 2, 3] });
+    displayRow: KnockoutObservableSelection = ko.observableSelection(10).extend({ $name: '#display_row', $constraint: '#negative_is_auto', dataSources: [-10, -5, 5, 10, 15] });
+    fixedColumn: KnockoutObservableSelection = ko.observableSelection(0).extend({ $name: '#fixed_column', dataSources: [0, 1, 2, 3] });
+    columns: KnockoutObservableSelection = ko.observableSelection([50, 170, 100, 200, 100, 130, 200]).extend({
+        $name: '#columns', dataSources: [
+            {
+                text: '[50, 100, 100, 100, 100, 100, 100]',
+                value: [50, 100, 100, 100, 100, 100, 100]
+            },
+            {
+                text: '[75, 200, 200, 200, 200, 200, 200]',
+                value: [75, 200, 200, 200, 200, 200, 200]
+            },
+            {
+                text: '[100, 100, 100, 100, 100, 100, 100]',
+                value: [100, 100, 100, 100, 100, 100, 100]
+            },
+            {
+                text: '[75, 150, 150, 120, 150, 150, 200]',
+                value: [75, 150, 150, 120, 150, 150, 200]
+            },
+            {
+                text: '[50, 170, 150, 100, 170, 200, 150]',
+                value: [50, 170, 150, 100, 170, 200, 150]
+            }
+        ]
+    });
+
+    class: KnockoutObservable<string> = ko.observableOrig('table table-bordered');
 
     constructor(params: any, private element: HTMLElement) {
         ko.utils.extend(window, { $vm: this });

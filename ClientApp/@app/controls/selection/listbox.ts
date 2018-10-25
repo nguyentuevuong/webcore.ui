@@ -10,7 +10,7 @@ let ki = '__fxlistbox__',
     virtual: false,
     bindingName: 'listbox'
 })
-export class FixedTableBindingHandler implements KnockoutBindingHandler {
+export class ListBoxBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLTableElement, valueAccessor: () => KnockoutObservableSelectionStatic, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let accessor = valueAccessor(),
             body = element.querySelector('tbody'),
