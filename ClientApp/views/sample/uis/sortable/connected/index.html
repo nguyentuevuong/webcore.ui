@@ -1,35 +1,49 @@
-<div id="main">
-    <h3>High Priority</h3>
-
-    <div class="high" data-bind="sortable: { template: 'taskTmpl', data: highPriorityTasks, afterMove: myDropCallback }"></div>
-
-    <h3>Normal Priority</h3>
-
-    <div data-bind="sortable: { template: 'taskTmpl', data: normalPriorityTasks, afterMove: myDropCallback }"></div>
-
-    <a href="#" data-bind="click: addTask">Add Task</a>
-    <hr />
-    <h3>Trash</h3>
-
-    <div class="trash" data-bind="sortable: trash"></div>
-
-    <script id="taskTmpl" type="text/html"><div class="item">
-             <span data-bind="visible: !$vm.isTaskSelected($data)">
-                <a href="#" data-bind="text: name, click: $vm.selectedTask"></a>
-            </span>
-            <span data-bind="visible: $vm.isTaskSelected($data)">
-                <input data-bind="value: name, event: { blur: $vm.clearTask }" />
-            </span>  
-        </div></script>
+<h2 data-bind="i18n: '#sortable_connected'"></h2>
+<hr />
+<div class="row">
+    <div class="col-md-2">
+        <h4 data-bind="i18n: '#high_priority'"></h4>
+        <ul class="list-group" data-bind="sortable: { template: 'taskTmpl', data: highPriorityTasks, afterMove: myDropCallback }"></ul>
+    </div>
+    <div class="col-md-2">
+        <h4 data-bind="i18n: '#normal_priority'"></h4>
+        <ul class="list-group" data-bind="sortable: { template: 'taskTmpl', data: normalPriorityTasks, afterMove: myDropCallback }"></ul>
+    </div>
+    <div class="col-md-2">
+        <h4 data-bind="i18n: '#deleted'"></h4>
+        <ul class="list-group trash" data-bind="sortable: trash"></ul>
+    </div>
+    <div class="col-md-6">
+        <h4 data-bind="i18n: '#result'"></h4>
+        <div class="row">
+            <div class="col-md-6">
+                <h5 data-bind="i18n: '#high_priority'"></h5>
+                <ul data-bind="foreach: highPriorityTasks">
+                    <li data-bind="text: name"></li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h5 data-bind="i18n: '#normal_priority'"></h5>
+                <ul data-bind="foreach: normalPriorityTasks">
+                    <li data-bind="text: name"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div id="results">
-    <h3>High Priority</h3>
-    <ul data-bind="foreach: highPriorityTasks">
-        <li data-bind="text: name"></li>
-    </ul>
-    <h3>Normal Priority</h3>
-    <ul data-bind="foreach: normalPriorityTasks">
-        <li data-bind="text: name"></li>
-    </ul>
-</div>
+
+
+
+
+
+<script id="taskTmpl" type="text/html">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+         <span data-bind="visible: !$vm.isTaskSelected($data)">
+            <a href="#" data-bind="text: name, click: $vm.selectedTask"></a>
+        </span>
+        <span data-bind="visible: $vm.isTaskSelected($data)">
+            <input data-bind="value: name, event: { blur: $vm.clearTask }" />
+        </span>
+    </li>
+</script>

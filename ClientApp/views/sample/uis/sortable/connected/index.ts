@@ -6,7 +6,7 @@ import { component } from '@app/common/ko';
     name: 'sample-sortable-connected',
     title: 'Sortable control (connected)',
     icon: 'fa fa-refresh',
-    styles: require('./style.css'),
+    styles: require('./style.scss'),
     template: require('./index.html')
 })
 export class SampleSortableConnectedViewModel {

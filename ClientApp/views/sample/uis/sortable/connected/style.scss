@@ -1,0 +1,7 @@
+.list-group {
+    &.trash {
+        background-color: #ddd;
+        border: 1px solid #ccc;
+        min-height: 100px;
+    }
+}
