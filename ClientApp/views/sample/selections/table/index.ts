@@ -21,7 +21,8 @@ import { component } from '@app/common/ko';
             'columns': 'Columns widths',
             'class_name': 'Class name (css)',
             'change_class_name': 'Change class name subscribe change view (row height)',
-            'clear': 'Clear'
+            'clear': 'Clear',
+            'add_data': 'Add data'
         }, 'vi': {
             'width': 'Độ rộng',
             'display_row': 'Số dòng hiển thị',
@@ -33,7 +34,8 @@ import { component } from '@app/common/ko';
             'zero_is_auto': 'Giá trị 0 thì tự động #{default_0}',
             'class_name': 'Tên lớp css',
             'change_class_name': 'Thay đổi class để thấy sự thay đổi độ cao dòng',
-            'clear': 'Xóa'
+            'clear': 'Xóa',
+            'add_data': 'Thêm dữ liệu'
         }
     }
 })
@@ -109,15 +111,15 @@ export class SampleFixedTableViewModel {
 
     addData() {
         let self = this,
-            i = _.size(ko.toJS(self.dataSource)) + 1;
+            j = _.size(ko.toJS(self.dataSource)) + 1;
 
         self.dataSource.push({
-            id: i,
-            value1: ko.observableOrig(i),
-            value2: ko.observableOrig(i),
-            value3: ko.observableOrig(i),
-            value4: ko.observableOrig(i),
-            value5: ko.observableOrig(i),
+            id: j,
+            value1: ko.observableOrig(j),
+            value2: ko.observableOrig(j),
+            value3: ko.observableOrig(j),
+            value4: ko.observableOrig(j),
+            value5: ko.observableOrig(j)
         });
     }
 }
