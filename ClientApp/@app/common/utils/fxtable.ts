@@ -347,7 +347,7 @@ export class fxTable {
                 maxDispRow = Math.abs(options.displayRow),
                 displayRow = maxDispRow == options.displayRow ? maxDispRow : Math.min(row, maxDispRow);
 
-            if (row > displayRow || !options.width) {
+            if (row > displayRow) {
                 container.classList.add('has-scroll-y');
             } else {
                 container.classList.remove('has-scroll-y');
@@ -629,7 +629,7 @@ export class fxTable {
                 self.options.rowHeight = row.offsetHeight;
             }
         } else if (row) {
-            self.options.rowHeight = row.offsetHeight;
+            self.options.rowHeight = row.offsetHeight || self.options.rowHeight;
         }
     }
 
