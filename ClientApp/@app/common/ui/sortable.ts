@@ -180,7 +180,7 @@ export class Sortable {
 
                 self.dragging = true;
                 self.click = getPoint(evt);
-                
+
                 self.makeDragItem(target);
 
                 self.onMove(evt);
@@ -190,8 +190,11 @@ export class Sortable {
 
     // on item release/drop 
     onRelease(e: Event) {
-        this.dragging = false;
-        this.trashDragItem();
+        let self = this;
+
+        self.dragging = false;
+        
+        self.trashDragItem();
     }
 
     // on item drag/move
