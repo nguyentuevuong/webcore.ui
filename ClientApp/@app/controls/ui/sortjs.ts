@@ -22,25 +22,52 @@ const ITEMKEY = "ko_sortItem",
 @handler({
     bindingName: 'sortjs'
 })
-export class LabelControlBindingHandler implements KnockoutBindingHandler {
+export class SortJSControlBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let array = ko.utils.unwrapObservable(valueAccessor().data || valueAccessor());
+        let array = ko.unwrap(valueAccessor().data || valueAccessor()),
+            configs = ko.toJS(allBindingsAccessor().configs),
+            onSelect: Function = configs && configs.onSelect || function () { },
+            onDrag: Function = configs && configs.onDrag || function () { },
+            onDrop: Function = configs && configs.onDrop || function () { };
 
-        dataSet(element, LISTKEY, array);
+        ko.utils.extend(configs, {
+            onSelect: (evt: MouseEvent, data: ISortableData) => {
+                onSelect.apply(viewModel, [evt, data]);
+            },
+            onDrag: (evt: MouseEvent, data: ISortableData) => {
+                onDrag.apply(viewModel, [evt, data]);
+            },
+            onDrop: (evt: MouseEvent, data: ISortableData) => {
+                onDrop.apply(viewModel, [evt, data]);
+            }
+        });
 
         let newBinding = ko.utils.extendBindingsAccessor(valueAccessor, {
             afterRender: function (child: HTMLElement, item: any) {
                 dataSet(child, ITEMKEY, item);
 
-                if (ko.utils.arrayIndexOf(array, item) == ko.utils.arraySize(array) - 1) {
-                    new Sortable(element);
+                if (!dataGet(element, DRAGKEY)) {
+                    if (ko.utils.arrayIndexOf(array, item) == ko.utils.arraySize(array) - 1) {
+                        new Sortable(element, configs);
+                        dataSet(element, DRAGKEY, true);
+                    }
                 }
             }
+        }), childBindingContext = bindingContext.createChildContext({
+
         });
 
-        ko.bindingHandlers.foreach.init!(element, newBinding, allBindingsAccessor, viewModel, bindingContext);
-        ko.bindingHandlers.foreach.update!(element, newBinding, allBindingsAccessor, viewModel, bindingContext);
+        ko.bindingHandlers.foreach.init!(element, newBinding, allBindingsAccessor, {}, childBindingContext);
+        ko.bindingHandlers.foreach.update!(element, newBinding, allBindingsAccessor, {}, childBindingContext);
 
         return { controlsDescendantBindings: true };
     }
+}
+
+interface ISortableData {
+    sourceParentNode: HTMLElement;
+    sourceIndex: number;
+    targetParentNode: HTMLElement,
+    targetIndex: number;
+    cancelDrop: boolean;
 }

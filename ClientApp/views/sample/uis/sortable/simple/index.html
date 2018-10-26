@@ -2,25 +2,15 @@
 <div class="row">
     <div class="col-md-4">
         <h3>Sortable List 1</h3>
-        <ul id="list_1" class="list-group">
-            <li class="list-group-item">Item 01 &nbsp;-&nbsp; <a href="#1">Link 01</a></li>
-            <li class="list-group-item">Item 02 &nbsp;-&nbsp; <a href="#2">Link 02</a></li>
-            <li class="list-group-item">Item 03 &nbsp;-&nbsp; <a href="#3">Link 03</a></li>
-            <li class="list-group-item">Item 04 &nbsp;-&nbsp; <a href="#4">Link 04</a></li>
-            <li class="list-group-item">Item 05 &nbsp;-&nbsp; <a href="#5">Link 05</a></li>
-            <li class="list-group-item">Item 06 &nbsp;-&nbsp; <a href="#6">Link 06</a></li>
+        <ul id="list_1" class="list-group" data-bind="sortjs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], configs: { onSelect: (evt, data) => { console.log(data); } }">
+            <li class="list-group-item" data-bind="text: 'Item ' +  $data, attr: { id: $data }"></li>
         </ul>
     </div>
 
     <div class="col-md-4">
         <h3>Sortable List 2</h3>
-        <ul id="list_2" class="list-group">
-            <li class="list-group-item">Item 01 &nbsp;-&nbsp; <a href="#1">Link 01</a></li>
-            <li class="list-group-item">Item 02 &nbsp;-&nbsp; <a href="#2">Link 02</a></li>
-            <li class="list-group-item">Item 03 &nbsp;-&nbsp; <a href="#3">Link 03</a></li>
-            <li class="list-group-item">Item 04 &nbsp;-&nbsp; <a href="#4">Link 04</a></li>
-            <li class="list-group-item">Item 05 &nbsp;-&nbsp; <a href="#5">Link 05</a></li>
-            <li class="list-group-item">Item 06 &nbsp;-&nbsp; <a href="#6">Link 06</a></li>
+        <ul id="list_2" class="list-group" data-bind="sortjs: { data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] }, configs: { }">
+            <li class="list-group-item" data-bind="text: 'Item ' +  $data, attr: { id: $data }"></li>
         </ul>
     </div>
 </div>

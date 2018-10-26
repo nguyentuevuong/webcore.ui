@@ -1,11 +1,45 @@
+import { ko } from '@app/providers';
+
+
 let _w = window,
     _b = document.body,
     _d = document.documentElement,
+    extend = ko.utils.extend,
+    domData = ko.utils.domData,
+    registerEvent = ko.utils.registerEventHandler,
+    // update item position 
+    translate3d = (item: HTMLElement, x: number, y: number, z: number = 0) => item.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`,
+    // checks if mouse x/y is on top of an item 
+    isOnTop = (item: HTMLElement, x: number, y: number) => {
+        let box = item.getBoundingClientRect(),
+            isx = (x > box.left && x < (box.left + box.width)),
+            isy = (y > box.top && y < (box.top + box.height));
+
+        return (isx && isy);
+    },
+    // manipulate the className of an item (for browsers that lack classList support)
+    itemClass = (item: HTMLElement, task: ITEMCLASS, className: string) => {
+        let _cls = item.className,
+            list = _cls.split(/\s+/),
+            index = list.indexOf(className);
+
+        switch (task) {
+            case ITEMCLASS.ADD:
+                if (index == -1) {
+                    list.push(className);
+                    item.className = list.join(" ");
+                }
+                break;
+            case ITEMCLASS.REMOVE:
+                if (index != -1) {
+                    list.splice(index, 1);
+                    item.className = list.join(" ");
+                }
+                break;
+        }
+    },
     // get position of mouse/touch in relation to viewport 
-    getPoint: (e: MouseEvent) => {
-        x: number;
-        y: number;
-    } = (e: MouseEvent) => {
+    getPoint: (e: MouseEvent) => { x: number; y: number; } = (e: MouseEvent) => {
         let scrollX = Math.max(0, _w.pageXOffset || (_d ? _d.scrollLeft : 0) || _b.scrollLeft || 0) - ((_d ? _d.clientLeft : 0) || 0),
             scrollY = Math.max(0, _w.pageYOffset || (_d ? _d.scrollTop : 0) || _b.scrollTop || 0) - ((_d ? _d.clientTop : 0) || 0),
             pointX = e ? (Math.max(0, e.pageX || e.clientX || 0) - scrollX) : 0,
@@ -16,78 +50,209 @@ let _w = window,
 
 // class constructor
 export class Sortable {
-    dragging: boolean = false;
+    private dragging: boolean = false;
 
-    hovItem: HTMLElement | null = null;
-    dragItem: HTMLElement | null = null;
-    clickItem: HTMLElement | null = null;
+    private clickIndex: number = 0;
+    private targetIndex: number = 0;
 
-    options: { [key: string]: any } = {};
+    private clickItem: HTMLElement = document.createElement('span');
+    private placeHolderItem: HTMLElement = document.createElement('span');
 
-    container: HTMLElement = document.createElement('div');
-    lstContainers: NodeListOf<Element> | Array<Element> = [];
+    private options: {
+        connectWith: Array<HTMLElement> | string;
+        onSelect?: (evt: MouseEvent, data: ISortableData) => void,
+        onDrag?: (evt: MouseEvent, data: ISortableData) => void,
+        onDrop?: (evt: MouseEvent, data: ISortableData) => void
+        [key: string]: any;
+    } = {
+            connectWith: '[data-sortable]'
+        };
 
-    clickPoint: { x: number; y: number; } = { x: 0, y: 0 };
+    private dragcontainer: HTMLElement = document.createElement('div');
+    private targetContainer: HTMLElement = document.createElement('div');
+    private lstContainers: NodeListOf<Element> | Array<Element> = [];
+
+    private clickPoint: { x: number; y: number; } = { x: 0, y: 0 };
 
     constructor(container: HTMLElement | null, options?: any) {
         let self = this;
 
         if (container && container instanceof Element) {
-            self.container = container;
+            // set container
+            self.dragcontainer = container;
 
-            self.options = options || {};
+            extend(self.options, options || {});
 
-            //self.container.style.position = "static";
-            self.container.setAttribute("data-sortable", 'true');
+            // self.container.style.position = "static";
+            itemClass(self.dragcontainer, ITEMCLASS.ADD, 'sortable');
+            self.dragcontainer.setAttribute("data-sortable", 'true');
 
-            window.addEventListener("mousedown", self.onPress.bind(self));
-            window.addEventListener("touchstart", self.onPress.bind(self));
+            // start drag
+            registerEvent(window, "mousedown", self.onSelect.bind(self));
+            registerEvent(window, "touchstart", self.onSelect.bind(self));
 
-            window.addEventListener("mouseup", self.onRelease.bind(self));
-            window.addEventListener("touchend", self.onRelease.bind(self));
+            // on dragging
+            registerEvent(window, "mousemove", self.onDrag.bind(self));
+            registerEvent(window, "touchmove", self.onDrag.bind(self));
 
-            window.addEventListener("mousemove", self.onMove.bind(self));
-            window.addEventListener("touchmove", self.onMove.bind(self));
+            // finish drag
+            registerEvent(window, "mouseup", self.onDrop.bind(self));
+            registerEvent(window, "touchend", self.onDrop.bind(self));
         }
     }
 
-    // checks if mouse x/y is on top of an item 
-    private isOnTop(item: HTMLElement, x: number, y: number) {
-        let box = item.getBoundingClientRect(),
-            isx = (x > box.left && x < (box.left + box.width)),
-            isy = (y > box.top && y < (box.top + box.height));
+    // on item press/drag 
+    private onSelect(evt: MouseEvent) {
+        let self = this,
+            options = self.options,
+            target = evt.target as HTMLElement;
 
-        return (isx && isy);
+        if (self.dragcontainer == target.parentNode) {
+            evt.preventDefault();
+
+            if (options.onSelect) {
+                options.onSelect.apply(null, [evt, {
+                    sourceIndex: (self.clickIndex = [].slice.call(self.dragcontainer.children).indexOf(target)),
+                    sourceParentNode: self.dragcontainer
+                }]);
+            }
+
+            if (!evt.cancelBubble) {
+                self.dragging = true;
+                self.clickPoint = getPoint(evt);
+
+                self.makeDragItem(target);
+
+                self.swapItems(self.placeHolderItem, self.clickItem);
+
+                itemClass(self.dragcontainer, ITEMCLASS.ADD, 'sortable-dragging');
+
+                if (options.connectWith) {
+                    if (typeof options.connectWith !== 'string') {
+                        self.lstContainers = options.connectWith;
+                    }
+                    else {
+                        self.lstContainers = document.querySelectorAll(options.connectWith);
+                    }
+                }
+            }
+        }
     }
 
-    // manipulate the className of an item (for browsers that lack classList support)
-    private itemClass(item: HTMLElement, task: string, cls: string) {
-        var list = item.className.split(/\s+/),
-            index = list.indexOf(cls);
+    // on item release/drop 
+    private onDrop(evt: MouseEvent) {
+        let self = this,
+            options = self.options;
 
-        if (task === "add" && index == -1) {
-            list.push(cls);
-            item.className = list.join(" ");
+        self.dragging = false;
+
+        if (options.onDrop) {
+            options.onDrop.apply(null, [evt, {
+                sourceIndex: self.clickIndex,
+                sourceParentNode: self.dragcontainer,
+                targetParentNode: self.placeHolderItem.parentElement,
+                targetIndex: self.targetIndex,
+                cancelDrop: false
+            }]);
         }
-        else if (task === "remove" && index != -1) {
-            list.splice(index, 1);
-            item.className = list.join(" ");
+
+        self.swapItems(self.placeHolderItem, self.clickItem, SWAP.LEFT);
+
+        self.clear();
+    }
+
+    // on item drag/move
+    private onDrag(evt: MouseEvent) {
+        let self = this,
+            options = self.options,
+            dropPoint = getPoint(evt),
+            clickPoint = self.clickPoint;
+
+        self.targetContainer = self.dragcontainer;
+
+        if (self.dragging) {
+            evt.preventDefault();
+
+            // change position of clickItem
+            translate3d(self.clickItem, (dropPoint.x - clickPoint.x), (dropPoint.y - clickPoint.y));
+
+            // keep an eye for other sortable lists and switch over to it on hover
+            [].slice.call(self.lstContainers).forEach((sub: HTMLElement) => {
+                if (isOnTop(sub, dropPoint.x, dropPoint.y)) {
+                    self.targetContainer = sub;
+                }
+            });
+
+            // container is empty, move clicked item over to it on hover 
+            if (isOnTop(self.targetContainer, dropPoint.x, dropPoint.y) && self.targetContainer.children.length === 0) {
+                self.targetContainer.appendChild(self.placeHolderItem);
+
+                self.targetIndex = [].slice.call(self.targetContainer.children)
+                    .filter((e: HTMLElement) => e != self.clickItem)
+                    .indexOf(self.placeHolderItem);
+
+                setTimeout(() => {
+                    // check if current drag item is over another item and swap places
+                    [].slice.call(self.targetContainer.children).forEach((subItem: HTMLElement) => {
+                        if (subItem !== self.clickItem && subItem !== self.placeHolderItem) {
+                            if (isOnTop(subItem, dropPoint.x, dropPoint.y)) {
+                                if (options.onDrag) {
+                                    options.onDrag.apply(null, [evt, {
+                                        sourceIndex: self.clickIndex,
+                                        sourceParentNode: self.dragcontainer,
+                                        targetIndex: self.targetIndex,
+                                        targetParentNode: self.targetContainer,
+                                        cancelDrop: true
+                                    }]);
+                                }
+                            }
+                        }
+                    });
+                }, 10);
+            } else {
+                // check if current drag item is over another item and swap places
+                [].slice.call(self.targetContainer.children).forEach((subItem: HTMLElement) => {
+                    if (subItem !== self.clickItem && subItem !== self.placeHolderItem) {
+                        if (isOnTop(subItem, dropPoint.x, dropPoint.y)) {
+                            self.swapItems(self.placeHolderItem, subItem);
+
+                            self.targetIndex = [].slice.call(self.targetContainer.children)
+                                .filter((e: HTMLElement) => e != self.clickItem)
+                                .indexOf(self.placeHolderItem);
+
+                            if (options.onDrag) {
+                                options.onDrag.apply(null, [evt, {
+                                    sourceIndex: self.clickIndex,
+                                    sourceParentNode: self.dragcontainer,
+                                    targetIndex: self.targetIndex,
+                                    targetParentNode: self.targetContainer,
+                                    cancelDrop: true
+                                }]);
+                            }
+                        }
+                    }
+                });
+            }
         }
     }
 
     // swap position of two item in sortable list container 
-    private swapItems(item1: HTMLElement, item2: HTMLElement) {
+    private swapItems(item1: HTMLElement, item2: HTMLElement, swap: SWAP = SWAP.RIGHT) {
         let parent1: Node | null = item1.parentNode,
             parent2: Node | null = item2.parentNode;
 
         if (parent1 && parent2) {
             if (parent1 !== parent2) {
-                // move to new list 
-                parent2.insertBefore(item1, item2);
+                // move to new list
+                if (swap == SWAP.LEFT) {
+                    parent1.insertBefore(item2, item1);
+                } else {
+                    parent2.insertBefore(item1, item2);
+                }
             }
             else {
                 // sort is same list 
-                let temp = document.createElement("div");
+                let temp = item1.cloneNode();
 
                 parent1.insertBefore(temp, item1);
                 parent2.insertBefore(item1, item2);
@@ -98,112 +263,68 @@ export class Sortable {
         }
     }
 
-    // update item position 
-    private moveItem = (item: HTMLElement, x: number, y: number) => item.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-
     // make a temp fake item for dragging and add to container 
-    private makeDragItem(item: HTMLElement) {
+    private makeDragItem = (item: HTMLElement) => {
         let self = this;
 
-        //self.trashDragItem();
-
         self.clickItem = item;
-        self.dragItem = item.cloneNode(true) as HTMLElement;
 
-        self.lstContainers = document.querySelectorAll("[data-sortable]");
+        self.placeHolderItem = item.cloneNode(true) as HTMLElement;
 
-        self.itemClass(self.clickItem, "add", "active");
-        self.itemClass(self.dragItem, 'add', 'dragging');
+        self.placeHolderItem.removeAttribute('id');
+        self.placeHolderItem.removeAttribute('data-bind');
 
-        self.dragItem.style.zIndex = "999";
-        self.dragItem.style.position = "absolute";
+        itemClass(self.placeHolderItem, ITEMCLASS.ADD, 'active');
 
-        self.dragItem.style.top = (item.offsetTop || 0) + "px";
-        self.dragItem.style.left = (item.offsetLeft || 0) + "px";
-        self.dragItem.style.width = (item.offsetWidth || 0) + "px";
+        self.clickItem.style.top = (item.offsetTop || 0) + "px";
+        self.clickItem.style.left = (item.offsetLeft || 0) + "px";
+        self.clickItem.style.width = (item.offsetWidth || 0) + "px";
 
-        self.container.appendChild(self.dragItem);
+        self.clickItem.style.zIndex = "999";
+        self.clickItem.style.position = "absolute";
+
+        self.dragcontainer.insertBefore(self.placeHolderItem, self.clickItem);
     }
 
     // remove drag item that was added to container 
-    private trashDragItem() {
-        let self = this;
-
-        if (self.dragItem && self.clickItem) {
-            self.container.removeChild(self.dragItem);
-            
-            self.itemClass(self.clickItem, "remove", "active");
-
-            self.dragItem = null;
-            self.clickItem = null;
-        }
-    }
-
-    // on item press/drag 
-    private onPress(evt: MouseEvent) {
+    private clear = () => {
         let self = this,
-            target = evt.target as HTMLElement;
+            parent = self.placeHolderItem.parentNode;
 
-        if (self.container == target.parentNode) {
-            evt.preventDefault();
+        self.clickItem.removeAttribute('style');
 
-            self.dragging = true;
-            self.clickPoint = getPoint(evt);
-
-            self.makeDragItem(target);
+        if (parent) {
+            parent.removeChild(self.placeHolderItem);
         }
+
+        self.lstContainers = [];
+
+        self.clickItem = document.createElement('span');
+        self.placeHolderItem = document.createElement('span');
+
+        self.clickIndex = 0;
+        self.targetIndex = 0;
+        
+        self.targetContainer = document.createElement('div');
+
+        itemClass(self.dragcontainer, ITEMCLASS.REMOVE, 'sortable-dragging');
     }
+}
 
-    // on item release/drop 
-    private onRelease(e: MouseEvent) {
-        let self = this;
+enum SWAP {
+    LEFT = <any>'left',
+    RIGHT = <any>'right'
+}
 
-        self.dragging = false;
+enum ITEMCLASS {
+    ADD = <any>'add',
+    REMOVE = <any>'remove'
+}
 
-        self.trashDragItem();
-    }
-
-    // on item drag/move
-    private onMove(e: MouseEvent) {
-        let self = this,
-            dropPoint = getPoint(e),
-            container = self.container,
-            clickPoint = self.clickPoint;
-
-        if (self.dragItem && self.dragging) {
-            e.preventDefault();
-
-            // drag fake item 
-            self.moveItem(self.dragItem, (dropPoint.x - clickPoint.x), (dropPoint.y - clickPoint.y));
-
-            // keep an eye for other sortable lists and switch over to it on hover
-            [].slice.call(self.lstContainers).forEach((sub: HTMLElement) => {
-                if (self.isOnTop(sub, dropPoint.x, dropPoint.y)) {
-                    container = sub;
-                }
-            });
-
-            // container is empty, move clicked item over to it on hover 
-            if (self.isOnTop(container, dropPoint.x, dropPoint.y) && container.children.length === 0) {
-                if (self.clickItem) {
-                    container.appendChild(self.clickItem);
-                }
-
-                return;
-            }
-
-            // check if current drag item is over another item and swap places
-            [].slice.call(container.children).forEach((subItem: HTMLElement) => {
-                if (subItem !== self.clickItem && subItem !== self.dragItem) {
-                    if (self.isOnTop(subItem, dropPoint.x, dropPoint.y)) {
-                        self.hovItem = subItem;
-
-                        if (self.clickItem) {
-                            self.swapItems(self.clickItem, self.hovItem);
-                        }
-                    }
-                }
-            });
-        }
-    }
+interface ISortableData {
+    sourceParentNode: HTMLElement;
+    sourceIndex: number;
+    targetParentNode: HTMLElement,
+    targetIndex: number;
+    cancelDrop: boolean;
 }
