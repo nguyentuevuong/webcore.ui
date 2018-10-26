@@ -24,7 +24,9 @@ const ITEMKEY = "ko_sortItem",
 })
 export class SortJSControlBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let array = ko.unwrap(valueAccessor().data || valueAccessor()),
+        let sortable: Sortable | null = null,
+            accessor = valueAccessor(),
+            dataSources = ko.unwrap(accessor.data || accessor),
             configs = ko.toJS(allBindingsAccessor().configs),
             onSelect: Function = configs && configs.onSelect || function () { },
             onDrag: Function = configs && configs.onDrag || function () { },
@@ -41,24 +43,19 @@ export class SortJSControlBindingHandler implements KnockoutBindingHandler {
                 onDrop.apply(viewModel, [evt, data]);
             }
         });
-
-        let newBinding = ko.utils.extendBindingsAccessor(valueAccessor, {
+        
+        let newBinding = ko.utils.extendBindingsAccessor('data' in accessor ? valueAccessor : () => ({ data: dataSources }), {
             afterRender: function (child: HTMLElement, item: any) {
                 dataSet(child, ITEMKEY, item);
 
-                if (!dataGet(element, DRAGKEY)) {
-                    if (ko.utils.arrayIndexOf(array, item) == ko.utils.arraySize(array) - 1) {
-                        new Sortable(element, configs);
-                        dataSet(element, DRAGKEY, true);
-                    }
+                if (!sortable && ko.utils.arrayIndexOf(dataSources, item) == ko.utils.arraySize(dataSources) - 1) {
+                    sortable = new Sortable(element, configs);
                 }
             }
-        }), childBindingContext = bindingContext.createChildContext({
-
         });
 
-        ko.bindingHandlers.foreach.init!(element, newBinding, allBindingsAccessor, {}, childBindingContext);
-        ko.bindingHandlers.foreach.update!(element, newBinding, allBindingsAccessor, {}, childBindingContext);
+        ko.bindingHandlers.foreach.init!(element, newBinding, allBindingsAccessor, viewModel, bindingContext);
+        ko.bindingHandlers.foreach.update!(element, newBinding, allBindingsAccessor, viewModel, bindingContext);
 
         return { controlsDescendantBindings: true };
     }

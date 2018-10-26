@@ -21,7 +21,7 @@ ko.utils.extend(ko.utils, {
     },
     extendBindingsAccessor: (accessor: () => any, prop: any) => {
         let oldBindings = accessor();
-
+        
         ko.utils.objectForEach(oldBindings, (key: string, value: any) => {
             if (ko.utils.has(prop, key) && prop[key] instanceof Function) {
                 let oldFunc1 = prop[key],

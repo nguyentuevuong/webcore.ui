@@ -12,8 +12,6 @@ export class CheckBindingHandler implements KnockoutBindingHandler {
                 let newV = ko.toJS(data),
                     oldV = ko.toJS(obser);
 
-                console.log(bindingContext);
-
                 if (!_.isEqual(newV, oldV)) {
                     obser(newV);
                     if (!element.className) {
