@@ -102,7 +102,7 @@ declare interface KnockoutObservableSelectionStatic {
     <T = any>(value: T): KnockoutObservableSelection;
     <T = any>(value: null): KnockoutObservableSelection;
     <T = any>(): KnockoutObservableSelection;
-    
+
     dataSources: KnockoutObservableArray<any>;
 }
 
@@ -112,7 +112,9 @@ declare interface KnockoutObservableStatic {
 
 declare interface KnockoutUtils {
     has: (obj: any, prop: string) => boolean;
+    arraySize: (array: Array<any> | KnockoutObservableArray<any>) => number;
     setPrototypeOfOrExtend: (obj: KnockoutObservable<any>, proto: any) => KnockoutObservable<any>;
+    extendBindingsAccessor: (accessor: () => any, prop: any) => any;
     extendAllBindingsAccessor: (accessor: KnockoutAllBindingsAccessor, prop: any) => KnockoutAllBindingsAccessor;
 }
 
