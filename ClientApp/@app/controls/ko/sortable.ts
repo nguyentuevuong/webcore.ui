@@ -42,14 +42,14 @@ const ITEMKEY = "ko_sortItem",
             templateElement = document.getElementById(name);
             if (templateElement) {
                 templateSource = new ko.templateSources.domElement(templateElement);
-                templateSource.text($.trim(templateSource.text()));
+                templateSource.text(templateSource.text().trim());
             }
         }
         else {
             //remove leading/trailing non-elements from anonymous templates
-            $(element).contents().each(function () {
-                if (this && this.nodeType !== 1) {
-                    element.removeChild(this);
+            [].slice.call(element.children).forEach((child: HTMLElement) => {
+                if (child.nodeType !== 1) {
+                    element.removeChild(child)
                 }
             });
         }
@@ -115,7 +115,7 @@ export class SortableBindingHandler implements KnockoutBindingHandler {
         stripTemplateWhitespace(element, templateOptions.name);
 
         //build a new object that has the global options with overrides from the binding
-        $.extend(true, sortable, ko.bindingHandlers['sortable']);
+        ko.utils.extend(sortable, ko.bindingHandlers['sortable']);
 
         if (value.options && sortable.options) {
             ko.utils.extend(sortable.options, value.options);
@@ -469,8 +469,6 @@ export class DroppableBindingHandler implements KnockoutBindingHandler {
         }
 
         //handle disposal
-        ko.utils.domNodeDisposal.addDisposeCallback(element, function () {
-            $(element).droppable("destroy");
-        });
+        ko.utils.domNodeDisposal.addDisposeCallback(element, () => $(element).droppable("destroy"));
     }
 }
