@@ -4,8 +4,8 @@
 **/vendor*
 **/bundles*
 **/main-server*
-**/wwwroot/**/*.html
-**/wwwroot/**/*.eot
-**/wwwroot/**/*.svg
-**/wwwroot/**/*.ttf
+**/wwwroot/dist/**/*.html
+**/wwwroot/dist/**/*.eot
+**/wwwroot/dist/**/*.svg
+**/wwwroot/dist/**/*.ttf
 **/.DS_Store
