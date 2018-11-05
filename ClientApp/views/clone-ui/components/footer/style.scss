@@ -1,0 +1,334 @@
+/*-----------------------------------------------------------
+Footer
+------------------------------------------------------------*/
+
+.footer {
+    font-size: 0;
+}
+
+.footer__left {
+    width: 56.2%;
+    display: inline-block;
+    vertical-align: top;
+    max-height: 426px;
+    overflow: hidden;
+}
+
+.footer__left img {
+    width: 100%;
+}
+
+.footer__right {
+    display: inline-block;
+    vertical-align: top;
+    background: #333333;
+    width: 43.8%;
+    padding-top: 50px;
+    max-height: 426px;
+}
+
+.footer__h2 {
+    font-size: 24px;
+    line-height: 24px;
+    letter-spacing: 2.88px;
+    color: #FFFFFF;
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 17px;
+    text-shadow: none;
+    font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", "Osaka", "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+}
+
+.footer__h2::before {
+    content: none;
+}
+
+.footer__span {
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 1.28px;
+    color: #FFFFFF;
+    text-align: center;
+    display: block;
+}
+
+.footer__list01 {
+    text-align: center;
+    font-size: 0;
+    margin-top: 33px;
+}
+
+.footer__list01 li {
+    display: block;
+    margin-bottom: 15px;
+}
+
+.footer__list01 li a {
+    width: 378px;
+    height: 73px;
+    background: #FFF;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    position: relative;
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
+    border-radius: 40px;
+}
+
+.footer__list01 li a:before {
+    content: "";
+    background: url(./assets/img/common/ico_ft01.svg) no-repeat;
+    width: 21px;
+    height: 27px;
+    left: 38px;
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+}
+
+.footer__list01 li a span {
+    font-size: 22px;
+    line-height: 73px;
+    letter-spacing: 2.64px;
+    color: #325A96;
+    font-weight: 700;
+    background: url(./assets/img/common/blue_arrow.svg) no-repeat right 18px center;
+    background-size: 9px 12px;
+    display: block;
+}
+
+.footer__list01 li a:hover {
+    opacity: 0.5;
+}
+
+.footer__list01 li:last-child {
+    margin-bottom: 0;
+}
+
+.footer__list01 li:last-child a:before {
+    content: "";
+    background: url(./assets/img/common/ico_ft02.svg) no-repeat;
+    width: 27px;
+    height: 20px;
+    left: 35px;
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+}
+
+.footer__list01 li p {
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 0.5px;
+    color: #434343;
+    margin-top: 20px;
+}
+
+.footer__inner {
+    background: #666;
+    font-size: 0;
+}
+
+@media only screen and (min-width: 768px) {
+    .footer__inner {
+        height: 37px;
+    }
+    .footer__inner .container {
+        padding: 0;
+        width: 1040px;
+        margin-bottom: 0px;
+    }
+}
+
+.footer__list02 {
+    display: inline-block;
+    vertical-align: middle;
+    width: 60%;
+    margin-bottom: 0;
+    padding-left: 0;
+}
+
+.footer__list02 li {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 100px;
+    padding-bottom: 0;
+}
+
+.footer__list02 li:first-child {
+    margin-left: 30px;
+}
+
+.footer__list02 li:last-child {
+    margin-right: 0;
+}
+
+.footer__list02 li a {
+    font-size: 13px;
+    font-weight: 700;
+    color: #FFF;
+    line-height: 37px;
+    background: url(./assets/img/top/white_arrow.svg) no-repeat left center;
+    background-size: 8px 11px;
+    padding-left: 15px;
+}
+
+.footer__list02 li a:hover {
+    opacity: 0.5;
+}
+
+.footer__copyright {
+    font-size: 11px;
+    color: #FFF;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: right;
+    width: 40%;
+    padding-right: 35px;
+    margin: 0;
+}
+
+/*==========================================================================================================================================================*/
+
+/*========================================================================START SP CSS========================================================================*/
+
+/*==========================================================================================================================================================*/
+
+@media only screen and (max-width: 767px) {
+    .footer__left {
+        width: 100%;
+    }
+    .footer__right {
+        width: 100%;
+        padding-top: 26px;
+        padding-bottom: 50px;
+    }
+    .footer__h2 {
+        font-size: 16px;
+        line-height: 25px;
+        letter-spacing: 1.68px;
+        margin-bottom: 5px;
+        margin-top: 0;
+    }
+    .footer__span {
+        font-size: 12px;
+        line-height: 17px;
+        letter-spacing: 0.96px;
+    }
+    .footer__list01 {
+        text-align: center;
+        font-size: 0;
+        margin-top: 22px;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+    .footer__list01 li {
+        display: inline-block;
+        vertical-align: top;
+        margin: 0;
+        margin-bottom: 15px;
+    }
+    .footer__list01 li a {
+        border: 2px solid #325A96;
+        width: 264px;
+        height: 53px;
+        display: block;
+        text-align: center;
+        margin: 0 auto;
+        position: relative;
+        -webkit-border-radius: 40px;
+        -moz-border-radius: 40px;
+        border-radius: 40px;
+    }
+    .footer__list01 li a:before {
+        content: "";
+        background: url(./assets/img/common/ico_ft01.svg) no-repeat;
+        width: 15px;
+        height: 19px;
+        left: 23px;
+        top: 50%;
+        transform: translateY(-50%);
+        position: absolute;
+    }
+    .footer__list01 li a span {
+        font-size: 17px;
+        line-height: 53px;
+        letter-spacing: 2.04px;
+        font-weight: 700;
+        background: url(./assets/img/common/blue_arrow.svg) no-repeat right 13px center;
+        background-size: 6px 8px;
+        display: block;
+    }
+    .footer__list01 li a:hover {
+        opacity: 0.5;
+    }
+    .footer__list01 li:last-child {
+        margin-bottom: 0;
+    }
+    .footer__list01 li:last-child a {
+        border: 2px solid #555;
+    }
+    .footer__list01 li:last-child a:before {
+        content: "";
+        background: url(./assets/img/common/ico_ft02.svg) no-repeat;
+        width: 19px;
+        height: 14px;
+        left: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        position: absolute;
+    }
+    .footer__inner {
+        font-size: 0;
+        padding: 5px 15px 8px;
+    }
+    .footer__inner .container {
+        padding: 0;
+        margin-bottom: 0;
+    }
+    .footer__list02 {
+        display: inline-block;
+        vertical-align: middle;
+        width: 100%;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+    .footer__list02 li {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 0;
+        width: 100%;
+        padding-left: 10%;
+    }
+    .footer__list02 li:first-child {
+        margin-left: 0px;
+    }
+    .footer__list02 li:last-child {
+        margin-right: 0;
+    }
+    .footer__list02 li a {
+        font-size: 13px;
+        font-weight: 400;
+        color: #FFF;
+        line-height: 37px;
+        background: url(./assets/img/top/white_arrow.svg) no-repeat left center;
+        background-size: 7px 10px;
+        padding-left: 11px;
+    }
+    .footer__list02 li a:hover {
+        opacity: 0.5;
+    }
+    .footer__copyright {
+        font-size: 9px;
+        line-height: 15px;
+        color: #FFF;
+        display: inline-block;
+        vertical-align: middle;
+        text-align: center;
+        width: 100%;
+        padding-right: 0;
+        margin-top: 25px;
+        margin-bottom: 0;
+    }
+}

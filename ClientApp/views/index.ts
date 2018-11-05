@@ -7,3 +7,5 @@ import '@views/cps';
 import '@views/ccg';
 
 import '@views/sample';
+
+import '@views/clone-ui';

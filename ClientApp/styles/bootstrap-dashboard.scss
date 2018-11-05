@@ -1262,6 +1262,21 @@ pre {
         position: relative;
         border-radius: 3px;
         color: #0D86D1 !important;
+        &:before {
+            color: #0D86D1;
+            font-family: 'Font Awesome 5 Free';
+            position: absolute;
+        }
+    }
+    &-back {
+       &:before {
+            content: "\F0A8";
+            font-weight: 900;
+            font-size: 3.2em;
+            top: -0.35em;
+       } 
+    }
+    &-forward {
         &:focus,
         &:hover {
             text-decoration: none;
@@ -1272,15 +1287,12 @@ pre {
             box-shadow: 0 0 0 2px lighten(#E0F59E, 5%);
         }
         &:before {
-            color: #0D86D1;
             content: "\F2F5";
-            font-family: 'Font Awesome 5 Free';
             font-weight: 900;
             font-size: 22px;
             top: 0;
             left: -15px;
-            position: absolute;
-        }
+        }             
     }
     /* Errors btn */
     &-errors {
