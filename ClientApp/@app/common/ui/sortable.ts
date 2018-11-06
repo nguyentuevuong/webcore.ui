@@ -27,13 +27,13 @@ let _w = window,
             case ITEMCLASS.ADD:
                 if (index == -1) {
                     list.push(className);
-                    item.className = list.join(" ");
+                    item.className = list.join(" ").trim();
                 }
                 break;
             case ITEMCLASS.REMOVE:
                 if (index != -1) {
                     list.splice(index, 1);
-                    item.className = list.join(" ");
+                    item.className = list.join(" ").trim();
                 }
                 break;
         }

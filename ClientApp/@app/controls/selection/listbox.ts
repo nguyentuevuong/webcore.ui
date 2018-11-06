@@ -1,6 +1,6 @@
 import { ko } from '@app/providers';
 import { handler } from '@app/common/ko';
-import { fxTable } from '@app/common/utils/fxtable';
+import { FixedTable } from '@app/common/utils/table';
 import { Selectables } from '@app/common/ui/selectable';
 
 let ki = '__fxlistbox__',
@@ -15,7 +15,7 @@ export class ListBoxBindingHandler implements KnockoutBindingHandler {
         let accessor = valueAccessor(),
             body = element.querySelector('tbody'),
             dataSources = accessor.dataSources,
-            fxtable: fxTable | undefined = undefined,
+            fxtable: FixedTable | undefined = undefined,
             options: {
                 width: number;
                 displayRow: number;
@@ -40,7 +40,7 @@ export class ListBoxBindingHandler implements KnockoutBindingHandler {
                 },
                 $$afterRender: (el: HTMLTableRowElement, record: any) => {
                     if (!fxtable && ko.utils.arrayIndexOf(dataSources(), record) == dataSources().length - 1) {
-                        fxtable = new fxTable(element, options);
+                        fxtable = new FixedTable(element, options);
                         domData.set(element, ki, fxtable);
                     } else {
                         if (fxtable) {
@@ -67,7 +67,7 @@ export class ListBoxBindingHandler implements KnockoutBindingHandler {
         return { controlsDescendantBindings: true };
     }
     update = (element: HTMLTableElement, valueAccessor: () => KnockoutObservableSelection, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let fxtable: fxTable = domData.get(element, ki),
+        let fxtable: FixedTable = domData.get(element, ki),
             allBindings = allBindingsAccessor(),
             configs = allBindings.configs || {
                 width: ko.toJS(ko.unwrap((allBindings.configs || {}).width)),

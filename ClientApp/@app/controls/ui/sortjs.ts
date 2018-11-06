@@ -30,7 +30,11 @@ export class SortJSControlBindingHandler implements KnockoutBindingHandler {
             configs = ko.toJS(allBindingsAccessor().configs),
             onSelect: Function = configs && configs.onSelect || function () { },
             onDrag: Function = configs && configs.onDrag || function () { },
-            onDrop: Function = configs && configs.onDrop || function () { };
+            onDrop: Function = configs && configs.onDrop || function () { },
+            afterRender: Function = accessor.afterRender || function () { },
+            beforeRemove: Function = accessor.beforeRemove || function () { };
+
+        configs = configs || {};
 
         ko.utils.extend(configs, {
             onSelect: (evt: MouseEvent, data: ISortableData) => {
@@ -43,19 +47,16 @@ export class SortJSControlBindingHandler implements KnockoutBindingHandler {
                 onDrop.apply(viewModel, [evt, data]);
             }
         });
-        
-        let newBinding = ko.utils.extendBindingsAccessor('data' in accessor ? valueAccessor : () => ({ data: dataSources }), {
-            afterRender: function (child: HTMLElement, item: any) {
-                dataSet(child, ITEMKEY, item);
 
-                if (!sortable && ko.utils.arrayIndexOf(dataSources, item) == ko.utils.arraySize(dataSources) - 1) {
-                    sortable = new Sortable(element, configs);
-                }
-            }
+        let newBinding = ko.utils.extendBindingsAccessor('data' in accessor ? valueAccessor : () => ({ data: dataSources }), {
+            afterRender: function (child: HTMLElement, record: any) { dataSet(child, ITEMKEY, record); afterRender.apply(viewModel, [child, record]); },
+            beforeRemove: function (child: HTMLTableRowElement, index: number, record: any) { beforeRemove.apply(viewModel, [child, index, record]) }
         });
 
         ko.bindingHandlers.foreach.init!(element, newBinding, allBindingsAccessor, viewModel, bindingContext);
         ko.bindingHandlers.foreach.update!(element, newBinding, allBindingsAccessor, viewModel, bindingContext);
+
+        sortable = new Sortable(element, configs);
 
         return { controlsDescendantBindings: true };
     }
