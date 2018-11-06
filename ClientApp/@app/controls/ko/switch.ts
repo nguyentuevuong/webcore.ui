@@ -6,7 +6,7 @@ import { handler } from '@app/common/ko';
     bindingName: 'switch'
 })
 export class SwitchBindingHandler implements KnockoutBindingHandler {
-    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+    init = (element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let contexts: Array<any> = [],
             switchSkipNextArray: Array<any> = [],
             switchBindings: any = {
@@ -67,10 +67,8 @@ const checkCase = (value: any, bindingContext: KnockoutBindingContext) => {
     //  Otherwise, the result is true if value matches the control value (loose)
     let switchValue = ko.unwrap((<any>bindingContext).$switchValueAccessor());
 
-    return (typeof switchValue == 'boolean')
-        ? (value ? switchValue : !switchValue) : (typeof value == 'boolean')
-            ? value : (value instanceof Array)
-                ? (ko.utils.arrayIndexOf(value, switchValue) !== -1) : (value == switchValue);
+    return (typeof switchValue == 'boolean') ? (value ? switchValue : !switchValue) : (typeof value == 'boolean')
+        ? value : (value instanceof Array) ? (ko.utils.arrayIndexOf(value, switchValue) !== -1) : (value == switchValue);
 },
     checkNotCase = (value: any, bindingContext: KnockoutBindingContext) => !checkCase(value, bindingContext),
     makeCaseHandler = (binding: string, isNot?: boolean) => {
@@ -82,7 +80,7 @@ const checkCase = (value: any, bindingContext: KnockoutBindingContext) => {
             // Inherit flags from the binding we're wrapping
             flags: ko.bindingHandlers[binding].flags,
 
-            init: function (element: HTMLElement, valueAccessor: any, allBindings: any, viewModel: any, bindingContext: KnockoutBindingContext) {
+            init: function (element: HTMLElement, valueAccessor: () => any, allBindings: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) {
                 if (!(<any>bindingContext).$switchSkipNextArray) {
                     throw Error("case binding must only be used with a switch binding");
                 }
@@ -147,7 +145,7 @@ const checkCase = (value: any, bindingContext: KnockoutBindingContext) => {
                 }
             },
 
-            update: function (element: HTMLElement, valueAccessor: any, allBindings: any, viewModel: any, bindingContext: KnockoutBindingContext) {
+            update: function (element: HTMLElement, valueAccessor: () => any, allBindings: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) {
                 // Call update with the observable result value
                 if (ko.bindingHandlers[binding].update) {
                     return ko.bindingHandlers[binding].update!(element, () => (<any>bindingContext).$caseValue, allBindings, viewModel, bindingContext);
