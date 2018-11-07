@@ -111,7 +111,9 @@ declare interface KnockoutObservableStatic {
 }
 
 declare interface KnockoutUtils {
-    has: (obj: any, prop: string) => boolean;
+    keys: (object: Array<any> | string | any | Function) => Array<string>;
+    merge: (object: any, other: any) => any;
+    has: (object: any, prop: string) => boolean;
     set: (object: any, path: Array<string> | string, value: any) => any;
     get: (object: any, path: Array<string> | string | undefined, defaultVal?: any) => any;
     size: (object: Array<any> | string | any | Function) => number;

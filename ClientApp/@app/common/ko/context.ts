@@ -91,5 +91,25 @@ ko.utils.extend(ko.utils, {
         }
 
         return object;
+    },
+    merge: (object: any, source: any) => {
+
+
+        return object;
+    },
+    keys: (object: Array<any> | string | any | Function) => {
+        if (object instanceof Function) {
+            if (!ko.isObservable(object)) {
+                object = object.apply();
+            } else {
+                object = ko.toJS(object);
+            }
+        }
+
+        if (object instanceof Array || typeof object === 'string') {
+            return [].slice.call(object).map((v: any, i: number) => String(i));
+        }
+
+        return Object.keys(object);
     }
 })
