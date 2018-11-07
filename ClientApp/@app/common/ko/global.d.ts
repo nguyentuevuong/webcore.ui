@@ -112,7 +112,9 @@ declare interface KnockoutObservableStatic {
 
 declare interface KnockoutUtils {
     has: (obj: any, prop: string) => boolean;
-    arraySize: (array: Array<any> | KnockoutObservableArray<any>) => number;
+    set: (object: any, path: Array<string> | string, value: any) => any;
+    get: (object: any, path: Array<string> | string | undefined, defaultVal?: any) => any;
+    size: (object: Array<any> | string | any | Function) => number;
     setPrototypeOfOrExtend: (obj: KnockoutObservable<any>, proto: any) => KnockoutObservable<any>;
     extendBindingsAccessor: (accessor: () => any, prop: any) => any;
     extendAllBindingsAccessor: (accessor: KnockoutAllBindingsAccessor, prop: any) => KnockoutAllBindingsAccessor;

@@ -2,10 +2,7 @@
 import 'popper.js';
 import 'bootstrap';
 
-import { _, $, ko } from '@app/providers';
-
-import * as crossroads from 'crossroads';
-import { createBrowserHistory } from 'history';
+import { _, $, ko, crossroads, createBrowserHistory } from '@app/providers';
 
 // import external observable
 import '@app/common/ko/context';

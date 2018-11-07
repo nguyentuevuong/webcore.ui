@@ -1,7 +1,4 @@
-import * as ko from 'knockout';
-import * as _ from 'lodash';
-import { History } from 'history';
-
+import { _, ko, History } from '@app/providers';
 import { Router, route } from '@app/common/router';
 import { component, IComponent, Components, IView, IDispose } from '@app/common/ko';
 
@@ -11,48 +8,49 @@ import { component, IComponent, Components, IView, IDispose } from '@app/common/
     template: require('./index.html')
 })
 export class AppRootViewModel implements IView, IDispose {
-    public router: Router;
+    public router: Router | undefined;
     public TEMPL = TEMPLATE;
 
     public template: KnockoutObservable<TEMPLATE | number> = ko.observable(TEMPLATE.HOME);
 
     constructor(params: { history: History, baseName: string }) {
+        let self = this;
+
         // Activate the client-side router
-        route.goto = (this.router = new Router(params.history, params.baseName)).goto;
+        route.goto = (self.router = new Router(params.history, params.baseName)).goto;
 
         ko.computed({
             read: () => {
-                let route: IComponent = ko.toJS(this.router),
-                    templ = _(this.TEMPL).map(m => m)
+                let route: IComponent = ko.toJS(self.router),
+                    templ = _(self.TEMPL).map(m => m)
                         .filter(f => !_.isNumber(f))
                         .map(m => String(m).toLowerCase())
                         .value(),
                     regx: Array<any> | null = route.history!.location.pathname.match(/[a-z]+/);
 
                 if (_.isNil(regx)) {
-                    this.template(this.TEMPL.HOME);
+                    self.template(self.TEMPL.HOME);
                 } else {
-                    this.template(_.indexOf(templ, regx[0]));
+                    self.template(_.indexOf(templ, regx[0]));
                 }
             }
         });
     }
 
-    public paserComp = (viewName: string) => {
-        let self = this,
-            viewNames = _.map(Components, v => v.url && v.name);
+    // find registered components
+    public paserComp = (viewName: string) => _.map(Components, v => v.url && v.name).indexOf(viewName) > -1 ? viewName : "no-component";
 
-        return viewNames.indexOf(viewName) > -1 ? viewName : "no-component";
-    }
-
-    afterRender = () => {
-
-    };
+    // prevent error for first load
+    afterRender = () => { };
 
     // To support hot module replacement, this method unregisters the router and KO components.
     // In production scenarios where hot module replacement is disabled, this would not be invoked.
     public dispose() {
-        this.router.dispose();
+        let self = this;
+
+        if (self.router) {
+            self.router.dispose();
+        }
 
         _(Components).each((comp: IComponent) => ko.components.unregister(comp.name || ''));
     }

@@ -1,5 +1,5 @@
 import { ko } from '@app/providers';
-import { random, randomId } from '@app/common/id';
+import { random } from '@app/common/id';
 
 let orgSet = ko.utils.setPrototypeOfOrExtend;
 
@@ -27,7 +27,7 @@ ko.utils.extend(ko.utils, {
             ko.utils.extend(obj, {
                 valueWillMutate: () => {
                     obj.beforeValue = ko.toJS(obj);
-                    
+
                     origVwm!.apply(obj);
                 }
             });
