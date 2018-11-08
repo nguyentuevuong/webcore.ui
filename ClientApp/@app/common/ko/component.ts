@@ -1,7 +1,4 @@
-import * as _ from 'lodash';
-import * as $ from 'jquery';
-import * as ko from 'knockout';
-
+import { ko } from '@app/providers';
 import { i18n } from '@app/common/lang';
 import { random } from '@app/common/id';
 import { Components } from '@app/common/ko';
@@ -42,7 +39,7 @@ export function component(params: IDecoratorComponent) {
         let id = random.id;
 
         // merge resources
-        _.merge(i18n, params.resources);
+        ko.utils.merge(i18n, params.resources);
 
         if (!params.name) {
             if (params.url) {
@@ -62,7 +59,7 @@ export function component(params: IDecoratorComponent) {
             title: params.title || params.name
         });
 
-        if (!_.isEmpty(params.styles)) {
+        if (!!params.styles) {
             let rid = `[role="${id}"]`;
 
             params.styles = params.styles!
@@ -90,7 +87,7 @@ export function component(params: IDecoratorComponent) {
                     // add new line before rid
                     return st.replace(/(\[role=")/gi, '\r$1')
                         .replace(/(,\r\[role=")/gi, ',[role="')
-                        .replace(/(\r\[role=")/gi, (rt: string) => `\r${_.startsWith(st, '@media') ? '\t' : ''}${rt.trim()}`)
+                        .replace(/(\r\[role=")/gi, (rt: string) => `\r${st.indexOf('@media') == 0 ? '\t' : ''}${rt.trim()}`)
                         .replace(/}}/gi, '}\r}');
                 })
                 .replace(/:\s/gi, ':')
@@ -104,13 +101,14 @@ export function component(params: IDecoratorComponent) {
             viewModel: {
                 createViewModel: (params: any, elementRef: ElementRef) => {
                     let element = elementRef.element,
-                        templateNodes: Array<HTMLElement> = _.filter(elementRef.templateNodes, (node: HTMLElement) => !!node.tagName),
-                        $element = $(element),
-                        $contents = $element.find('content');
+                        templateNodes: Array<HTMLElement> = [].slice.call(elementRef.templateNodes)
+                            .filter((node: HTMLElement) => !!node.tagName);
+                        //$element = $(element),
+                        //$contents = $element.find('content');
 
                     element.setAttribute('role', id);
 
-                    if (_.size($contents) > 1) {
+                    /*if (_.size($contents) > 1) {
                         _.each($contents, elm => {
                             let $placeholder = $(elm),
                                 query = $placeholder.attr('id'),
@@ -124,9 +122,9 @@ export function component(params: IDecoratorComponent) {
                         });
                     } else if (_.size($contents) == 1) {
                         $contents.replaceWith(templateNodes);
-                    }
+                    }*/
 
-                    return new constructor(_.omit(params, ['$raw', 'component']), element, templateNodes);
+                    return new constructor(ko.utils.omit(params, ['$raw', 'component']), element, templateNodes);
                 }
             },
             template: `${params.styles || ''}<!-- ko template: { afterRender: ($vm.afterRender || function() {}).bind($vm) } -->${params.template || `<span data-bind="i18n: 'view_name'"></span>:&nbsp<span data-bind="i18n: '${viewName}'"></span>`}<!-- /ko -->`,
