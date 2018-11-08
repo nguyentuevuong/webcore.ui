@@ -65,6 +65,9 @@ ko.utils.extend(ko.utils, {
     has: (obj: any, prop: string) => {
         return obj != null && hasOwnProperty.call(obj, prop);
     },
+    isNull: (obj: any) => {
+        return obj == null;
+    },
     get: (object: any | undefined, path: Array<string> | string, defaultVal?: any) => {
         let _path = Array.isArray(path) ? path : (path || '').split('.').filter(i => i.length);
 
@@ -93,7 +96,15 @@ ko.utils.extend(ko.utils, {
         return object;
     },
     merge: (object: any, source: any) => {
+        ko.utils.objectForEach(source, (key: string, value: any) => {
+            let override = ko.utils.get(object, key);
 
+            if (ko.utils.isNull(override)) {
+                ko.utils.set(object, key, value);
+            } else if (override instanceof Object) {
+                ko.utils.merge(override, value);
+            }
+        });
 
         return object;
     },
