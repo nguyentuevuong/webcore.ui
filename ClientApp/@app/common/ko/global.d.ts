@@ -118,6 +118,8 @@ declare interface KnockoutUtils {
     get: (object: any, path: Array<string> | string | undefined, defaultVal?: any) => any;
     size: (object: Array<any> | string | any | Function) => number;
     isNull: (obj: any) =>  boolean;
+    isEmpty: (object: any) => boolean;
+    omit: (object: any, path: Array<string> | string) => any;
     setPrototypeOfOrExtend: (obj: KnockoutObservable<any>, proto: any) => KnockoutObservable<any>;
     extendBindingsAccessor: (accessor: () => any, prop: any) => any;
     extendAllBindingsAccessor: (accessor: KnockoutAllBindingsAccessor, prop: any) => KnockoutAllBindingsAccessor;

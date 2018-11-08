@@ -68,6 +68,13 @@ ko.utils.extend(ko.utils, {
     isNull: (obj: any) => {
         return obj == null;
     },
+    isEmpty: (object: any) => {
+        if (object instanceof Array || typeof object === 'string') {
+            return !![].slice.call(object).length;
+        }
+
+        return true;
+    },
     get: (object: any | undefined, path: Array<string> | string, defaultVal?: any) => {
         let _path = Array.isArray(path) ? path : (path || '').split('.').filter(i => i.length);
 
@@ -77,10 +84,19 @@ ko.utils.extend(ko.utils, {
 
         return ko.utils.get(object[_path.shift() || -1], _path, defaultVal);
     },
+    omit: (object: any, path: Array<string> | string) => {
+        return ko.utils.set(object, path, null);
+    },
     set: (object: any, path: Array<string> | string, value: any) => {
-        let _path = Array.isArray(path) ? path : (path || '').split('.').filter(i => i.length),
+        let _path = Array.isArray(path) ? path : (path || '')
+            .split('.').filter(i => i.length),
             child: string = _path.shift() || '';
 
+
+        if (ko.utils.isNull(object)) {
+            return object;
+        }
+        
         if (_path.length) {
             if (!ko.utils.has(object, child)) {
                 object[child] = {};
@@ -90,7 +106,11 @@ ko.utils.extend(ko.utils, {
                 ko.utils.set(object[child], _path, value);
             }
         } else {
-            object[child] = value;
+            if (ko.utils.isNull(value)) {
+                delete object[child];
+            } else {
+                object[child] = value;
+            }
         }
 
         return object;
