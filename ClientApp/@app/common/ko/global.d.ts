@@ -114,12 +114,15 @@ declare interface KnockoutUtils {
     keys: (object: Array<any> | string | any | Function) => Array<string>;
     merge: (object: any, other: any) => any;
     has: (object: any, prop: string) => boolean;
+    omit: (object: any, path: Array<string> | string) => any;
     set: (object: any, path: Array<string> | string, value: any) => any;
     get: (object: any, path: Array<string> | string | undefined, defaultVal?: any) => any;
     size: (object: Array<any> | string | any | Function) => number;
-    isNull: (obj: any) =>  boolean;
+    isNull: (obj: any) => boolean;
     isEmpty: (object: any) => boolean;
-    omit: (object: any, path: Array<string> | string) => any;
+    isArray: (object: any) => boolean;
+    escape: (string: string) => string;
+    unescape: (string: string) => string;
     setPrototypeOfOrExtend: (obj: KnockoutObservable<any>, proto: any) => KnockoutObservable<any>;
     extendBindingsAccessor: (accessor: () => any, prop: any) => any;
     extendAllBindingsAccessor: (accessor: KnockoutAllBindingsAccessor, prop: any) => KnockoutAllBindingsAccessor;

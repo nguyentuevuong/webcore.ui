@@ -70,10 +70,41 @@ ko.utils.extend(ko.utils, {
     },
     isEmpty: (object: any) => {
         if (object instanceof Array || typeof object === 'string') {
-            return !![].slice.call(object).length;
+            return ![].slice.call(object).length;
         }
 
         return true;
+    },
+    escape: (string: string) => {
+        /** Used to map characters to HTML entities. */
+        let htmlEscapes: {
+            [key: string]: string
+        } = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        };
+
+        return (string || '').replace(/[&<>"']/g, (chr: string) => htmlEscapes[chr]);
+    },
+    unescape: (string: string) => {
+        /** Used to map characters to HTML entities. */
+        let htmlUnescapes: {
+            [key: string]: string
+        } = {
+            '&amp;': '&',
+            '&lt;': '<',
+            '&gt;': '>',
+            '&quot;': '"',
+            '&#39;': "'"
+        };
+
+        return (string || '').replace(/&(?:amp|lt|gt|quot|#39);/g, (chr: string) => htmlUnescapes[chr]);
+    },
+    isArray: (object: any) => {
+        return Array.isArray(object);
     },
     get: (object: any | undefined, path: Array<string> | string, defaultVal?: any) => {
         let _path = Array.isArray(path) ? path : (path || '').split('.').filter(i => i.length);
@@ -85,29 +116,36 @@ ko.utils.extend(ko.utils, {
         return ko.utils.get(object[_path.shift() || -1], _path, defaultVal);
     },
     omit: (object: any, path: Array<string> | string) => {
-        return ko.utils.set(object, path, null);
+        let _path = Array.isArray(path) ? path : (path || '')
+            .split('.').filter(i => i.length),
+            child: string = _path.shift() || '';
+
+        if (!ko.utils.isNull(object)) {
+            if (_path.length) {
+                if (object[child] instanceof Object) {
+                    ko.utils.omit(object[child], _path);
+                }
+            } else {
+                delete object[child];
+            }
+        }
+
+        return object;
     },
     set: (object: any, path: Array<string> | string, value: any) => {
         let _path = Array.isArray(path) ? path : (path || '')
             .split('.').filter(i => i.length),
             child: string = _path.shift() || '';
 
+        if (!ko.utils.isNull(object)) {
+            if (_path.length) {
+                if (!ko.utils.has(object, child)) {
+                    object[child] = {};
+                }
 
-        if (ko.utils.isNull(object)) {
-            return object;
-        }
-        
-        if (_path.length) {
-            if (!ko.utils.has(object, child)) {
-                object[child] = {};
-            }
-
-            if (object[child] instanceof Object) {
-                ko.utils.set(object[child], _path, value);
-            }
-        } else {
-            if (ko.utils.isNull(value)) {
-                delete object[child];
+                if (object[child] instanceof Object) {
+                    ko.utils.set(object[child], _path, value);
+                }
             } else {
                 object[child] = value;
             }
