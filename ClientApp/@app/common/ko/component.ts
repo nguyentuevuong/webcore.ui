@@ -59,7 +59,7 @@ export function component(params: IDecoratorComponent) {
             title: params.title || params.name
         });
 
-        if (!!params.styles) {
+        if (!ko.utils.isEmpty(params.styles)) {
             let rid = `[role="${id}"]`;
 
             params.styles = params.styles!
