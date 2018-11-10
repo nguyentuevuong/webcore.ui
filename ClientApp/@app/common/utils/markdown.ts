@@ -1,239 +1,227 @@
 import { ko } from '@app/providers';
 import { random } from '@app/common/id';
-import { Markdown } from 'highlight-ts';
 
 export { MarkDown as md };
 
 export class MarkDown {
-    private static blocks: {
-        [key: string]: string
-    } = {};
-
-    private static regexobject: {
+    private static Regexs: {
         [key: string]: RegExp
     } = {
-            headline: /^(\#{1,6})([^\#\n]+)$/m,
-            code: /\s\`\`\`\n?([^`]+)\`\`\`/g,
             hr: /^(?:([\*\-_] ?)+)\1\1$/gm,
-            lists: /^((\s*(\*|\d\.) [^\n]+)\n)+/gm, // /^((\s*((\*|\-)|\d(\.|\))) [^\n]+)\n)+/gm,
+            code: /\s\`\`\`\n?([^`]+)\`\`\`/g,
+            headline: /^(\#{1,6})([^\#\n]+)$/m,
+            lists: /^((\s*(\*|\d\.) [^\n]+)\n)+/gm,
             bolditalic: /(?:([\*_~]{1,3}))([^\*_~\n]+[^\*_~\s])\1/g,
-            links: /!?\[([^\]<>]+)\]\(([^ \)<>]+)( "[^\(\)\"]+")?\)/g,
             reflinks: /\[([^\]]+)\]\[([^\]]+)\]/g,
+            links: /!?\[([^\]<>]+)\]\(([^ \)<>]+)( "[^\(\)\"]+")?\)/g,
             mail: /<(([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,7}))>/gmi,
             tables: /\n(([^|\n]+ *\| *)+([^|\n]+\n))((:?\-+:?\|)+(:?\-+:?)*\n)((([^|\n]+ *\| *)+([^|\n]+)\n)+)/g,
-            include: /[\[<]include (\S+) from (https?:\/\/[a-z0-9\.\-]+\.[a-z]{2,9}[a-z0-9\.\-\?\&\/]+)[\]>]/gi,
             url: /<([a-zA-Z0-9@:%_\+.~#?&\/=]{2,256}\.[a-z]{2,4}\b(\/[\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)?)>/g,
             url2: /[ \t\n]([a-zA-Z]{2,16}:\/\/[a-zA-Z0-9@:%_\+.~#?&=]{2,256}.[a-z]{2,4}\b(\/[\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)?)[ \t\n]/g
         };
 
     static parse(str: string) {
-        let line, nstatus = 0,
-            status,
-            cel,
-            calign: Array<any>,
-            indent: number | boolean = 0,
-            helper: RegExpExecArray | Array<any> | string | null,
-            helper1,
-            helper2,
-            count,
-            repstr: string = '',
-            stra,
-            trashgc = [],
-            casca = 0,
-            i = 0,
-            j = 0;
-
+        str = ko.utils.escape(str);
 
         /* headlines */
-        while ((stra = MarkDown.regexobject.headline.exec(str)) !== null) {
-            let id = random.id;
+        str = str.replace(/^\#{1,6}.+$/gm, match => {
+            let string = match.replace(/#/g, '').trim(),
+                length = ko.utils.size(match.match(/#/g));
 
-            count = stra[1].length;
+            return `<h${length}>${string}</h${length}>`;
+        });
 
-            MarkDown.blocks[id] = ko.utils.escape(`<h${count}>${stra[2].trim()}</h${count}>`);
+        /* List */
+        str = str.replace(/^((\s*(\*|\d\.)\s[^\n]+)\n)+/gm, (match: string) => {
+            let orul: Array<string> = [],
+                hir: number = -1,
+                hirs: Array<number> = [],
+                rows: Array<string> = match
+                    .split(/\n/g)
+                    .filter(f => !!f.trim()),
+                html: Array<string> = [];
 
-            str = str.replace(stra[0], '§§§' + id + '§§§');
-        }
+            [].slice.call(rows).forEach((row: string) => {
+                let text = row.trim(),
+                    uro = text.indexOf('*') == 0,
+                    indent = row.match(/^\s*/)![0].length;
+
+                if (hir == -1) {
+                    hirs.push(indent);
+                    html.push(uro ? '<ul>' : '<ol>');
+                    orul.push(uro ? '</ul>' : '</ol>');
+
+                    html.push(`<li>${text.substring(text.indexOf(' ') + 1)}</li>`);
+                } else if (hir != indent) {
+                    if (hir > indent) {
+                        while (hirs[hirs.length - 1] > indent) {
+                            hirs.pop();
+                            html.push(orul.pop() || '');
+                        }
+                    }
+
+                    if (hir < indent) {
+                        hirs.push(indent);
+                        html.push(uro ? '<ul>' : '<ol>');
+                        orul.push(uro ? '</ul>' : '</ol>');
+                    }
+
+                    html.push(`<li>${text.substring(text.indexOf(' ') + 1)}</li>`);
+                } else {
+                    html.push(`<li>${text.substring(text.indexOf(' ') + 1)}</li>`);
+                }
+
+                hir = indent;
+            });
+
+            while (orul.length > 0) {
+                hirs.pop();
+                html.push(orul.pop() || '');
+            }
+
+            return html.join('');
+        });
+
+        /* horizontal line */
+        str = str.replace(/(-{3,}|_{3,}|\*{3,})\n/g, () => `<hr />`);
+
+        /* delete */
+        str = str.replace(/(\~{2}?([^\*]+)\~{2})/g, match => `<del>${match.replace(/\~{2}/g, '')}</del>`);
+
+        /* bold & italic */
+        str = str.replace(/([\*_]{3}?([^(\*|_)]+)[\*_]{3})/g, match => `<b><i>${match.replace(/[\*_]{3}/g, '')}</i></b>`);
+
+        /* bold */
+        str = str.replace(/([\*_]{2}?([^(\*|_)]+)[\*_]{2})/g, match => `<b>${match.replace(/[\*_]{2}/g, '')}</b>`);
+
+        /* italic */
+        str = str.replace(/([\*_]{1}?([^(\*|_)]+)[\*_]{1})/g, match => `<i>${match.replace(/[\*_]{1}/g, '')}</i>`);
 
         /* code */
-        while ((stra = MarkDown.regexobject.code.exec(str)) !== null) {
-            let id = random.id,
-                code = stra[1].replace(/\s+/g, ' ').trim();
+        str = str.replace(/`{3}[a-z]*\n[\s\S]*?\n`{3}/g, match => {
+            let lang = '',
+                code = match
+                    .replace(/`{3}([a-z0-9])*\n/, match => {
+                        lang = match.replace(/(`|\n)/g, '');
+                        return '';
+                    })
+                    .replace(/\n/g, '§§§')
+                    .replace(/`/g, '')
+                    .replace(/\s+/g, ' ').trim();
 
-            MarkDown.blocks[id] = ko.utils.escape(`<pre>${code}</pre>`);
+            return `<pre data-bind="code: '${ko.utils.escape(code).replace(/§{3}/g, '§n')}', type: '${lang}'">${ko.utils.escape(code).replace(/§{3}/g, '<br />')}</pre>`;
+        });
 
-            str = str.replace(stra[0], '§§§' + id + '§§§');
-        }
+        /* inline code */
+        str = str.replace(/\`{1}?([^`]+)\`{1}/g, match => {
+            return `<code>${match.replace(/`/g, '')}</code>`;
+        });
 
-        /* lists */
-        while ((stra = MarkDown.regexobject.lists.exec(str)) !== null) {
-            let id = random.id;
+        /* bock quotes */
+        str = str.replace(/^( *&gt;[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
+            let quote = match
+                .replace(/(\&gt;\s*)/g, '')
+                .replace(/\n/g, '§§§');
 
-            casca = 0;
-
-            if ((stra[0].trim().substr(0, 1) === '*') || (stra[0].trim().substr(0, 1) === '-')) {
-                repstr = '<ul>';
-            } else {
-                repstr = '<ol>';
-            }
-
-            helper = stra[0].split('\n');
-            helper1 = [];
-            status = 0;
-            indent = false;
-
-            for (i = 0; i < helper.length; i++) {
-                if ((line = /^((\s*)((\*|\-)|\d(\.|\))) ([^\n]+))/.exec(helper[i])) !== null) {
-                    if ((line[2] === undefined) || (line[2].length === 0)) {
-                        nstatus = 0;
-                    } else {
-                        if (indent === false) {
-                            indent = line[2].replace(/\t/, '    ').length;
-                        }
-                        nstatus = Math.round(line[2].replace(/\t/, '    ').length / indent);
-                    }
-
-                    while (status > nstatus) {
-                        repstr += helper1.pop();
-                        status--;
-                        casca--;
-                    }
-
-                    while (status < nstatus) {
-                        if ((line[0].trim().substr(0, 1) === '*') || (line[0].trim().substr(0, 1) === '-')) {
-                            repstr += '<ul>';
-                            helper1.push('</ul>');
-                        } else {
-                            repstr += '<ol>';
-                            helper1.push('</ol>');
-                        }
-                        status++;
-                        casca++;
-                    }
-                    repstr += '<li>' + line[6] + '</li>' + '\n';
-                }
-            }
-
-            while (casca > 0) {
-                repstr += '</ul>';
-                casca--;
-            }
-
-            if ((stra[0].trim().substr(0, 1) === '*') || (stra[0].trim().substr(0, 1) === '-')) {
-                repstr += '</ul>';
-            } else {
-                repstr += '</ol>';
-            }
-
-            //MarkDown.blocks[id] = ko.utils.escape(`${repstr}<br />`);
-            //str = str.replace(stra[0], '§§§' + id + '§§§');
-
-            str = str.replace(stra[0], repstr + '\n');
-        }
-
-
-        debugger;
+            return `<blockquote class="blockquote">${quote.replace(/§{3}/g, '<br />')}</blockquote>`;
+        });
 
         /* tables */
-        while ((stra = MarkDown.regexobject.tables.exec(str)) !== null) {
-            repstr = '<table class="table"><tr>';
-            helper = stra[1].split('|');
-            calign = stra[4].split('|');
+        str = str.replace(MarkDown.Regexs.tables, match => {
+            let rows = match
+                .split(/\n/g)
+                .filter(f => !!f)
+                .map(m => m.trim()),
+                align = [].slice.call(rows)
+                    .filter((r: string) => !!r.match(/^(-|_|:)(-|_|:|\|)+(-|_|:)$/g))[0],
+                cols: Array<{
+                    align: string
+                }> = align.split(/\|/g).map((m: string) => {
+                    m = m.trim();
 
-            for (i = 0; i < helper.length; i++) {
-                if (calign.length <= i) {
-                    calign.push(0);
-                } else if (calign[i].trimRight().slice(-1) === ':') {
-                    if (calign[i][0] === ':') {
-                        calign[i] = 3;
-                    } else {
-                        calign[i] = 2;
+                    if (m.indexOf(':') == 0 && m.lastIndexOf(':') == m.length - 1) {
+                        return { align: 'center' }
+                    } else if (m.indexOf(':') == 0) {
+                        return { align: 'left' };
+                    } else if (m.indexOf(':') == m.length - 1) {
+                        return { align: 'right' };
                     }
+
+                    return { align: '' };
+                }),
+                html: Array<string> = ['<br /><table class="table table-bordered"><thead>'];
+
+            [].slice.call(rows).forEach((row: string) => {
+                let _cols = row
+                    .split(/\|/g)
+                    .map(m => ({ name: m.trim() }));
+
+                if (row.match(/^(-|_|:)(-|_|:|\|)+(-|_|:)$/g)) {
+                    html.push('</thead><tbody>');
                 } else {
-                    calign[i] = 0;
+                    let body = html.indexOf('</thead><tbody>') > -1;
+                    html.push(`<tr>${_cols.map((m: any, index: number) => `<t${body ? 'd' : 'h'} align="${(cols[index] || { align: '' }).align}">${m.name}</t${body ? 'd' : 'h'}>`).join('')}</tr>`)
                 }
-            }
+            });
 
-            cel = ['<th>', '<th align="left">', '<th align="right">', '<th align="center">'];
+            html.push('</tbody></table>');
+            return html.join('');
+        });
 
-            for (i = 0; i < helper.length; i++) {
-                repstr += cel[calign[i]] + helper[i].trim() + '</th>';
-            }
+        /* mailto: */
+        str = str.replace(/&lt;(([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,7}))&gt;/gmi, match => {
+            let email = match.replace(/(\&lt;|\&gt;)/g, '');
 
-            repstr += '</tr>';
-            cel = ['<td>', '<td align="left">', '<td align="right">', '<td align="center">'];
-            helper1 = stra[7].split('\n');
-
-            for (i = 0; i < helper1.length; i++) {
-                helper2 = helper1[i].split('|');
-
-                if (helper2[0].length !== 0) {
-
-                    while (calign.length < helper2.length) {
-                        calign.push(0);
-                    }
-
-                    repstr += '<tr>';
-
-                    for (j = 0; j < helper2.length; j++) {
-                        repstr += cel[calign[j]] + helper2[j].trim() + '</td>';
-                    }
-                    repstr += '</tr>' + '\n';
-                }
-            }
-
-            repstr += '</table>';
-            str = str.replace(stra[0], repstr);
-        }
-
-        /* bold and italic */
-        for (i = 0; i < 3; i++) {
-            while ((stra = MarkDown.regexobject.bolditalic.exec(str)) !== null) {
-                let _repstr: Array<string> = [];
-
-                if (stra[1] === '~~') {
-                    str = str.replace(stra[0], '<del>' + stra[2] + '</del>');
-                } else {
-                    switch (stra[1].length) {
-                        case 1:
-                            _repstr = ['<i>', '</i>'];
-                            break;
-                        case 2:
-                            _repstr = ['<b>', '</b>'];
-                            break;
-                        case 3:
-                            _repstr = ['<i><b>', '</b></i>'];
-                            break;
-                    }
-
-                    str = str.replace(stra[0], _repstr[0] + stra[2] + _repstr[1]);
-                }
-            }
-        }
+            return `<a href="mailto:${email}">${email}</a>`;
+        });
 
         /* links */
-        while ((stra = MarkDown.regexobject.links.exec(str)) !== null) {
-            if (stra[0].substr(0, 1) === '!') {
-                str = str.replace(stra[0], '<img src="' + stra[2] + '" alt="' + stra[1] + '" title="' + stra[1] + '" />');
-            } else {
-                str = str.replace(stra[0], '<a ' + 'href="' + stra[2] + '">' + stra[1] + '</a>');
-            }
-        }
-        
-        /* horizontal line */
-        while ((stra = MarkDown.regexobject.hr.exec(str)) !== null) {
-            let id = random.id;
+        [].slice.call(str.match(/!?\[([^\]<>]+)\]\(([^ \)<>]+)( "[^\(\)\"]+")?\)/g) || [])
+            .forEach((match: string) => {
+                let id = random.id,
+                    url = match.match(/\]\(.+\)$/),
+                    text = match.match(/^\[.+\]\(/);
 
-            MarkDown.blocks[id] = ko.utils.escape(`\n<hr/>\n`);
+                if (text) {
+                    let string = text[0].replace(/(^\[|\]\($)/g, '');
 
-            str = str.replace(stra[0], '§§§' + id + '§§§');
-        }
+                    if (url) {
+                        let _url = url[0].replace(/^\]\(|\)/g, '');
 
-        while ((stra = MarkDown.regexobject.mail.exec(str)) !== null) {
-            str = str.replace(stra[0], '<a href="mailto:' + stra[1] + '">' + stra[1] + '</a>');
-        }
+                        if (match.indexOf('!') !== 0) {
+                            str = str.replace(match, `<a href="${_url}">${string}</a>`);
+                        } else {
+                            str = str.replace(match, `<img src="${_url}" alt="${string}" />`);
+                        }
+                    }
+                } else if (url) {
+                    let _url = url[0].replace(/^\]\(|\)/g, '');
 
-        while ((stra = MarkDown.regexobject.url.exec(str)) !== null) {
+                    if (match.indexOf('!') !== 0) {
+                        str = str.replace(match, `<a href="${_url}">${_url}</a>`);
+                    } else {
+                        str = str.replace(match, `<img src="${_url}" alt="${_url}" />`);
+                    }
+                }
+            });
+
+        str.replace(MarkDown.Regexs.url, match => {
+            //console.log(match);
+            return match;
+        });
+
+        str.replace(MarkDown.Regexs.url2, match => {
+            //console.log(match);
+            return match;
+        });
+
+        str.replace(MarkDown.Regexs.reflinks, match => {
+            //console.log(match);
+            return match;
+        });
+
+
+        /*while ((stra = MarkDown.regexobject.url.exec(str)) !== null) {
             repstr = stra[1];
 
             if (repstr.indexOf('://') === -1) {
@@ -260,81 +248,24 @@ export class MarkDown {
             repstr = stra[1];
             str = str.replace(stra[0], '<a ' + 'href="' + repstr + '">' + repstr + '</a>');
         }
+        
+        while (match = str.match(MarkDown.regexobject.url2)) {
+            let id = random.id,
+                repst = match[1];
 
-        /* include */
-        while ((stra = MarkDown.regexobject.include.exec(str)) !== null) {
-            helper = stra[2].replace(/[\.\:\/]+/gm, '');
-            helper1 = '';
+            blocks[id] = ko.utils.escape(`<a href='${repst}'>${repst}</a>`);
+            str = str.replace(repst[0], `§§§${id}§§§`);
+        }*/
 
-            helper1 = document.getElementById(helper)!.innerHTML.trim();
-
-            if ((stra[1] === 'csv') && (helper1 !== '')) {
-                let helper2: any = {
-                    ';': [],
-                    '\t': [],
-                    ',': [],
-                    '|': []
-                };
-
-                helper1 = helper1.split('\n');
-                helper2[0] = [';', '\t', ',', '|'];
-
-                for (j = 0; j < helper2[0].length; j++) {
-                    for (i = 0; i < helper1.length; i++) {
-                        if (i > 0) {
-                            if (helper2[helper2[0][j]] !== false) {
-                                if ((helper2[helper2[0][j]][i] !== helper2[helper2[0][j]][i - 1]) || (helper2[helper2[0][j]][i] === 1)) {
-                                    helper2[helper2[0][j]] = false;
-                                }
-                            }
-                        }
-                    }
-                }
-                if ((helper2[';'] !== false) || (helper2['\t'] !== false) || (helper2[','] !== false) || (helper2['|'] !== false)) {
-                    if (helper2[';'] !== false) {
-                        helper2 = ';';
-                    } else if (helper2['\t']) {
-                        helper2 = '\t';
-                    } else if (helper2[',']) {
-                        helper2 = ',';
-                    } else if (helper2['|']) {
-                        helper2 = '|';
-                    }
-                    repstr = '<table>';
-                    for (i = 0; i < helper1.length; i++) {
-                        helper = helper1[i].split(helper2);
-                        repstr += '<tr>';
-                        for (j = 0; j < helper.length; j++) {
-                            repstr += '<td>' + MarkDown.htmlEncode(helper[j]) + '</td>';
-                        }
-                        repstr += '</tr>';
-                    }
-                    repstr += '</table>';
-                    str = str.replace(stra[0], repstr);
-                } else {
-                    str = str.replace(stra[0], '<code>' + helper1.join('\n') + '</code>');
-                }
-            } else {
-                str = str.replace(stra[0], '');
-            }
-        }
-
-        str = str.replace(/[\s]{2,}[\n]{1,}/gmi, '<br/>');
-
-        //str = str.replace(/[\n]{2,}/gmi, '<br/><br/>');
-
-        ko.utils.objectForEach(MarkDown.blocks, (key: string, value: string) => {
-            str = str.replace('§§§' + key + '§§§', ko.utils.unescape(value));
-        });
-
-        return str;
-    };
-
-    private static htmlEncode(str: string) {
-        let div = document.createElement('div');
-
-        div.appendChild(document.createTextNode(str));
-
-        return div.innerHTML;
+        return ko.utils.unescape(str
+            .replace(/\n/g, '§§§')
+            .replace(/§{3,}/g, '§§§') // strip multi newline
+            .replace(/§{3}\<h/g, '<h') // string newline in all h tag (h[1-6r])
+            .replace(/h\d{1}\>§{3}/g, match => match.replace(/§{3}/g, '')) // string newline in all h tag (h[1-6r])
+            .replace(/\/pre\>§{3}/g, '/pre>') // string newline in pre tag
+            .replace(/§{3}\<blockquote/g, '<blockquote') // string newline in blockquote
+            .replace(/\/blockquote\>§{3}/g, '/blockquote>') // string newline in blockquote
+            .replace(/§{3}/g, '<br />') // match newline by br tag
+            .replace(/§n/g, '\n'));
     };
 }

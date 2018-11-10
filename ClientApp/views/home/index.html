@@ -16,16 +16,84 @@
 <div class="row">
     <div class="col-md-6 markdown-preview">
         <textarea class="form-control">
-#µmd.js
+# This is an h1 tag
+## This is an h2 tag
+###### This is an h6 tag
 ___
-a tiny script to convert [markdown](http://en.wikipedia.org/wiki/Markdown) to [HTML](http://en.wikipedia.org/wiki/HTML) in under 5kb and under [MIT License](http://opensource.org/licenses/MIT).  
+###### Emphasis
+*This text will be italic*
+_This will also be italic_
 
+**This text will be bold**
+__This will also be bold__
+
+_You **can** combine them_
+*You __can__ also combine them*
+---
+###### Links
+[Sample URL](/clone-ui/nittsu)
+[I'm an inline-style link](https://www.google.com)
+
+[I'm an inline-style link with title](https://www.google.com "Google's Homepage")
+
+[I'm a reference-style link][Arbitrary case-insensitive reference text]
+
+[I'm a relative reference to a repository file](../blob/master/LICENSE)
+
+[You can use numbers for reference-style link definitions][1]
+
+Or leave it empty and use the [link text itself].
+
+URLs and URLs in angle brackets will automatically get turned into links. 
+http://www.example.com or &lt;http://www.example.com&gt; and sometimes 
+example.com (but not on Github, for example).
+
+Some text to show that the reference links can follow later.
+
+[arbitrary case-insensitive reference text]: https://www.mozilla.org
+[1]: http://slashdot.org
+[link text itself]: http://www.reddit.com
+---
+###### Image
+#![µmd.js](http://simonwaldherr.de/umd.png)
+---
+###### Mailto
+Send to me: &lt;nguyentuevuong@gmail.com&gt;
+---
+###### Blockquote
+
+> Blockquotes are very handy in email to emulate reply text.
+> This line is part of the same quote.
+> I think you should use an `addr` element here instead.
+
+Quote break.
+
+> This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can *put* **Markdown** into a blockquote.
+
+---
+###### Table
+this | *left* | **center**   | right
+-----|:-------|:--------:|------:
+with | sample | content  | for
+lorem| ipsum  | dolor    | sit
+sit  | amet   | sed      | do
+do   | eiusom | tempor   | with
+---
+###### Code
+```javascript
+var s = "JavaScript syntax highlighting";
+alert(s);
 ```
-[howto make a link in markdown](http://example.tld/)
-```  
-
-[Lorem ipsum](http://en.wikipedia.org/wiki/Lorem_ipsum) **dolor** sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea **commodo** consequat. Duis *aute **irure dolor** in* reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint **occaecat cupidatat** non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo ~~inventore~~ inventari veritatis et quasi ***architecto beatae vitae dicta*** sunt, explicabo.
+```python
+s = "Python syntax highlighting"
+print s
+```
+```
+No language indicated, so no syntax highlighting. 
+But let's throw in a &lt;b&gt;tag&lt;/b&gt;.
+```
+---
+###### List
 
 1. At vero eos et accusamus et iusto odio dignissimos ducimus
 1. Qui blanditiis praesentium voluptatum deleniti atque corrupti
@@ -38,74 +106,12 @@ Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium dolo
     4. consectetur adipisci velit
 1. Quis autem vel eum iure reprehenderit
 1. qui in ea voluptate velit esse
+    3. quia dolor sit amet
+    4. consectetur adipisci velit
+1. Quis autem vel eum iure reprehenderit
+1. qui in ea voluptate velit esse
 
-Quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?
-The previous text is only a lorem ipsum **placeholder text** to demonstrate **µmarkdown.js**. You can take a look at the code at <https://github.com/SimonWaldherr/micromarkdown.js> or view some of my other projects on [my GitHub page](https://github.com/SimonWaldherr/).  
-
----
-
-as an example of what you can do with markdown, here is a nice table:  
-
-this | *left* | center   | right
------|:-------|:--------:|------:
-with | sample | content  | for
-lorem| ipsum  | dolor    | sit
-sit  | amet   | sed      | do
-do   | eiusom | tempor   | with
-
-you can also write down code-examples in markdown:  
-
-```
-var md   = document.getElementById("md").value,
-    html = micromarkdown.parse(md);
-
-```
-
-or include content from [other sources][source] *(this is only possible with micromarkdown)*:  
-
-[source]: http://cdn.simon.waldherr.eu/projects/majaX/content/data.csv
-<include csv from http://cdn.simon.waldherr.eu/projects/majaX/content/data.csv>
-
-to include µmarkdown on your page add  
-
-```
-<script type="text/javascript" 
-src="http://simonwaldherr.github.io/micromarkdown.js/micromarkdown.js">
-</script>
-```  
-
-to your HTML Head and than use  
-
-```
-var input = document.getElementById('input').value,
-    outputEle = document.getElementById('outEle');
-
-outputEle.innerHTML = micromarkdown.parse(input);
-```  
-
-to convert markdown to html.  
-
-please take a look at some of my other projects:
-
-* [selfCSS](http://selfcss.org/)
-* [PodloveWebPlayer](http://podlove.org/podlove-web-player/)
-* [Shownot.es](http://shownot.es/)
-* [FAMOUS](http://famous-project.org/)
-* and many more on [github.com](https://github.com/SimonWaldherr?tab=repositories)
-
-you can find me on:
-
-* App.net @SimonWaldherr@adn
-* Twitter @SimonWaldherr@t
-* GitHub @SimonWaldherr@gh
-* Facebook @SimonWaldherr@fb
-* Google+ @SimonWaldherr@gp
-
-most markdown scripts also allow to include HTML:  
-
----
-<span style="position:absolute;right:25px;">micromarkdown.js</span>
-        </textarea>
+</textarea>
     </div>
     <div id="html_preview" class="col-md-6">
 
