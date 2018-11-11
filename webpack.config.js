@@ -21,7 +21,7 @@ module.exports = (env) => {
         },
         module: {
             rules: [
-                { test: /\.css$/, loaders: ['raw-loader'] },
+                { test: /\.(css|txt)$/, loaders: ['raw-loader'] },
                 { test: /\.ts$/, include: /ClientApp/, loaders: ['ts-loader'] },
                 {
                     test: /\.html$/, loaders: [
