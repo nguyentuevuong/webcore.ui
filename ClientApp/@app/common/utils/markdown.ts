@@ -7,10 +7,10 @@ export class MarkDown {
     private static Regexs: {
         [key: string]: RegExp
     } = {
-            hr: /^(?:([\*\-_] ?)+)\1\1$/gm,
+            hr: /^(?:([\*\-_=] ?)+)\1\1$/gm,
             code: /\s\`\`\`\n?([^`]+)\`\`\`/g,
             headline: /^(\#{1,6})([^\#\n]+)$/m,
-            lists: /^((\s*(\*|\d\.) [^\n]+)\n)+/gm,
+            lists: /^((\s*(\*|\d\.)\s[^\n]+)\n)+/gm,
             bolditalic: /(?:([\*_~]{1,3}))([^\*_~\n]+[^\*_~\s])\1/g,
             reflinks: /\[([^\]]+)\]\[([^\]]+)\]/g,
             links: /!?\[([^\]<>]+)\]\(([^ \)<>]+)( "[^\(\)\"]+")?\)/g,
@@ -32,7 +32,7 @@ export class MarkDown {
         });
 
         /* List */
-        str = str.replace(/^((\s*(\*|\d\.)\s[^\n]+)\n)+/gm, (match: string) => {
+        str = str.replace(MarkDown.Regexs.lists, (match: string) => {
             let orul: Array<string> = [],
                 hir: number = -1,
                 hirs: Array<number> = [],
@@ -83,7 +83,7 @@ export class MarkDown {
         });
 
         /* horizontal line */
-        str = str.replace(/(-|_|\*){3,}\n/g, () => `<hr />`);
+        str = str.replace(MarkDown.Regexs.hr, () => `<hr />`);
 
         /* delete */
         str = str.replace(/(\~{2}?([^\*]+)\~{2})/g, match => `<del>${match.replace(/\~{2}/g, '')}</del>`);
@@ -118,12 +118,13 @@ export class MarkDown {
         });
 
         /* bock quotes */
-        str = str.replace(/^( *&gt;[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
-            let quote = match
-                .replace(/(\&gt;\s*)/g, '')
-                .replace(/\n/g, '§§§');
+        str = str.replace(/^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
+            let quotes = [].slice.call(match.split('\n') || [])
+                .map((line: string) => line
+                    .replace(/^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)\s*)/g, '')
+                    .replace(/\n/g, '§§§').trim());
 
-            return `<blockquote class="blockquote">${quote.replace(/§{3}/g, '<br />')}</blockquote>`;
+            return `<blockquote class="blockquote">${quotes.join('\n').replace(/§{3}/g, '<br />')}</blockquote>`;
         });
 
         /* tables */
@@ -169,8 +170,8 @@ export class MarkDown {
         });
 
         /* mailto: */
-        str = str.replace(/&lt;(([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,7}))&gt;/gmi, match => {
-            let email = match.replace(/(\&lt;|\&gt;)/g, '');
+        str = str.replace(/(&(amp;)*lt;|\<)(([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,7}))(&(amp;)*gt;|\<)/gmi, match => {
+            let email = match.replace(/((\&(amp;)*lt;|\<)|(\&(amp;)*gt;|\>))/g, '');
 
             return `<a href="mailto:${email}">${email}</a>`;
         });
@@ -219,6 +220,8 @@ export class MarkDown {
             //console.log(match);
             return match;
         });
+
+        str = str.replace(/\n+(?!<pre>)(?!<h)(?!<ul>)(?!<blockquote)(?!<hr)(?!\t)([^\n]+)\n/gm, (match: string) => !!match.trim() ? `<p>${match.trim()}</p>` : '');
 
 
         /*while ((stra = MarkDown.regexobject.url.exec(str)) !== null) {
