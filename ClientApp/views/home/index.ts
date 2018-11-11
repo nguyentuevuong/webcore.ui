@@ -25,20 +25,5 @@ export class HomeViewModel implements IView, IDispose {
 
     afterRender(): void {
         console.log("Home view renderred!");
-
-        let self = this,
-            textarea = self.element.querySelector('textarea'),
-            mdpreview = self.element.querySelector('#html_preview');
-
-        ko.utils.registerEventHandler(textarea, 'keyup', () => {
-            if (textarea && mdpreview) {
-                ko.utils.setHtml(mdpreview, md.parse(textarea.value));
-                
-                ko.cleanNode(mdpreview);
-                ko.applyBindingsToDescendants({}, mdpreview);
-            }
-        });
-
-        ko.utils.triggerEvent(textarea, 'keyup');
     }
 }
