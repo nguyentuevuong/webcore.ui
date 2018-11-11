@@ -83,7 +83,7 @@ export class MarkDown {
         });
 
         /* horizontal line */
-        str = str.replace(/(-{3,}|_{3,}|\*{3,})\n/g, () => `<hr />`);
+        str = str.replace(/(-|_|\*){3,}\n/g, () => `<hr />`);
 
         /* delete */
         str = str.replace(/(\~{2}?([^\*]+)\~{2})/g, match => `<del>${match.replace(/\~{2}/g, '')}</del>`);
@@ -109,7 +109,7 @@ export class MarkDown {
                     .replace(/`/g, '')
                     .replace(/\s+/g, ' ').trim();
 
-            return `<pre data-bind="code: '${ko.utils.escape(code).replace(/§{3}/g, '§n')}', type: '${lang}'">${ko.utils.escape(code).replace(/§{3}/g, '<br />')}</pre>`;
+            return `<pre data-bind='code: "", type: "${lang}"'>${ko.utils.escape(code).replace(/§{3}/g, '<br />')}</pre>`;
         });
 
         /* inline code */

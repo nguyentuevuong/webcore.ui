@@ -33,6 +33,9 @@ export class HomeViewModel implements IView, IDispose {
         ko.utils.registerEventHandler(textarea, 'keyup', () => {
             if (textarea && mdpreview) {
                 ko.utils.setHtml(mdpreview, md.parse(textarea.value));
+                
+                ko.cleanNode(mdpreview);
+                ko.applyBindingsToDescendants({}, mdpreview);
             }
         });
 

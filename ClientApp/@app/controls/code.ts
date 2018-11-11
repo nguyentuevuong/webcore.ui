@@ -72,11 +72,15 @@ export class I18nBindingHandler implements KnockoutBindingHandler {
             if (String(code).indexOf('#') == 0) {
                 type = "xml";
                 let selector = document.querySelector(code);
-                if(selector) {
+                if (selector) {
                     ko.cleanNode(selector);
                     code = beautify.html(selector.outerHTML, beautify.configs);
                 }
             } else {
+                if (!code) {
+                    code = ko.utils.unescape(element.innerHTML.replace(/\<br\s*\/*\>/g, '\n').trim());
+                }
+
                 lang = process(highlighter, String(code));
                 switch (type || lang.language) {
                     case 'css':
@@ -87,6 +91,7 @@ export class I18nBindingHandler implements KnockoutBindingHandler {
                         type = "scss";
                         code = beautify.css(code, beautify.configs);
                         break;
+                    default:
                     case 'xml':
                         type = "xml";
                         code = beautify.html(code, beautify.configs);
@@ -107,7 +112,7 @@ export class I18nBindingHandler implements KnockoutBindingHandler {
         }
 
         lang = process(highlighter, String(code), type);
-
+        
         ko.bindingHandlers.html.update!(element, () => `<code class='${type}'>${lang.value}</code>`, allBindingsAccessor, viewModel, bindingContext);
     }
 }

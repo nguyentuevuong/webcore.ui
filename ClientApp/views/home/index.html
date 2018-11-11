@@ -80,11 +80,22 @@ sit  | amet   | sed      | do
 do   | eiusom | tempor   | with
 ---
 ###### Code
-```javascript
-var s = "JavaScript syntax highlighting";
-alert(s);
+```typescript
+@handler({
+    virtual: false,
+    bindingName: 'code'
+})
+export class I18nBindingHandler implements KnockoutBindingHandler {
+    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+        element.classList.add('pretty-print');
+        ko.bindingHandlers.html.init!(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
+    }
+    update = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+        element.classList.add('html-preview');
+    }
+}
 ```
-```python
+```javascript
 s = "Python syntax highlighting"
 print s
 ```
