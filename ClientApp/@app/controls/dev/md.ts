@@ -1,5 +1,6 @@
 import { ko } from '@app/providers';
 import { md } from '@app/common/utils';
+import { lang } from '@app/common/lang';
 import { handler } from '@app/common/ko';
 
 @handler({
@@ -8,9 +9,23 @@ import { handler } from '@app/common/ko';
 })
 export class I18nBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        ko.utils.setHtml(element, md.parse(ko.toJS(valueAccessor()) || ""));
+        let markdown = valueAccessor();
 
-        ko.applyBindingsToDescendants({}, element);
+        ko.computed({
+            read: () => {
+                let _lang: string = ko.toJS(lang),
+                    content: string | any = ko.toJS(markdown);
+
+                if (typeof content == 'string') {
+                    ko.utils.setHtml(element, md.parse(ko.toJS(content)));
+                } else {
+                    ko.utils.setHtml(element, md.parse(ko.toJS(content[_lang])));
+                }
+
+                ko.cleanNode(element);
+                ko.applyBindingsToDescendants({}, element);
+            }
+        });
 
         return { controlsDescendantBindings: true };
     }

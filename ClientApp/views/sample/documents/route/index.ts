@@ -1,7 +1,6 @@
-import * as ko from 'knockout';
-import * as _ from 'lodash';
-
+import { ko } from '@app/providers';
 import { component } from '@app/common/ko';
+import { lang } from '@app/common/lang';
 
 @component({
     url: 'sample/documents/route',
@@ -16,5 +15,8 @@ import { component } from '@app/common/ko';
     }
 })
 export class RouteDocumentViewModel {
-
+    resources: { [key: string]: string } = {
+        vi: require('./contents/vi.txt'),
+        en: require('./contents/en.txt')
+    };
 }

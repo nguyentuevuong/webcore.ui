@@ -18,5 +18,5 @@ import { component } from '@app/common/ko';
     }
 })
 export class ResourceDocumentViewModel {
-
+    content: string = require('./content.txt');
 }
