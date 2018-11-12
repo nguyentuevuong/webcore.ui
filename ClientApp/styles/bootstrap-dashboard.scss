@@ -1269,12 +1269,12 @@ pre {
         }
     }
     &-back {
-       &:before {
+        &:before {
             content: "\F0A8";
             font-weight: 900;
             font-size: 3.2em;
             top: -0.35em;
-       } 
+        }
     }
     &-forward {
         &:focus,
@@ -1292,7 +1292,7 @@ pre {
             font-size: 22px;
             top: 0;
             left: -15px;
-        }             
+        }
     }
     /* Errors btn */
     &-errors {
@@ -1460,11 +1460,36 @@ pre.pretty-print {
     }
 }
 
-
-.blockquote {
-    color:  #6a737d;
-    margin-left: 1em;
-    padding-left: 1em;
-    margin-top: 1rem;
-    border-left: 0.25em solid #dfe2e5;
+.markdown {
+    &-html-preview {
+        .blockquote {
+            color: #6a737d;
+            margin-left: 1em;
+            padding-left: 1em;
+            margin-top: 1rem;
+            border-left: 0.25em solid #dfe2e5;
+        }
+        h1,
+        h2,
+        h3,
+        h4 {
+            border-bottom: 1px solid #dfe2e5;
+            padding-bottom: 0.2em;
+        }
+        h1,
+        h2 {
+            padding-top: 0.5em;
+            border-bottom: 2px dashed $primary;
+        }
+        h3,
+        h4 {
+            padding-top: 1em;
+        }
+        .fa {
+            &.fa-circle-o,
+            &.fa-check-circle-o {
+                font-size: 1.2em;
+            }
+        }
+    }
 }

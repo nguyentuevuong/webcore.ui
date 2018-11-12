@@ -11,6 +11,8 @@ export class I18nBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         let markdown = valueAccessor();
 
+        ko.utils.dom.addClass(element, 'markdown markdown-html-preview');
+
         ko.computed({
             read: () => {
                 let _lang: string = ko.toJS(lang),

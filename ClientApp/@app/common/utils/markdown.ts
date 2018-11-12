@@ -41,11 +41,12 @@ export class MarkDown {
         str = ko.utils.escape(str);
 
         /* headlines */
-        str = str.replace(/^\#{1,6}.+$/gm, match => {
-            let string = match.replace(/#/g, '').trim(),
-                length = ko.utils.size(match.match(/#/g));
+        str = str.replace(/^(#{1,6}\s*)(.*)$/gm, match => {
+            let string = match.replace(/^#{1,6}/, '').trim(),
+                length = ko.utils.size((match.match(/^#{1,6}/) || [''])[0]),
+                hrefId = (string.match(/#\{.*\}$/) || [''])[0].replace(/[#\{\}]/g, '').trim();
 
-            return `<h${length}>${string}</h${length}>`;
+            return `<h${length} ${hrefId ? `id='${hrefId}'` : ''}>${string.replace(/(#\{.*\})$/, '').trim()}</h${length}>`;
         });
 
         /* List */
@@ -113,6 +114,9 @@ export class MarkDown {
 
         /* italic */
         str = str.replace(/([\*_]{1}?([^(\*|_)]+)[\*_]{1})/g, match => `<i>${match.replace(/[\*_]{1}/g, '')}</i>`);
+
+        /* checkbox */
+        str = str.replace(/\[(\s|x)*\]/g, match => `<i class='fa fa-${match.match(/x/) ? 'check-circle-o' : 'circle-o'}'></i>`);
 
         /* code */
         str = str.replace(/`{3}[a-z]*\n[\s\S]*?\n`{3}/g, match => {
@@ -234,11 +238,11 @@ export class MarkDown {
         });
 
         str.replace(MarkDown.Regexs.reflinks, match => {
-            //console.log(match);
+            console.log(match);
             return match;
         });
 
-        str = str.replace(/\n+(?!<pre>)(?!<h)(?!<ul>)(?!<blockquote)(?!<hr)(?!\t)([^\n]+)\n/gm, (match: string) => !!match.trim() ? `<p>${match.trim()}</p>` : '');
+        //str = str.replace(/\n+(?!<pre>)(?!<h)(?!<ul>)(?!<blockquote)(?!<hr)(?!\t)([^\n]+)\n/gm, (match: string) => !!match.trim() ? `<p>${match.trim()}</p>` : '');
 
 
         /*while ((stra = MarkDown.regexobject.url.exec(str)) !== null) {
@@ -286,6 +290,7 @@ export class MarkDown {
             .replace(/§{3}\<blockquote/g, '<blockquote') // string newline in blockquote
             .replace(/\/blockquote\>§{3}/g, '/blockquote>') // string newline in blockquote
             .replace(/§{3}/g, '<br />') // match newline by br tag
-            .replace(/§n/g, '\n'));
+            .replace(/§n/g, '\n'))
+            .replace(/\<p\>\s+\<(\/*)p\>/, '');
     };
 }
