@@ -126,6 +126,10 @@ declare interface KnockoutUtils {
     setPrototypeOfOrExtend: (obj: KnockoutObservable<any>, proto: any) => KnockoutObservable<any>;
     extendBindingsAccessor: (accessor: () => any, prop: any) => any;
     extendAllBindingsAccessor: (accessor: KnockoutAllBindingsAccessor, prop: any) => KnockoutAllBindingsAccessor;
+    dom: {
+        addClass: (element: HTMLElement, classCss: string) => void;
+        removeClass: (element: HTMLElement, classCss: string) => void;
+    }
 }
 
 declare interface KnockoutObservableError extends KnockoutObservableArray<KnockoutObservable<any>> {

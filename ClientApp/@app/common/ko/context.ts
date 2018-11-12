@@ -180,5 +180,46 @@ ko.utils.extend(ko.utils, {
         }
 
         return Object.keys(object);
+    },
+    dom: {
+        addClass: (element: HTMLElement, classCss: Array<string> | string) => {
+            if (element) {
+                if (typeof classCss == 'string') {
+                    if (classCss.indexOf(' ') == -1) {
+                        classCss = [classCss];
+                    } else {
+                        classCss = [].slice.call(classCss.split(/\s/));
+                    }
+                }
+
+                if (element.className) {
+                    [].slice.call(classCss)
+                        .forEach((c: string) => element.classList.add(c.trim()));
+                } else {
+                    element.className = "__temp__";
+
+                    [].slice.call(classCss)
+                        .forEach((c: string) => element.classList.add(c.trim()));
+
+                    ko.utils.dom.removeClass(element, "__temp__");
+                }
+            }
+        },
+        removeClass: (element: HTMLElement, classCss: Array<string> | string) => {
+            if (element) {
+                if (typeof classCss == 'string') {
+                    if (classCss.indexOf(' ') == -1) {
+                        classCss = [classCss];
+                    } else {
+                        classCss = [].slice.call(classCss.split(/\s/));
+                    }
+                }
+
+                if (element.className) {
+                    [].slice.call(classCss)
+                        .forEach((css: string) => element.classList.remove(css));
+                }
+            }
+        }
     }
-})
+});
