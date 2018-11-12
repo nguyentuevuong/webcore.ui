@@ -36,7 +36,7 @@ Some text to show that the reference links can follow later.
 [link text itself]: http://www.reddit.com
 ---
 ###### Image
-#![µmd.js](http://simonwaldherr.de/umd.png)
+![µmd.js](http://simonwaldherr.de/umd.png)
 ---
 ###### Mailto
 Send to me: &lt;nguyentuevuong@gmail.com&gt;
@@ -97,10 +97,10 @@ But let's throw in a <b>tag</b>.
     * Quos dolores et quas molestias excepturi sint
     * Obcaecati *cupiditate **non** provident*
     * Et harum quidem rerum facilis est et expedita distinctio
-    1. Neque porro quisquam
-    2. est qui dolorem ipsum
-    3. quia dolor sit amet
-    4. consectetur adipisci velit
+        1. Neque porro quisquam
+        2. est qui dolorem ipsum
+        3. quia dolor sit amet
+        4. consectetur adipisci velit
 1. Quis autem vel eum iure reprehenderit
 1. qui in ea voluptate velit esse
     3. quia dolor sit amet
