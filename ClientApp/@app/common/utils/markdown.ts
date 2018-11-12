@@ -1,6 +1,25 @@
 import { ko } from '@app/providers';
 
 export { MarkDown as md };
+
+/**
+ * Markdown - A very basic regex-based Markdown parser
+ *
+ * - Headers
+ * - Links
+ * - Bold
+ * - Emphasis
+ * - Deletions
+ * - Quotes
+ * - Inline code
+ * - Blockquotes
+ * - Ordered/unordered lists
+ * - Horizontal rules
+ *
+ * Author: Tue Vuong <nguyentuevuong@gmail.com>
+ * Website: http://nhanvuong.vn
+ * License: MIT
+ */
 export class MarkDown {
     private static Regexs: {
         [key: string]: RegExp
@@ -116,14 +135,14 @@ export class MarkDown {
         });
 
         /* bock quotes */
-        /*str = str.replace(/^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
+        str = str.replace(/^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
             let quotes = [].slice.call(match.split('\n') || [])
                 .map((line: string) => line
                     .replace(/^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)\s*)/g, '')
                     .replace(/\n/g, '§§§').trim());
 
             return `<blockquote class="blockquote">${quotes.join('\n').replace(/§{3}/g, '<br />')}</blockquote>`;
-        });*/
+        });
 
         /* tables */
         str = str.replace(MarkDown.Regexs.tables, match => {
