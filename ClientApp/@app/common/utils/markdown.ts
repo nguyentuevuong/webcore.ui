@@ -1,8 +1,6 @@
 import { ko } from '@app/providers';
-import { random } from '@app/common/id';
 
 export { MarkDown as md };
-
 export class MarkDown {
     private static Regexs: {
         [key: string]: RegExp
@@ -118,14 +116,14 @@ export class MarkDown {
         });
 
         /* bock quotes */
-        str = str.replace(/^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
+        /*str = str.replace(/^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
             let quotes = [].slice.call(match.split('\n') || [])
                 .map((line: string) => line
                     .replace(/^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)\s*)/g, '')
                     .replace(/\n/g, '§§§').trim());
 
             return `<blockquote class="blockquote">${quotes.join('\n').replace(/§{3}/g, '<br />')}</blockquote>`;
-        });
+        });*/
 
         /* tables */
         str = str.replace(MarkDown.Regexs.tables, match => {
@@ -177,34 +175,34 @@ export class MarkDown {
         });
 
         /* links */
-        [].slice.call(str.match(/!?\[([^\]<>]+)\]\(([^ \)<>]+)( "[^\(\)\"]+")?\)/g) || [])
-            .forEach((match: string) => {
-                let id = random.id,
-                    url = match.match(/\]\(.+\)$/),
-                    text = match.match(/^\[.+\]\(/);
+        str = str.replace(/!?\[([^\]<>]+)\]\(([^ \)<>]+)( "[^\(\)\"]+")?\)/g, (match: string) => {
+            let url = match.match(/\]\(.+\)$/),
+                text = match.match(/^\[.+\]\(/);
 
-                if (text) {
-                    let string = text[0].replace(/(^\[|\]\($)/g, '');
+            if (text) {
+                let string = text[0].replace(/(^\[|\]\($)/g, '');
 
-                    if (url) {
-                        let _url = url[0].replace(/^\]\(|\)/g, '');
-
-                        if (match.indexOf('!') !== 0) {
-                            str = str.replace(match, `<a href="${_url}">${string}</a>`);
-                        } else {
-                            str = str.replace(match, `<img src="${_url}" alt="${string}" />`);
-                        }
-                    }
-                } else if (url) {
+                if (url) {
                     let _url = url[0].replace(/^\]\(|\)/g, '');
 
                     if (match.indexOf('!') !== 0) {
-                        str = str.replace(match, `<a href="${_url}">${_url}</a>`);
+                        return `<a href="${_url}">${string}</a>`;
                     } else {
-                        str = str.replace(match, `<img src="${_url}" alt="${_url}" />`);
+                        return `<img src="${_url}" alt="${string}" />`;
                     }
                 }
-            });
+            } else if (url) {
+                let _url = url[0].replace(/^\]\(|\)/g, '');
+
+                if (match.indexOf('!') !== 0) {
+                    return `<a href="${_url}">${_url}</a>`;
+                } else {
+                    return `<img src="${_url}" alt="${_url}" />`;
+                }
+            }
+
+            return match;
+        });
 
         str.replace(MarkDown.Regexs.url, match => {
             //console.log(match);
