@@ -24,11 +24,11 @@ export class MarkDown {
     private static Regexs: {
         [key: string]: RegExp
     } = {
-            hr: /^(?:([\*\-_=] ?)+)\1\1$/gm,
-            code: /(\s|\n)*(`{3})\n?([^`]+)(`{3})/g, ///(\n)*`{3}[a-z]*\n[\s\S]*?\n`{3}/g
+            hr: /^(?:([-_=] ?)+)\1\1$/gm,
             headline: /^(\#{1,6})([^\n]+)$/gm,
-            lists: /^((\s*(\*|\d\.)\s[^\n]+)\n)+/gm,
+            lists: /^((\s*(\+|-|\d\.)\s[^\n]+)\n)+/gm,
             bolditalic: /(?:([\*_~]{1,3}))([^\*_~\n]+[^\*_~\s])\1/g,
+            code: /(\s|\n)*(`{3})\n?([^`]+)(`{3})(\s|\n)*/g, ///(\n)*`{3}[a-z]*\n[\s\S]*?\n`{3}/g
             reflinks: /\[([^\]]+)\]\[([^\]]+)\]/g,
             links: /!?\[([^\]<>]+)\]\(([^ \)<>]+)( "[^\(\)\"]+")?\)/g,
             mail: /<(([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,7}))>/gmi,
@@ -59,7 +59,7 @@ export class MarkDown {
 
             [].slice.call(rows).forEach((row: string) => {
                 let text = row.trim(),
-                    uro = text.indexOf('*') == 0,
+                    uro = text.indexOf('-') == 0 || text.indexOf('+') == 0,
                     indent = row.match(/^\s*/)![0].length;
 
                 if (hir == -1) {
@@ -131,9 +131,7 @@ export class MarkDown {
         });
 
         /* inline code */
-        str = str.replace(/\`{1}?([^`]+)\`{1}/g, match => {
-            return `<code>${match.replace(/`/g, '')}</code>`;
-        });
+        str = str.replace(/\`{1}?([^`]+)\`{1}/g, match => `<code>${match.replace(/`/g, '')}</code>`);
 
         /* bock quotes */
         str = str.replace(/(^(\n*(&gt;|>)) ?.+?)(\r?\n\r?\n)/gms, match => {// /^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
@@ -278,7 +276,7 @@ export class MarkDown {
             blocks[id] = ko.utils.escape(`<a href='${repst}'>${repst}</a>`);
             str = str.replace(repst[0], `§§§${id}§§§`);
         }*/
-        debugger;
+
         return ko.utils.unescape(str
             .replace(/\n/g, '§§§')
             .replace(/§{3,}/g, '§§§') // strip multi newline

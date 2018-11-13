@@ -53,6 +53,7 @@ Quote break.
 
 ---
 ###### Table
+
 this | *left* | **center**   | right
 -----|:-------|:--------:|------:
 with | sample | content  | for
@@ -94,16 +95,16 @@ But let's throw in a <b>tag</b>.
 
 1. At vero eos et accusamus et iusto odio dignissimos ducimus
 1. Qui blanditiis praesentium voluptatum deleniti atque corrupti
-    * Quos dolores et quas molestias excepturi sint
-    * Obcaecati *cupiditate **non** provident*
-    * Et harum quidem rerum facilis est et expedita distinctio
+    + Quos dolores et quas molestias excepturi sint
+    + Obcaecati *cupiditate **non** provident*
+    + Et harum quidem rerum facilis est et expedita distinctio
         1. Neque porro quisquam
         2. est qui dolorem ipsum
         3. quia dolor sit amet
         4. consectetur adipisci velit
 1. Quis autem vel eum iure reprehenderit
 1. qui in ea voluptate velit esse
-    3. quia dolor sit amet
-    4. consectetur adipisci velit
+    - quia dolor sit amet
+    - consectetur adipisci velit
 1. Quis autem vel eum iure reprehenderit
 1. qui in ea voluptate velit esse
