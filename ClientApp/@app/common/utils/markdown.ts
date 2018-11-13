@@ -26,18 +26,26 @@ export class MarkDown {
     } = {
             hr: /^(?:([-_=] ?)+)\1\1$/gm,
             headline: /^(\#{1,6})([^\n]+)$/gm,
-            lists: /^((\s*(\+|-|\d\.)\s[^\n]+)\n)+/gm,
-            bolditalic: /(?:([\*_~]{1,3}))([^\*_~\n]+[^\*_~\s])\1/g,
-            code: /(\s|\n)*(`{3})\n?([^`]+)(`{3})(\s|\n)*/g, ///(\n)*`{3}[a-z]*\n[\s\S]*?\n`{3}/g
+            code: /(\s|\n)*(`{3})\n?([^`]+)(`{3})(\s|\n)*/g,
+
             reflinks: /\[([^\]]+)\]\[([^\]]+)\]/g,
+            reftarget: /\[.+\]:\s*(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?\n/g,
+
             links: /!?\[([^\]<>]+)\]\(([^ \)<>]+)( "[^\(\)\"]+")?\)/g,
-            mail: /<(([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,7}))>/gmi,
+            mail: /(&(amp;)*lt;|\<)*(([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,7}))(&(amp;)*gt;|\>)*/gmi,
+
+            lists: /^((\s*(\+|-|\d\.)\s[^\n]+)\n)+/gm,
             tables: /\n(([^|\n]+ *\| *)+([^|\n]+\n))((:?\-+:?\|)+(:?\-+:?)*\n)((([^|\n]+ *\| *)+([^|\n]+)\n)+)/g,
-            url: /<([a-zA-Z0-9@:%_\+.~#?&\/=]{2,256}\.[a-z]{2,4}\b(\/[\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)?)>/g,
-            url2: /[ \t\n]([a-zA-Z]{2,16}:\/\/[a-zA-Z0-9@:%_\+.~#?&=]{2,256}.[a-z]{2,4}\b(\/[\-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)?)[ \t\n]/g
+
+            url: /\s(&(amp;)*lt;|\<)*(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?(&(amp;)*gt;|\>)*\s/g
         };
 
     static parse(str: string) {
+        let refs: Array<{ [key: string]: string }> = [];
+
+        /* horizontal line */
+        str = str.replace(MarkDown.Regexs.hr, () => `<hr />`);
+
         /* headlines */
         str = str.replace(MarkDown.Regexs.headline, match => {
             let string = match.replace(/^#{1,6}/, '').trim(),
@@ -45,6 +53,49 @@ export class MarkDown {
                 hrefId = (string.match(/#\{.*\}$/) || [''])[0].replace(/[#\{\}]/g, '').trim();
 
             return `<h${length} ${hrefId ? `id='${hrefId}'` : ''}>${string.replace(/(#\{.*\}|\n)$/, '').trim()}</h${length}>`;
+        });
+
+        /* delete */
+        str = str.replace(/(\~{2}?([^\*]+)\~{2})/g, match => `<del>${match.replace(/\~{2}/g, '')}</del>`);
+
+        /* bold & italic */
+        str = str.replace(/([\*_]{3}?([^(\*|_)]+)[\*_]{3})/g, match => `<b><i>${match.replace(/[\*_]{3}/g, '')}</i></b>`);
+
+        /* bold */
+        str = str.replace(/([\*_]{2}?([^(\*|_)]+)[\*_]{2})/g, match => `<b>${match.replace(/[\*_]{2}/g, '')}</b>`);
+
+        /* italic */
+        str = str.replace(/([\*_]{1}?([^(\*|_)]+)[\*_]{1})/g, match => `<i>${match.replace(/[\*_]{1}/g, '')}</i>`);
+
+        /* checkbox */
+        str = str.replace(/\[(\s|x)*\]/g, match => `<i class='fa fa-${match.match(/x/) ? 'check-circle-o' : 'circle-o'}'></i>`);
+
+        /* code */
+        str = str.replace(MarkDown.Regexs.code, match => {
+            let lang = '',
+                code = match
+                    .replace(/`{3}([a-z0-9])*\n/, match => {
+                        lang = match.replace(/(`|\n)/g, '');
+                        return '';
+                    })
+                    .replace(/\n/g, '§§§')
+                    .replace(/`/g, '')
+                    .replace(/\s+/g, ' ').trim();
+            return `<pre data-bind='code: "", type: "${lang}"'>${ko.utils.escape(code).replace(/§{3}/g, '<br />')}</pre>`;
+        });
+
+        /* inline code */
+        str = str.replace(/\`{1}?([^`]+)\`{1}/g, match => `<code>${match.replace(/`/g, '')}</code>`);
+
+        /* bock quotes */
+        str = str.replace(/(^(\n*(&gt;|>)) ?.+?)(\r?\n\r?\n)/gms, match => {// /^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
+            let quotes = [].slice.call(match.split('\n') || [])
+                .filter((str: string) => !!str)
+                .map((line: string) => line
+                    .replace(/^( *(&(&amp;)*gt;|\>)\s*)/g, '')
+                    .replace(/\n/g, '§§§').trim());
+
+            return `<blockquote class="blockquote">${quotes.join('§§§')}</blockquote>`;
         });
 
         /* List */
@@ -98,52 +149,6 @@ export class MarkDown {
             return html.join('');
         });
 
-        /* horizontal line */
-        str = str.replace(MarkDown.Regexs.hr, () => `<hr />`);
-
-        /* delete */
-        str = str.replace(/(\~{2}?([^\*]+)\~{2})/g, match => `<del>${match.replace(/\~{2}/g, '')}</del>`);
-
-        /* bold & italic */
-        str = str.replace(/([\*_]{3}?([^(\*|_)]+)[\*_]{3})/g, match => `<b><i>${match.replace(/[\*_]{3}/g, '')}</i></b>`);
-
-        /* bold */
-        str = str.replace(/([\*_]{2}?([^(\*|_)]+)[\*_]{2})/g, match => `<b>${match.replace(/[\*_]{2}/g, '')}</b>`);
-
-        /* italic */
-        str = str.replace(/([\*_]{1}?([^(\*|_)]+)[\*_]{1})/g, match => `<i>${match.replace(/[\*_]{1}/g, '')}</i>`);
-
-        /* checkbox */
-        str = str.replace(/\[(\s|x)*\]/g, match => `<i class='fa fa-${match.match(/x/) ? 'check-circle-o' : 'circle-o'}'></i>`);
-
-        /* code */
-        str = str.replace(MarkDown.Regexs.code, match => {
-            let lang = '',
-                code = match
-                    .replace(/`{3}([a-z0-9])*\n/, match => {
-                        lang = match.replace(/(`|\n)/g, '');
-                        return '';
-                    })
-                    .replace(/\n/g, '§§§')
-                    .replace(/`/g, '')
-                    .replace(/\s+/g, ' ').trim();
-            return `<pre data-bind='code: "", type: "${lang}"'>${ko.utils.escape(code).replace(/§{3}/g, '<br />')}</pre>`;
-        });
-
-        /* inline code */
-        str = str.replace(/\`{1}?([^`]+)\`{1}/g, match => `<code>${match.replace(/`/g, '')}</code>`);
-
-        /* bock quotes */
-        str = str.replace(/(^(\n*(&gt;|>)) ?.+?)(\r?\n\r?\n)/gms, match => {// /^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
-            let quotes = [].slice.call(match.split('\n') || [])
-                .filter((str: string) => !!str)
-                .map((line: string) => line
-                    .replace(/^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)\s*)/g, '')
-                    .replace(/\n/g, '§§§').trim());
-
-            return `<blockquote class="blockquote">${quotes.join('\n').replace(/§{3}/g, '<br />')}</blockquote>`;
-        });
-
         /* tables */
         str = str.replace(MarkDown.Regexs.tables, match => {
             let rows = match
@@ -187,14 +192,14 @@ export class MarkDown {
         });
 
         /* mailto: */
-        str = str.replace(/(&(amp;)*lt;|\<)(([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,7}))(&(amp;)*gt;|\<)/gmi, match => {
+        str = str.replace(MarkDown.Regexs.mail, match => {
             let email = match.replace(/((\&(amp;)*lt;|\<)|(\&(amp;)*gt;|\>))/g, '');
 
             return `<a href="mailto:${email}">${email}</a>`;
         });
 
         /* links */
-        str = str.replace(/!?\[([^\]<>]+)\]\(([^ \)<>]+)( "[^\(\)\"]+")?\)/g, (match: string) => {
+        str = str.replace(MarkDown.Regexs.links, (match: string) => {
             let url = match.match(/\]\(.+\)$/),
                 text = match.match(/^\[.+\]\(/);
 
@@ -223,72 +228,61 @@ export class MarkDown {
             return match;
         });
 
-        str.replace(MarkDown.Regexs.url, match => {
-            //console.log(match);
-            return match;
-        });
+        // match all reflinks
+        str = str.replace(MarkDown.Regexs.reftarget, match => {
+            let links: Array<string> = match.split(/\]:\s*/)
+                .map(m => m.replace(/^\[/g, '').trim());
 
-        str.replace(MarkDown.Regexs.url2, match => {
-            //console.log(match);
-            return match;
-        });
+            if (links[0] && links[1]) {
+                let kv: any = {};
+                kv[links[0].toLowerCase()] = links[1];
 
-        str.replace(MarkDown.Regexs.reflinks, match => {
-            console.log(match);
-            return match;
-        });
-
-        //str = str.replace(/\n+(?!<pre>)(?!<h)(?!<ul>)(?!<blockquote)(?!<hr)(?!\t)([^\n]+)\n/gm, (match: string) => !!match.trim() ? `<p>${match.trim()}</p>` : '');
-
-
-        /*while ((stra = MarkDown.regexobject.url.exec(str)) !== null) {
-            repstr = stra[1];
-
-            if (repstr.indexOf('://') === -1) {
-                repstr = 'http://' + repstr;
+                refs.push(kv);
             }
 
-            str = str.replace(stra[0], '<a ' + 'href="' + repstr + '">' + repstr.replace(/(https:\/\/|http:\/\/|mailto:|ftp:\/\/)/gmi, '') + '</a>');
-        }
+            return '';
+        });
 
-        while ((stra = MarkDown.regexobject.reflinks.exec(str)) !== null) {
-            helper1 = new RegExp('\\[' + stra[2] + '\\]: ?([^ \n]+)', "gi");
+        // ref url with title
+        str = str.replace(MarkDown.Regexs.reflinks, match => {
+            let links: Array<string> = match.split(/\]\s*\[/)
+                .map(m => m.replace(/(^\[|\]$)/g, '').trim()),
+                k = links[1].toLowerCase(),
+                kv = refs.filter(f => !!f[k]);
 
-            if ((helper = helper1.exec(str)) !== null) {
-                str = str.replace(stra[0], '<a ' + 'href="' + helper[1] + '">' + stra[1] + '</a>').replace(/^\s+|\s+$/g, '');
-                trashgc.push(helper[0]);
+            if (kv.length) {
+                return `<a href="${kv[0][k]}" ${k.match(/^\d+$/) ? '' : `title="${links[1]}"`}>${links[0]}</a>`;
             }
-        }
 
-        for (i = 0; i < trashgc.length; i++) {
-            str = str.replace(trashgc[i], '');
-        }
+            return match;
+        });
 
-        while ((stra = MarkDown.regexobject.url2.exec(str)) !== null) {
-            repstr = stra[1];
-            str = str.replace(stra[0], '<a ' + 'href="' + repstr + '">' + repstr + '</a>');
-        }
-        
-        while (match = str.match(MarkDown.regexobject.url2)) {
-            let id = random.id,
-                repst = match[1];
+        // single ref url
+        str = str.replace(/\[([^\]]+)\]/g, match => {
+            let k = match.replace(/(^\[|\]$)/g, '').trim(),
+                kv = refs.filter(f => !!f[k]);
 
-            blocks[id] = ko.utils.escape(`<a href='${repst}'>${repst}</a>`);
-            str = str.replace(repst[0], `§§§${id}§§§`);
-        }*/
+            if (kv.length) {
+                return `<a href="${kv[0][k]}" ${k.match(/^\d+$/) ? '' : `title="${k}"`}>${k}</a>`;
+            }
 
-        return ko.utils.unescape(str
+            return match;
+        });
+
+        // raw url
+        str = str.replace(MarkDown.Regexs.url, match => {
+            let url = match.replace(/(((&(amp;)*lt;|\<))|((&(amp;)*gt;|\>)))*/g, '');
+
+            if (url.trim().indexOf('http') != 0) {
+                url = 'http://' + url.trim();
+            }
+
+            return `${match.indexOf('\n') == 0 ? '\n' : ''}<a href="${url.trim()}">${" " + url.trim() + " "}</a>`;
+        });
+
+        return str
             .replace(/\n/g, '§§§')
-            .replace(/§{3,}/g, '§§§') // strip multi newline
-            .replace(/§{3}\<h/g, '<h') // string newline in all h tag (h[1-6r])
-            .replace(/h\d{1}\>§{3}/g, match => match.replace(/§{3}/g, '')) // string newline in all h tag (h[1-6r])
-            .replace(/\/pre\>§{3}/g, '/pre>') // string newline in pre tag
-            .replace(/§{3}\<blockquote/g, '<blockquote') // string newline in blockquote
-            .replace(/\/blockquote\>§{3}/g, '/blockquote>') // string newline in blockquote
-            .replace(/§{3}/g, '<br />') // match newline by br tag
-            .replace(/\n/g, '')
-            .replace(/h(\d{1})>(\n)*<br(\s|\/)*>/g, match => match.replace(/<br(\s|\/)*>/, ''))
-            .replace(/§n/g, '\n')
-        );
+            .replace(/(§{3,}\<h\d|h\d\>§{3,})/g, match => match.replace(/§{3,}/, ''))
+            .replace(/§{3,}/g, '<br />');
     };
 }
