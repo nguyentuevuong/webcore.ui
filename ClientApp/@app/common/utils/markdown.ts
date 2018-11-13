@@ -25,8 +25,8 @@ export class MarkDown {
         [key: string]: RegExp
     } = {
             hr: /^(?:([\*\-_=] ?)+)\1\1$/gm,
-            code: /\s\`\`\`\n?([^`]+)\`\`\`/g,
-            headline: /^(\#{1,6})([^\#\n]+)$/m,
+            code: /(\s|\n)*(`{3})\n?([^`]+)(`{3})/g, ///(\n)*`{3}[a-z]*\n[\s\S]*?\n`{3}/g
+            headline: /^(\#{1,6})([^\n]+)$/gm,
             lists: /^((\s*(\*|\d\.)\s[^\n]+)\n)+/gm,
             bolditalic: /(?:([\*_~]{1,3}))([^\*_~\n]+[^\*_~\s])\1/g,
             reflinks: /\[([^\]]+)\]\[([^\]]+)\]/g,
@@ -38,15 +38,13 @@ export class MarkDown {
         };
 
     static parse(str: string) {
-        str = ko.utils.escape(str);
-
         /* headlines */
-        str = str.replace(/^(#{1,6}\s*)(.*)$/gm, match => {
+        str = str.replace(MarkDown.Regexs.headline, match => {
             let string = match.replace(/^#{1,6}/, '').trim(),
                 length = ko.utils.size((match.match(/^#{1,6}/) || [''])[0]),
                 hrefId = (string.match(/#\{.*\}$/) || [''])[0].replace(/[#\{\}]/g, '').trim();
 
-            return `<h${length} ${hrefId ? `id='${hrefId}'` : ''}>${string.replace(/(#\{.*\})$/, '').trim()}</h${length}>`;
+            return `<h${length} ${hrefId ? `id='${hrefId}'` : ''}>${string.replace(/(#\{.*\}|\n)$/, '').trim()}</h${length}>`;
         });
 
         /* List */
@@ -119,7 +117,7 @@ export class MarkDown {
         str = str.replace(/\[(\s|x)*\]/g, match => `<i class='fa fa-${match.match(/x/) ? 'check-circle-o' : 'circle-o'}'></i>`);
 
         /* code */
-        str = str.replace(/`{3}[a-z]*\n[\s\S]*?\n`{3}/g, match => {
+        str = str.replace(MarkDown.Regexs.code, match => {
             let lang = '',
                 code = match
                     .replace(/`{3}([a-z0-9])*\n/, match => {
@@ -129,7 +127,6 @@ export class MarkDown {
                     .replace(/\n/g, '§§§')
                     .replace(/`/g, '')
                     .replace(/\s+/g, ' ').trim();
-
             return `<pre data-bind='code: "", type: "${lang}"'>${ko.utils.escape(code).replace(/§{3}/g, '<br />')}</pre>`;
         });
 
@@ -139,8 +136,9 @@ export class MarkDown {
         });
 
         /* bock quotes */
-        str = str.replace(/^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
+        str = str.replace(/(^(\n*(&gt;|>)) ?.+?)(\r?\n\r?\n)/gms, match => {// /^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
             let quotes = [].slice.call(match.split('\n') || [])
+                .filter((str: string) => !!str)
                 .map((line: string) => line
                     .replace(/^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)\s*)/g, '')
                     .replace(/\n/g, '§§§').trim());
@@ -280,7 +278,7 @@ export class MarkDown {
             blocks[id] = ko.utils.escape(`<a href='${repst}'>${repst}</a>`);
             str = str.replace(repst[0], `§§§${id}§§§`);
         }*/
-
+        debugger;
         return ko.utils.unescape(str
             .replace(/\n/g, '§§§')
             .replace(/§{3,}/g, '§§§') // strip multi newline
@@ -290,7 +288,9 @@ export class MarkDown {
             .replace(/§{3}\<blockquote/g, '<blockquote') // string newline in blockquote
             .replace(/\/blockquote\>§{3}/g, '/blockquote>') // string newline in blockquote
             .replace(/§{3}/g, '<br />') // match newline by br tag
-            .replace(/§n/g, '\n'))
-            .replace(/\<p\>\s+\<(\/*)p\>/, '');
+            .replace(/\n/g, '')
+            .replace(/h(\d{1})>(\n)*<br(\s|\/)*>/g, match => match.replace(/<br(\s|\/)*>/, ''))
+            .replace(/§n/g, '\n')
+        );
     };
 }
