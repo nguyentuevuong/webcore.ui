@@ -10,7 +10,10 @@ import { component, IView, IDispose } from '@app/common/ko';
     }
 })
 export class SampleMarkdownViewModel implements IView, IDispose {
-    content: string = require('./content.txt');
+    contents: { [key: string]: string } = {
+        en: require('./contents/en.md'),
+        vi: require('./contents/vi.md')
+    };
 
     constructor() {
     }
