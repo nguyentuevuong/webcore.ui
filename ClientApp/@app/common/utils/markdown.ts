@@ -61,14 +61,14 @@ export class MarkDown {
                     .replace(/\s+/g, ' ').trim();
 
             if (lang == 'raw') {
-                return `<pre>${code.replace(/[\#\`\-\_\=\*\>\<\/\~]/g, match => '§' + ko.utils.escape(match))}</pre>`;
+                return `<pre>${code.replace(/[\#\`\-\_\=\*\>\<\/\~\[\]\(\)]/g, match => '§' + ko.utils.escape(match).replace(/\n/g, '§§§').replace(/§{3}/g, '<br />'))}</pre>`;
             }
 
             return `<pre data-bind='code: "", type: "${lang}"'>${ko.utils.escape(code).replace(/§{3}/g, '<br />')}</pre>`;
         });
 
         /* inline code */
-        str = str.replace(/\`{1}?([^`]+)\`{1}/g, match => `<code>${match.replace(/`/g, '').replace(/[\#\-\_\=\*\>\<\/\~]/g, match => '§' + ko.utils.escape(match))}</code>`);
+        str = str.replace(/\`{1}?([^`]+)\`{1}/g, match => `<code>${match.replace(/`/g, '').replace(/[\#\`\-\_\=\*\>\<\/\~\[\]\(\)]/g, match => '§' + ko.utils.escape(match))}</code>`);
 
         /* horizontal line */
         str = str.replace(MarkDown.Regexs.hr, () => `<hr />`);
