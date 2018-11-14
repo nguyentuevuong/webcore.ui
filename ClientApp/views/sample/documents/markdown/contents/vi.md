@@ -1,5 +1,8 @@
 ## Ngôn ngữ đánh dấu văn bản thô (`Markdown`) #{ngon-ngu-danh-dau-van-ban-tho}
 
+> Đây là phiên bản tinh chỉnh nâng cao (chuyển sang `typescript`) của thư viện: [micromarkdown.js](https://github.com/SimonWaldherr/micromarkdown.js)
+> Chân thành cảm ơn [Simon Waldherr](https://twitter.com/simonwaldherr) đã cho tôi tham khảo mã nguồn của anh.
+
 #### Giải thích #{giai-thich}
 > `Markdown` là một ngôn ngữ đánh dấu với cú pháp văn bản thô, được thiết kế để có thể dễ dàng chuyển thành HTML và nhiều định dạng khác sử dụng một công cụ cùng tên. Nó thường được dùng để tạo các tập tin readme, viết tin nhắn trên các diễn đàn, và tạo văn bản có định dạng bằng một trình biên tập văn bản thô.
 
@@ -187,6 +190,9 @@ But let's throw in a <b>tag</b>.
 
 #### Bảng biểu #{table}
 > Để hiển thị một bảng biểu (`table`), ta có cấu trúc như sau:
+> Trong đó, dòng thứ 2 là dòng có tác dụng phân cách `head` và `body` của `table` đồng thời cũng là căn lề của các cột trong `body`.
+> Để căn lề ta dùng ký tự `:` với cấu trúc sau: `-`: `không căn lề`, `:-`: `căn lề trái`, `-:`: `căn lề phải`, `:-:`: `căn chính giữa`.
+> Ngoài căn lề, chúng ta có thể sử dụng cấu trúc *nghiêng*, **đậm**, ~~gạch ngang~~ cho các nội dung trong bảng biểu.
 
 ###### Mã
 <pre class="pretty-print">:norender:this | *left* | **center** | right
