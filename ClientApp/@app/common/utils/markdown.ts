@@ -52,7 +52,7 @@ export class MarkDown {
         str = str.replace(MarkDown.Regexs.code, match => {
             let lang = '',
                 code = match
-                    .replace(/`{3}([a-z0-9])*\n/, match => {
+                    .replace(/`{3}([a-z0-9\s])*\n/, match => {
                         lang = match.replace(/(`|\n)/g, '');
                         return '';
                     })
@@ -60,7 +60,9 @@ export class MarkDown {
                     .replace(/`/g, '')
                     .replace(/\s+/g, ' ').trim();
 
-            if (lang == 'raw') {
+            if (lang.match(/norender/)) {
+                return ko.utils.escape(match).replace(/norender(\s)*/, '');
+            } else if (lang == 'raw') {
                 return `<pre>${code.replace(/[\#\`\-\_\=\*\>\<\/\~\[\]\(\)]/g, match => '§' + ko.utils.escape(match).replace(/\n/g, '§§§').replace(/§{3}/g, '<br />'))}</pre>`;
             }
 
@@ -68,7 +70,15 @@ export class MarkDown {
         });
 
         /* inline code */
-        str = str.replace(/\`{1}?([^`]+)\`{1}/g, match => `<code>${match.replace(/`/g, '').replace(/[\#\`\-\_\=\*\>\<\/\~\[\]\(\)]/g, match => '§' + ko.utils.escape(match))}</code>`);
+        str = str.replace(/\`{1}?([^`\n]+)\`{1}/g, match => {
+            if (match.match(/norender/)) {
+                return ko.utils.escape(match)
+                    .replace(/norender/, '')
+                    .replace(/[\#\`\-\_\=\*\>\<\/\~\[\]\(\)]/g, match => '§' + match);
+            } else {
+                return `<code>${ko.utils.escape(match).replace(/`/g, '').replace(/[\#\`\-\_\=\*\>\<\/\~\[\]\(\)]/g, match => '§' + match)}</code>`;
+            }
+        });
 
         /* horizontal line */
         str = str.replace(MarkDown.Regexs.hr, () => `<hr />`);
@@ -92,31 +102,21 @@ export class MarkDown {
         });
 
         /* bold & italic */
-        str = str.replace(/((\*|_){3})([^(\*|_)]+)\1/g, match => {
-            if (match.match(/^([*_]{3})§*\1$/)) {
-                return match;
+        for (var i = 3; i >= 1; i--) {
+            for (var j = 0; j <= 1; j++) {
+                let m = (j == 0 ? '_' : '*'),
+                    regx = new RegExp(`([${m}]{${i},})([^(${m})]+)\\1`, 'g'),
+                    tags = i == 3 ? ['<b><i>', '</i></b>'] : i == 2 ? ['<i>', '</i>'] : ['<b>', '</b>'];
+
+                str = str.replace(regx, match => {
+                    if (match.match(new RegExp(`(§\\${m})$`))) {
+                        return match;
+                    }
+
+                    return `${tags[0]}${match.replace(new RegExp(`[${m}]{${i},}`, 'g'), '')}${tags[1]}`;
+                });
             }
-
-            return `<b><i>${match.replace(/[\*_]{3}/g, '')}</i></b>`;
-        });
-
-        /* bold */
-        str = str.replace(/((\*|_){2})([^(\*|_)]+)\1/g, match => {
-            if (match.match(/^([*_]{2})§*\1$/)) {
-                return match;
-            }
-
-            return `<b>${match.replace(/[\*_]{2}/g, '')}</b>`;
-        });
-
-        /* italic */
-        str = str.replace(/((\*|_){1})([^(\*|_)]+)\1/g, match => {
-            if (match.match(/^([*_]{1})§*\1$/)) {
-                return match;
-            }
-
-            return `<i>${match.replace(/[\*_]{1}/g, '')}</i>`;
-        });
+        }
 
         /* checkbox */
         str = str.replace(/\[(\s|x)*\]/g, match => `<i class='fa fa-${match.match(/x/) ? 'check-circle-o' : 'circle-o'}'></i>`);
