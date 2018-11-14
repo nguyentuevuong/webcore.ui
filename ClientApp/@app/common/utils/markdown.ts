@@ -24,9 +24,9 @@ export class MarkDown {
     private static Regexs: {
         [key: string]: RegExp
     } = {
-            hr: /^(?:([-_=] ?)+)\1\1$/gm,
+            hr: /^(?:([-_=*] ?)+)\1\1$/gm,
             headline: /^(\#{1,6})([^\n]+)$/gm,
-            code: /(\s|\n)*(`{3})\n?([^`]+)(`{3})(\s|\n)*/g,
+            code: /(`{3})\n?([^`]+)\1/g,
 
             reflinks: /\[([^\]]+)\]\[([^\]]+)\]/g,
             reftarget: /\[.+\]:\s*(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?\n/g,
@@ -35,7 +35,7 @@ export class MarkDown {
             mail: /(&(amp;)*lt;|\<)*(([a-z0-9_\-\.])+\@([a-z0-9_\-\.])+\.([a-z]{2,7}))(&(amp;)*gt;|\>)*/gmi,
 
             lists: /^((\s*(\+|-|\d\.)\s[^\n]+)\n)+/gm,
-            tables: /\n(([^|\n]+ *\| *)+([^|\n]+\n))((:?\-+:?\|)+(:?\-+:?)*\n)((([^|\n]+ *\| *)+([^|\n]+)\n)+)/g,
+            tables: /(([^|\n]+ *\| *)+([^|\n]+\n))((:?\-+:?\|)+(:?\-+:?)*\n)((([^|\n]+ *\| *)+([^|\n]+)\n)+)/g,
 
             url: /\s(&(amp;)*lt;|\<)*(https?:\/\/)?([\da-z\.-]+\.[a-z\.]{2,6}|[\d\.]+)([\/:?=&#]{1}[\da-z\.-]+)*[\/\?]?(&(amp;)*gt;|\>)*\s/g
         };
@@ -47,6 +47,28 @@ export class MarkDown {
         str = str
             .replace(/(\r)/g, '§§§')
             .replace(/(§{3,}\n|\n§{3,})/g, '\n');
+
+        /* code */
+        str = str.replace(MarkDown.Regexs.code, match => {
+            let lang = '',
+                code = match
+                    .replace(/`{3}([a-z0-9])*\n/, match => {
+                        lang = match.replace(/(`|\n)/g, '');
+                        return '';
+                    })
+                    .replace(/\n/g, '§§§')
+                    .replace(/`/g, '')
+                    .replace(/\s+/g, ' ').trim();
+
+            if (lang == 'raw') {
+                return `<pre>${code.replace(/[\#\`\-\_\=\*\>\<\/\~]/g, match => '§' + ko.utils.escape(match))}</pre>`;
+            }
+
+            return `<pre data-bind='code: "", type: "${lang}"'>${ko.utils.escape(code).replace(/§{3}/g, '<br />')}</pre>`;
+        });
+
+        /* inline code */
+        str = str.replace(/\`{1}?([^`]+)\`{1}/g, match => `<code>${match.replace(/`/g, '').replace(/[\#\-\_\=\*\>\<\/\~]/g, match => '§' + ko.utils.escape(match))}</code>`);
 
         /* horizontal line */
         str = str.replace(MarkDown.Regexs.hr, () => `<hr />`);
@@ -61,36 +83,43 @@ export class MarkDown {
         });
 
         /* delete */
-        str = str.replace(/(\~{2}?([^\*]+)\~{2})/g, match => `<del>${match.replace(/\~{2}/g, '')}</del>`);
+        str = str.replace(/(\~{2}?([^\*]+)\~{2})/g, match => {
+            if (match.match(/^\~{2}§*\~{2}$/)) {
+                return match;
+            }
+
+            return `<del>${match.replace(/\~{2}/g, '')}</del>`;
+        });
 
         /* bold & italic */
-        str = str.replace(/([\*_]{3}?([^(\*|_)]+)[\*_]{3})/g, match => `<b><i>${match.replace(/[\*_]{3}/g, '')}</i></b>`);
+        str = str.replace(/((\*|_){3})([^(\*|_)]+)\1/g, match => {
+            if (match.match(/^([*_]{3})§*\1$/)) {
+                return match;
+            }
+
+            return `<b><i>${match.replace(/[\*_]{3}/g, '')}</i></b>`;
+        });
 
         /* bold */
-        str = str.replace(/([\*_]{2}?([^(\*|_)]+)[\*_]{2})/g, match => `<b>${match.replace(/[\*_]{2}/g, '')}</b>`);
+        str = str.replace(/((\*|_){2})([^(\*|_)]+)\1/g, match => {
+            if (match.match(/^([*_]{2})§*\1$/)) {
+                return match;
+            }
+
+            return `<b>${match.replace(/[\*_]{2}/g, '')}</b>`;
+        });
 
         /* italic */
-        str = str.replace(/([\*_]{1}?([^(\*|_)]+)[\*_]{1})/g, match => `<i>${match.replace(/[\*_]{1}/g, '')}</i>`);
+        str = str.replace(/((\*|_){1})([^(\*|_)]+)\1/g, match => {
+            if (match.match(/^([*_]{1})§*\1$/)) {
+                return match;
+            }
+
+            return `<i>${match.replace(/[\*_]{1}/g, '')}</i>`;
+        });
 
         /* checkbox */
         str = str.replace(/\[(\s|x)*\]/g, match => `<i class='fa fa-${match.match(/x/) ? 'check-circle-o' : 'circle-o'}'></i>`);
-
-        /* code */
-        str = str.replace(MarkDown.Regexs.code, match => {
-            let lang = '',
-                code = match
-                    .replace(/`{3}([a-z0-9])*\n/, match => {
-                        lang = match.replace(/(`|\n)/g, '');
-                        return '';
-                    })
-                    .replace(/\n/g, '§§§')
-                    .replace(/`/g, '')
-                    .replace(/\s+/g, ' ').trim();
-            return `<pre data-bind='code: "", type: "${lang}"'>${ko.utils.escape(code).replace(/§{3}/g, '<br />')}</pre>`;
-        });
-
-        /* inline code */
-        str = str.replace(/\`{1}?([^`]+)\`{1}/g, match => `<code>${match.replace(/`/g, '')}</code>`);
 
         /* bock quotes */
         str = str.replace(/(^(\n*(&gt;|>)) ?.+?)(\r?\n\r?\n)/gms, match => {// /^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
@@ -275,21 +304,23 @@ export class MarkDown {
         });
 
         // raw url
-        str = str.replace(MarkDown.Regexs.url, match => {
-            if (match.match(/^\d{1,}$/)) {
-                return match;
-            } else {
-                let url = match
-                    .replace(/(((&(amp;)*lt;|\<))|((&(amp;)*gt;|\>)))*/g, '');
+        //str = str.replace(MarkDown.Regexs.url, match => {
+        //    if (match.match(/^\d{1,}$/)) {
+        //        return match;
+        //    } else {
+        //        let url = match
+        //            .replace(/(((&(amp;)*lt;|\<))|((&(amp;)*gt;|\>)))*/g, '');
 
-                return `<a href="${(url.trim().indexOf('http') != 0 ? 'http://' : '') + url.trim()}">${url}</a>`;
-            }
-        });
+        //        return `<a href="${(url.trim().indexOf('http') != 0 ? 'http://' : '') + url.trim()}">${url}</a>`;
+        //    }
+        //});
 
         return str
             .replace(/\n/g, '§§§') // convert newline to special chars
             .replace(/§{3,}/g, '§§§') // remove multi break
-            .replace(/(§{3,}\<h(r|\d)|h(r|\d)\>§{3,})/g, match => match.replace(/§{3,}/, ''))
-            .replace(/§{3,}/g, '<br />');
+            .replace(/((§{3,}\<h(r|\d))|(h(r|\d)(\/*)\>§{3,}))/g, match => match.replace(/§{3,}/g, ''))
+            .replace(/(pre\>§{3,})/g, match => match.replace(/§{3,}/, ''))
+            .replace(/§{3,}/g, '<br />')
+            .replace(/§{1}/g, '');
     };
 }
