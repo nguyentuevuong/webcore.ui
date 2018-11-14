@@ -63,7 +63,7 @@ export class MarkDown {
             if (lang.match(/norender/)) {
                 return ko.utils.escape(match).replace(/norender(\s)*/, '');
             } else if (lang == 'raw') {
-                return `<pre>${code.replace(/[\#\`\-\_\=\*\>\<\/\~\[\]\(\)]/g, match => '§' + ko.utils.escape(match).replace(/\n/g, '§§§').replace(/§{3}/g, '<br />'))}</pre>`;
+                return `<pre class="pretty-print">${code.replace(/[\#\`\-\_\=\*\>\<\/\~\[\]\(\)]/g, match => '§' + ko.utils.escape(match).replace(/\n/g, '§§§').replace(/§{3}/g, '<br />'))}</pre>`;
             }
 
             return `<pre data-bind='code: "", type: "${lang}"'>${ko.utils.escape(code).replace(/§{3}/g, '<br />')}</pre>`;
