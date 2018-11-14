@@ -63,7 +63,7 @@ export class MarkDown {
             if (lang.match(/norender/)) {
                 return ko.utils.escape(match).replace(/norender(\s)*/, '');
             } else if (lang == 'raw') {
-                return `<pre class="pretty-print">${code.replace(/[\#\`\-\_\=\*\>\<\/\~\[\]\(\)]/g, match => '§' + ko.utils.escape(match).replace(/\n/g, '§§§').replace(/§{3}/g, '<br />'))}</pre>`;
+                return `<pre class="pretty-print">${code.replace(/[\#\`\-\_\=\*\>\<\/\~\[\]\(\)\|]/g, match => '§' + ko.utils.escape(match).replace(/\n/g, '§§§').replace(/§{3}/g, '<br />'))}</pre>`;
             }
 
             return `<pre data-bind='code: "", type: "${lang}"'>${ko.utils.escape(code).replace(/§{3}/g, '<br />')}</pre>`;
@@ -106,7 +106,7 @@ export class MarkDown {
             for (var j = 0; j <= 1; j++) {
                 let m = (j == 0 ? '_' : '*'),
                     regx = new RegExp(`([${m}]{${i},})([^(${m})]+)\\1`, 'g'),
-                    tags = i == 3 ? ['<b><i>', '</i></b>'] : i == 2 ? ['<i>', '</i>'] : ['<b>', '</b>'];
+                    tags = i == 3 ? ['<b><i>', '</i></b>'] : i == 2 ? ['<b>', '</b>'] : ['<i>', '</i>'];
 
                 str = str.replace(regx, match => {
                     if (match.match(new RegExp(`(§\\${m})$`))) {
@@ -185,44 +185,50 @@ export class MarkDown {
 
         /* tables */
         str = str.replace(MarkDown.Regexs.tables, match => {
-            let rows = match
-                .split(/\n/g)
-                .filter(f => !!f)
-                .map(m => m.trim()),
-                align = [].slice.call(rows)
-                    .filter((r: string) => !!r.match(/^(-|_|:)(-|_|:|\|)+(-|_|:)$/g))[0],
-                cols: Array<{
-                    align: string
-                }> = align.split(/\|/g).map((m: string) => {
-                    m = m.trim();
+            if (match.match(/\:norender\:/)) {
+                return match
+                    .replace(/\:norender\:/, '')
+                    .replace(/[\#\`\-\_\=\*\>\<\/\~\[\]\(\)]/g, match => '§' + match);
+            } else {
+                let rows = match
+                    .split(/\n/g)
+                    .filter(f => !!f)
+                    .map(m => m.trim()),
+                    align = [].slice.call(rows)
+                        .filter((r: string) => !!r.match(/^(-|_|:)(-|_|:|\|)+(-|_|:)$/g))[0],
+                    cols: Array<{
+                        align: string
+                    }> = align.split(/\|/g).map((m: string) => {
+                        m = m.trim();
 
-                    if (m.indexOf(':') == 0 && m.lastIndexOf(':') == m.length - 1) {
-                        return { align: 'center' }
-                    } else if (m.indexOf(':') == 0) {
-                        return { align: 'left' };
-                    } else if (m.indexOf(':') == m.length - 1) {
-                        return { align: 'right' };
+                        if (m.indexOf(':') == 0 && m.lastIndexOf(':') == m.length - 1) {
+                            return { align: 'center' }
+                        } else if (m.indexOf(':') == 0) {
+                            return { align: 'left' };
+                        } else if (m.indexOf(':') == m.length - 1) {
+                            return { align: 'right' };
+                        }
+
+                        return { align: '' };
+                    }),
+                    html: Array<string> = ['<table class="table table-bordered"><thead>'];
+
+                [].slice.call(rows).forEach((row: string) => {
+                    let _cols = row
+                        .split(/\|/g)
+                        .map(m => ({ name: m.trim() }));
+
+                    if (row.match(/^(-|_|:)(-|_|:|\|)+(-|_|:)$/g)) {
+                        html.push('</thead><tbody>');
+                    } else {
+                        let body = html.indexOf('</thead><tbody>') > -1;
+                        html.push(`<tr>${_cols.map((m: any, index: number) => `<t${body ? 'd' : 'h'} align="${(cols[index] || { align: '' }).align}">${m.name}</t${body ? 'd' : 'h'}>`).join('')}</tr>`)
                     }
+                });
 
-                    return { align: '' };
-                }),
-                html: Array<string> = ['<table class="table table-bordered"><thead>'];
-
-            [].slice.call(rows).forEach((row: string) => {
-                let _cols = row
-                    .split(/\|/g)
-                    .map(m => ({ name: m.trim() }));
-
-                if (row.match(/^(-|_|:)(-|_|:|\|)+(-|_|:)$/g)) {
-                    html.push('</thead><tbody>');
-                } else {
-                    let body = html.indexOf('</thead><tbody>') > -1;
-                    html.push(`<tr>${_cols.map((m: any, index: number) => `<t${body ? 'd' : 'h'} align="${(cols[index] || { align: '' }).align}">${m.name}</t${body ? 'd' : 'h'}>`).join('')}</tr>`)
-                }
-            });
-
-            html.push('</tbody></table>');
-            return html.join('');
+                html.push('</tbody></table>');
+                return html.join('');
+            }
         });
 
         /* mailto: */
