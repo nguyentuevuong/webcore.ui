@@ -276,13 +276,14 @@ export class MarkDown {
 
         // raw url
         str = str.replace(MarkDown.Regexs.url, match => {
-            let url = match.replace(/(((&(amp;)*lt;|\<))|((&(amp;)*gt;|\>)))*/g, '');
+            if (match.match(/^\d{1,}$/)) {
+                return match;
+            } else {
+                let url = match
+                    .replace(/(((&(amp;)*lt;|\<))|((&(amp;)*gt;|\>)))*/g, '');
 
-            if (url.trim().indexOf('http') != 0) {
-                url = 'http://' + url.trim();
+                return `<a href="${(url.trim().indexOf('http') != 0 ? 'http://' : '') + url.trim()}">${url}</a>`;
             }
-
-            return `${match.indexOf('\n') == 0 ? '\n' : ''}<a href="${url.trim()}">${" " + url.trim() + " "}</a>`;
         });
 
         return str
