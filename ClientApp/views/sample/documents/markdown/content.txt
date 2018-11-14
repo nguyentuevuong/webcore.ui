@@ -64,7 +64,11 @@ id|name|addr|desc
 -|-|-|-
 1|nguyentuevuong|nguyentrai-anthi-hungyen|admin
 
----
+Markdown | Less | Pretty
+---|---|---
+*Still* | `renders` | **nicely**
+1 | 2 | 3
+
 ###### Code
 ```typescript
 @handler({

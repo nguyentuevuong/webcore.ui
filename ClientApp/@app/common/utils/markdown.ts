@@ -43,6 +43,11 @@ export class MarkDown {
     static parse(str: string) {
         let refs: Array<{ [key: string]: string }> = [];
 
+        // convert return carier to newline charactor
+        str = str
+            .replace(/(\r)/g, '§§§')
+            .replace(/(§{3,}\n|\n§{3,})/g, '\n');
+
         /* horizontal line */
         str = str.replace(MarkDown.Regexs.hr, () => `<hr />`);
 
@@ -172,7 +177,7 @@ export class MarkDown {
 
                     return { align: '' };
                 }),
-                html: Array<string> = ['<br /><table class="table table-bordered"><thead>'];
+                html: Array<string> = ['<table class="table table-bordered"><thead>'];
 
             [].slice.call(rows).forEach((row: string) => {
                 let _cols = row
@@ -281,8 +286,9 @@ export class MarkDown {
         });
 
         return str
-            .replace(/\n/g, '§§§')
-            .replace(/(§{3,}\<h\d|h\d\>§{3,})/g, match => match.replace(/§{3,}/, ''))
+            .replace(/\n/g, '§§§') // convert newline to special chars
+            .replace(/§{3,}/g, '§§§') // remove multi break
+            .replace(/(§{3,}\<h(r|\d)|h(r|\d)\>§{3,})/g, match => match.replace(/§{3,}/, ''))
             .replace(/§{3,}/g, '<br />');
     };
 }
