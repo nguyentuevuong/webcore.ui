@@ -4,35 +4,35 @@
 > `Markdown` là một ngôn ngữ đánh dấu với cú pháp văn bản thô, được thiết kế để có thể dễ dàng chuyển thành HTML và nhiều định dạng khác sử dụng một công cụ cùng tên. Nó thường được dùng để tạo các tập tin readme, viết tin nhắn trên các diễn đàn, và tạo văn bản có định dạng bằng một trình biên tập văn bản thô.
 
 #### Sử dụng #{su-dung}
-> Tất cả các bài viết hướng dẫn ở trong hệ thống này sẽ được viết dưới dạng markdown (`md`) và đặt vào thư mục `contents` cùng cấp với `view` và `viewmodel`.
+> Tất cả các bài viết hướng dẫn ở trong hệ thống này sẽ được viết dưới dạng markdown (`md`) và đặt vào thư mục `contents` cùng cấp với `view` và `viewmodel` để biểu diễn hướng dẫn trong các mục: [Tài liệu hướng dẫn](/sample/documents/markdown), [Biểu tượng & màu sắc](/sample/uis/color), [Điều khiển sắp xếp](/sample/sortable/simple), [Điều khiển điều hướng](/sample/navigate/tab), [Điều khiển dạng nhập](/sample/input/text), [Điều khiển dạng chọn](/sample/selection/table).
 
 ## Cú pháp #{cu-phap}
 
 #### Headline
-> Để biểu thị một đường kẻ ngang (thẻ `<hr />`) ta chỉ cần sử dụng 3 ký tự (trở lên) `-` hoặc `=` liên tiếp trên một dòng văn bản.
+> Để biểu thị một đường kẻ ngang (thẻ `<hr />`) ta chỉ cần sử dụng 3 ký tự (trở lên) `-` hoặc `*` hoặc `=` liên tiếp trên một dòng văn bản.
 
+###### Mã
 ```raw
-Three or more...
+Ba ký tự hoặc hơn...
+Dấu trừ:
 ---
-Hyphens
+Dấu hoa thị:
 ***
-Asterisks
+Dấu gạch nối:
 ___
-Underscores
+Dấu bằng:
 ===
-As
 ```
-
-Three or more ...
+###### Kết quả
+Ba ký tự hoặc hơn...
+Dấu trừ:
 ---
-Hyphens
+Dấu hoa thị:
 ***
-Asterisks
+Dấu gạch nối:
 ___
-Underscores
+Dấu bằng:
 ===
-As
-
 
 #### Headers
 > Để biểu thị một thẻ header (`<h1>H1</h1>`, `<h2>H2</h2>`, `<h3>H3</h3>`, `<h4>H4</h4>`, `<h5>H5</h5>`, `<h6>H6</h6>`) ta sử dụng theo cú pháp `# tiêu đề #{id}`
@@ -54,29 +54,27 @@ As
 ##### H5 #{h5}
 ###### H6 #{h6}
 
----
 #### Đậm, nghiêng
 > Để hiển thị những ký tự đậm, nghiêng, gạch ngang ta viết như sau: `*nghiêng*` hoặc `_nghiêng_`, `**đậm**` hoặc `__đậm__`, `~~gạch ngang~~`
 
 ###### Mã
 ```raw
-Emphasis, aka italics, with *asterisks* or _underscores_.
+Để biểu thị chữ nghiêng, ta dùng *một cặp dấu sao* hoặc _một cặp dấu gạch nối_.
+Để biểu thị chữ đậm, ta dùng **hai cặp dấu sao** hoặc __hai cặp dấu gạch nối__.
+Để biểu thị chữ đậm + nghiêng, ta dùng ***ba cặp dấu sao*** hoặc ___ba cặp dấu gạch nối___.
 
-Strong emphasis, aka bold, with **asterisks** or __underscores__.
+Hoặc có thể kiết hợp như thế này để có **chữ nghiêng và _chữ đậm + nghiêng_** hay như thế này để có __chữ đậm và *chữ đậm + nghiêng*__
 
-Combined emphasis with **asterisks and _underscores_**.
-
-Strikethrough uses two tildes. ~~Scratch this~~.
+Để gạch giữa một khối chữ, ta dùng cặp dấu sau: ~~gạch giữa khối chữ này~~.
 ```
 ###### Kết quả
-Emphasis, aka italics, with *asterisks* or _underscores_.
+Để biểu thị chữ nghiêng, ta dùng *một cặp dấu sao* hoặc _một cặp dấu gạch nối_.
+Để biểu thị chữ đậm, ta dùng **hai cặp dấu sao** hoặc __hai cặp dấu gạch nối__.
+Để biểu thị chữ đậm + nghiêng, ta dùng ***ba cặp dấu sao*** hoặc ___ba cặp dấu gạch nối___.
 
-Strong emphasis, aka bold, with **asterisks** or __underscores__.
+Hoặc có thể kiết hợp như thế này để có **chữ nghiêng và _chữ đậm + nghiêng_** hay như thế này để có __chữ đậm và *chữ đậm + nghiêng*__
 
-Combined emphasis with **asterisks and _underscores_**.
-
-Strikethrough uses two tildes. ~~Scratch this.~~
-
+Để gạch giữa một khối chữ, ta dùng cặp dấu sau: ~~gạch giữa khối chữ này~~.
 
 #### Danh sách #{danh_sach}
 > Danh sách có 2 dạng, một là danh sách có sắp xếp `orderlist` hay `ol`, hai là danh sách không sắp xếp `unoderlist` hay `ul`.
@@ -155,16 +153,11 @@ Some text to show that the reference links can follow later.
 
 
 #### Thẻ mã (code) #{ma}
-> Để hiển thị một đoạn mã trong một dòng như `let a = 'universal';`, thì chỉ cần dùng cặp nháy sau:
-
-<pre>
-`norenderlet a = 'universal';`
-</pre>
-
+> Để hiển thị một đoạn mã trong một dòng như `let a = 'universal';`, thì chỉ cần dùng cặp nháy sau `norenderlet a = 'universal';`
 > Để hiển thị một đoạn mã trong nhiều dòng, thì viết như ví dụ bên dưới:
 
-<pre>
-```norender javascript
+###### Mã
+<pre class="pretty-print">```norender javascript
 var s = "JavaScript syntax highlighting";
 alert(s);
 ```
@@ -179,3 +172,43 @@ No language indicated, so no syntax highlighting.
 But let's throw in a <b>tag</b>.
 ```
 </pre>
+###### Kết quả
+```javascript
+var s = "JavaScript syntax highlighting";
+alert(s);
+```
+<pre class="pretty-print">s = "Python syntax highlighting"
+print s
+</pre>
+```html
+No language indicated, so no syntax highlighting. 
+But let's throw in a <b>tag</b>.
+```
+
+#### Bảng biểu #{table}
+> Để hiển thị một bảng biểu (`table`), ta có cấu trúc như sau:
+
+###### Mã
+<pre class="pretty-print">:norender:this | *left* | **center** | right
+-----|:-------|:--------:|------:
+with | sample | content  | for
+lorem| ipsum  | dolor    | sit
+sit  | amet   | sed      | do
+do   | eiusom | tempor   | with
+<br />
+:norender:id|name|addr|desc
+-|-|-|-
+1|nguyentuevuong|nguyentrai-anthi-hungyen|admin
+</pre>
+###### Kết quả
+
+this | *left* | **center** | right
+-----|:-------|:--------:|------:
+with | sample | content  | for
+lorem| ipsum  | dolor    | sit
+sit  | amet   | sed      | do
+do   | eiusom | tempor   | with
+
+id|name|addr|desc
+-|-|-|-
+1|nguyentuevuong|nguyentrai-anthi-hungyen|admin
