@@ -6,8 +6,8 @@ import {component} from '@app/common/ko';
     url: 'sample/date-picker',
     icon: 'fa fa-calendar',
     title: 'Date picker',
+    styles: require('./style.scss'),
     template: require('./date-picker.html')
 })
 export class DatePickerViewModel {
-    public date = ko.observable(new Date());
 }

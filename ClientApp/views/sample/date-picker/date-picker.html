@@ -1,75 +1,14 @@
-<div data-bind="ntsDatepicker: {
-    value: date,
-    events: {
-        change: () => {
-        },
-    },
-    configs: ko.observable({
-        require: true,
-        readonly: false,
-        enable: true,
-        showbtn: true,
-        columns: [
-            'col-md-2',
-            'col-md-4'
-        ],
-        constraint: '',
-        label: 'Date picker'
-    }),
-    options: ko.observable({
-        format: 'dd-mm-yyyy',
-        startDate: '09-10-1988',
-        endDate: '09-10-2090'
-    })
-}"></div>
+<div class="ko-moment-datepicker dropdown-menu show">
+    <div class="mm-years" data-bind="each: [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]">
+        <div class="mm-year" data-bind="text: $data"></div>
+    </div>
+    <div class="mm-months" data-bind="each: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']">
+        <div class="mm-month" data-bind="text: $data"></div>
+    </div>
+    <div class="mm-dates" data-bind="each: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]">
+        <div class="mm-day" data-bind="text: $data"></div>
+    </div>
+    <div class="mm-times">
 
-<div data-bind="ntsDatepicker: {
-    value: date,
-    events: {
-        change: () => {
-        },
-    },
-    configs: ko.observable({
-        require: false,
-        readonly: false,
-        enable: true,
-        showbtn: true,
-        columns: [
-            'col-md-2',
-            'col-md-4'
-        ],
-        constraint: '',
-        label: 'Date picker with startDate'
-    }),
-    options: ko.observable({
-        format: 'dd-mm-yyyy',
-        startDate: '09-10-1988'
-    })
-}"></div>
-
-<div data-bind="ntsDatepicker: {
-    value: date,
-    events: {
-        change: () => {
-        },
-    },
-    configs: ko.observable({
-        require: false,
-        readonly: false,
-        enable: true,
-        showbtn: true,
-        columns: [
-            'col-md-2',
-            'col-md-4'
-        ],
-        constraint: '',
-        label: 'Date picker with endDate'
-    }),
-    options: ko.observable({
-        format: 'dd/mm/yyyy',
-        endDate: '09-10-1988'
-    })
-}"></div>
-
-<pre data-bind="text: ko.toJSON($vm.date, null, 4)"></pre>
-
+    </div>
+</div>
