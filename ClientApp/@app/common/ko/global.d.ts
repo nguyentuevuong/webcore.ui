@@ -96,6 +96,12 @@ declare interface KnockoutObservableBooleanStatic {
     <T = boolean>(): KnockoutObservableBoolean;
 }
 
+declare interface KnockoutBindingHandlers {
+    i18n: KnockoutBindingHandler;
+    label: KnockoutBindingHandler;
+    init: KnockoutBindingHandler;
+}
+
 declare interface KnockoutObservableSelectionStatic {
     fn: KnockoutObservableFunctions<any>;
 
@@ -127,9 +133,25 @@ declare interface KnockoutUtils {
     extendBindingsAccessor: (accessor: () => any, prop: any) => any;
     extendAllBindingsAccessor: (accessor: KnockoutAllBindingsAccessor, prop: any) => KnockoutAllBindingsAccessor;
     dom: {
+        create: (tag: string, options?: { [key: string]: string | number }) => HTMLElement;
+        setAttr: (element: HTMLElement, key: string, value: string | number) => void;
+        removeAttr: (element: HTMLElement, key: string) => void;
         addClass: (element: HTMLElement, classCss: string) => void;
         removeClass: (element: HTMLElement, classCss: string) => void;
-    }
+        getScroll: (element: HTMLElement, side?: string) => number;
+    };
+    date: {
+        gmt: (year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number) => Date;
+        utc: (year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number) => Date;
+        addDays: (date: Date, day: number) => Date;
+        addMonths: (date: Date, month: number) => Date;
+        addYears: (date: Date, year: number) => Date;
+        addHours: (date: Date, hour: number) => Date;
+        addMinutes: (date: Date, minute: number) => Date;
+        addSeconds: (date: Date, second: number) => Date;
+        from: (date: Number | string, format?: string) => Date;
+        format: (date: Date, format?: string, utc?: boolean) => string;
+    };
 }
 
 declare interface KnockoutObservableError extends KnockoutObservableArray<KnockoutObservable<any>> {
@@ -138,4 +160,7 @@ declare interface KnockoutObservableError extends KnockoutObservableArray<Knocko
 
 declare interface KnockoutObservableRoute extends KnockoutObservableArray<any> {
     currentRoute: KnockoutObservable<any>;
+}
+
+declare interface KnockoutComponents {
 }
