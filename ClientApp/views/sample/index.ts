@@ -3,6 +3,8 @@ import '@views/sample/home';
 // group view by category
 import '@views/sample/documents';
 
+import '@views/sample/utils';
+
 import '@views/sample/uis';
 import '@views/sample/inputs';
 import '@views/sample/selections';
