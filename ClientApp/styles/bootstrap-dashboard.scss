@@ -1139,6 +1139,71 @@ pre {
     }
 }
 
+/* -- datepicker */
+
+[data-view="datepicker"] {
+    margin: 2px 0;
+    padding: 4px;
+    width: 19em;
+    cursor: pointer;
+    &.show {
+        display: block;
+    }
+    ul {
+        list-style: none;
+        &[data-view="controls"],
+        &[data-view="years"],
+        &[data-view="months"],
+        &[data-view="weeks"],
+        &[data-view="days"],
+        &[data-view="time"] {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            li {
+                text-align: center;
+                &[data-view="control prev"],
+                &[data-view="control next"] {
+                    width: 14.2858%;
+                    line-height: 1.8rem;
+                }
+                &[data-view="control current"] {
+                    width: 71.4284%;
+                    line-height: 1.8rem;
+                }
+                &[data-view="year"],
+                &[data-view="month"] {
+                    width: 25%;
+                    line-height: 2.5rem;
+                }
+                &[data-view="day"] {
+                    width: 14.2858%;
+                    line-height: 1.8rem;
+                }
+                &:hover {
+                    background-color: rgb(229, 242, 255);
+                }
+                &.picked {
+                    color: #39f;
+                    background-color: rgb(229, 242, 255);
+                }
+                &.current {
+                    color: #39f;
+                }
+                &.out {
+                    color: #e7e8e7;
+                }
+            }
+        }
+        &[data-view="weeks"] {
+            color: #a9a9a9;
+            margin-bottom: 3px;
+            border-bottom: 1px solid #e7e8e7;
+        }
+    }
+}
+
 /* -- fixed table -- */
 
 .fx-container {
