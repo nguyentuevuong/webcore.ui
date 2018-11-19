@@ -34,6 +34,15 @@ ko.utils.extend(ko.utils, {
 
         return () => ko.utils.extend(oldBindings, prop);
     },
+    removeEventHandler: (element: any, eventType: string | any, handler: (evt: any) => any) => {
+        element.removeEventListener(eventType, handler, false);
+    },
+    registerOnceEventHandler: (element: HTMLElement, eventType: string | any, handler: (evt: any) => any) => {
+        ko.utils.registerEventHandler(element, eventType, function handlerWrapper(evt: any) {
+            handler.apply(evt);
+            ko.utils.removeEventHandler(element, eventType, handlerWrapper);
+        });
+    },
     extendAllBindingsAccessor: (accessor: KnockoutAllBindingsAccessor, prop: any) => {
         let oldBindings = accessor();
 
@@ -243,15 +252,6 @@ ko.utils.extend(ko.utils, {
                     isoTime: "HH:MM:ss",
                     isoDateTime: "yyyy-mm-dd'T'HH:MM:ss",
                     isoUtcDateTime: "UTC:yyyy-mm-dd'T'HH:MM:ss'Z'"
-                }, i18n = {
-                    dayNames: [
-                        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
-                        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-                    ],
-                    monthNames: [
-                        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-                        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
-                    ]
                 };
 
             mask = String(masks[mask || ''] || mask || masks["default"]);
@@ -273,12 +273,12 @@ ko.utils.extend(ko.utils, {
                 } = {
                     d: d,
                     dd: pad(d),
-                    ddd: i18n.dayNames[D],
-                    dddd: i18n.dayNames[D + 7],
+                    ddd: ko.utils.date.dayNames[D],
+                    dddd: ko.utils.date.dayNames[D + 7],
                     m: m + 1,
                     mm: pad(m + 1),
-                    mmm: i18n.monthNames[m],
-                    mmmm: i18n.monthNames[m + 12],
+                    mmm: ko.utils.date.monthNames[m],
+                    mmmm: ko.utils.date.monthNames[m + 12],
                     yy: String(y).slice(2),
                     yyyy: y,
                     h: H % 12 || 12,
@@ -322,11 +322,7 @@ ko.utils.extend(ko.utils, {
                         }
                     }
                     return null;
-                },
-                monthNames = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
-                monthAbbreviations = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'),
-                dayNames = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'),
-                dayAbbreviations = new Array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+                };
 
             // If no format is specified, try a few common formats
             if (typeof (format) == "undefined" || format == null || format == "") {
@@ -402,9 +398,8 @@ ko.utils.extend(ko.utils, {
                 }
                 else if (token == "MMM" || token == "NNN") {
                     month = '0';
-                    var names = (token == "MMM" ? (monthNames.concat(monthAbbreviations)) : monthAbbreviations);
-                    for (var i = 0; i < names.length; i++) {
-                        var month_name = names[i];
+                    for (var i = 0; i < 12; i++) {
+                        var month_name = ko.utils.date.monthNames[i + (token == "MMM" ? 12 : 0)];
                         if (dateStr.substring(i_val, i_val + month_name.length).toLowerCase() == month_name.toLowerCase()) {
                             month = String((i % 12) + 1);
                             i_val += month_name.length;
@@ -416,9 +411,8 @@ ko.utils.extend(ko.utils, {
                     }
                 }
                 else if (token == "EE" || token == "E") {
-                    var names = (token == "EE" ? dayNames : dayAbbreviations);
-                    for (var i = 0; i < names.length; i++) {
-                        var day_name = names[i];
+                    for (var i = 0; i < 7; i++) {
+                        var day_name = ko.utils.date.dayNames[i + (token == "EE" ? 7 : 0)];
                         if (dateStr.substring(i_val, i_val + day_name.length).toLowerCase() == day_name.toLowerCase()) {
                             i_val += day_name.length;
                             break;
@@ -536,6 +530,28 @@ ko.utils.extend(ko.utils, {
             }
 
             return ko.utils.date.gmt(Number(year), Number(month), Number(date), Number(hh), Number(mm), Number(ss));
+        },
+        calendar(month: number, year: number) {
+            let utc = ko.utils.date.utc,
+                firstDate: Date = utc(year, month, 1),
+                startIndex: number = firstDate.getDay();
+
+            // set date to lastest saturday of preview month
+            ko.utils.date.addDays(firstDate, -(startIndex + 1));
+
+            return ko.utils.range(0, 41).map(() => ko.utils.date.addDays(firstDate, 1));
+        },
+        get dayNames() {
+            return [
+                "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+                "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+            ];
+        },
+        get monthNames() {
+            return [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+                "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+            ];
         }
     },
     dom: {

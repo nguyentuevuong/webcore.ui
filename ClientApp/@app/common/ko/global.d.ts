@@ -132,6 +132,8 @@ declare interface KnockoutUtils {
     setPrototypeOfOrExtend: (obj: KnockoutObservable<any>, proto: any) => KnockoutObservable<any>;
     extendBindingsAccessor: (accessor: () => any, prop: any) => any;
     extendAllBindingsAccessor: (accessor: KnockoutAllBindingsAccessor, prop: any) => KnockoutAllBindingsAccessor;
+    removeEventHandler: (element: any, eventType: any, handler: Function) => void;
+    registerOnceEventHandler: (element: HTMLElement, any: any, handler: Function) => void;
     dom: {
         create: (tag: string, options?: { [key: string]: string | number }) => HTMLElement;
         setAttr: (element: HTMLElement, key: string, value: string | number) => void;
@@ -151,6 +153,9 @@ declare interface KnockoutUtils {
         addSeconds: (date: Date, second: number) => Date;
         from: (date: Number | string, format?: string) => Date;
         format: (date: Date, format?: string, utc?: boolean) => string;
+        calendar: (month: number, year: number) => Array<Date>;
+        dayNames: Array<string>;
+        monthNames: Array<string>;
     };
 }
 
