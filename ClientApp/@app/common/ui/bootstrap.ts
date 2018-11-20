@@ -6,10 +6,14 @@ document.addEventListener("click", function (e) {
     // dropdown menu
     ((evt: MouseEvent) => {
         for (let node = evt.target as HTMLElement; node != document.body; node = node.parentNode as HTMLElement) {
-            if (node.getAttribute('data-dismiss') == "false") {
+            if (!node || !node.parentNode) {
+                break;
+            }
+            
+            if (ko.utils.dom.getAttr(node, 'data-dismiss') == "false") {
                 clicked = node;
                 break;
-            } else if (ko.utils.dom.hasClass(node, 'dropdown') || ko.utils.dom.hasClass(node, 'dropdown-toggle') || node.getAttribute('data-toggle') == "dropdown") {
+            } else if (ko.utils.dom.hasClass(node, 'dropdown') || ko.utils.dom.hasClass(node, 'dropdown-toggle') || ko.utils.dom.getAttr(node, 'data-toggle') == "dropdown") {
                 clicked = node;
                 break;
             }
@@ -21,10 +25,26 @@ document.addEventListener("click", function (e) {
                     let parent = element.parentNode as HTMLElement,
                         dropdown = parent.querySelector('.dropdown-menu') as HTMLElement | null;
 
+                    ko.utils.dom.addClass(parent, 'dropdown');
+                    ko.utils.dom.removeClass(parent, 'dropup');
+
                     if (dropdown) {
                         if (clicked == element) {
                             if (!ko.utils.dom.hasClass(dropdown, 'show')) {
                                 ko.utils.dom.addClass(dropdown, 'show');
+
+                                let scrollTop = window.scrollY,
+                                    scrollHeight = window.innerHeight,
+                                    offsetTop = dropdown.getBoundingClientRect().top,
+                                    offsetHeight = dropdown.offsetHeight;
+
+                                if (scrollTop + scrollHeight <= offsetTop + offsetHeight) {
+                                    ko.utils.dom.addClass(parent, 'dropup');
+                                    ko.utils.dom.removeClass(parent, 'dropdown');
+                                } else {
+                                    ko.utils.dom.addClass(parent, 'dropdown');
+                                    ko.utils.dom.removeClass(parent, 'dropup');
+                                }
                             } else {
                                 ko.utils.dom.removeClass(dropdown, 'show');
                             }

@@ -577,16 +577,16 @@ ko.utils.extend(ko.utils, {
             return element;
         },
         setAttr: (element: HTMLElement, key: string, value: string | number) => {
-            element.setAttribute(key, value.toString());
+            element && element.setAttribute && element.setAttribute(key, value.toString());
         },
         getAttr: (element: HTMLElement, key: string) => {
-            element.getAttribute(key);
+            return element && element.getAttribute && element.getAttribute(key);
         },
         removeAttr: (element: HTMLElement, key: string) => {
-            element.removeAttribute(key);
+            element && element.removeAttribute && element.removeAttribute(key);
         },
         hasClass: (element: HTMLElement, classCss: string) => {
-           return element.className && element.classList.contains(classCss.trim());
+            return element && element.className && element.classList.contains(classCss.trim());
         },
         addClass: (element: HTMLElement, classCss: Array<string> | string) => {
             if (element) {
