@@ -1,17 +1,15 @@
-<div class="ko-moment-datepicker dropdown-menu show">
-    <div class="mm-years" data-bind="each: [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]">
-        <div class="mm-year" data-bind="text: $data"></div>
-    </div>
-    <div class="mm-months" data-bind="each: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']">
-        <div class="mm-month" data-bind="text: $data"></div>
-    </div>
-    <div class="mm-dates" data-bind="each: ['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun']">
-            <div class="mm-day" data-bind="text: $data"></div>        
-    </div>
-    <div class="mm-dates" data-bind="each: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]">
-        <div class="mm-day" data-bind="text: $data"></div>
-    </div>
-    <div class="mm-times">
+<div data-view="datepicker" class="dropdown-menu show noselect">
+    <ul data-view="controls">
+        <li data-view="control prev">‹</li>
+        <li data-view="control current">November 2018</li>
+        <li data-view="control next">›</li>
+    </ul>
+    <!--<ul data-view="years" data-bind="each: [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]">
+        <li data-view="year" data-bind="text: $data"></li>
+    </ul>
+    <ul data-view="months" data-bind="months: $vm.month"></ul>-->
+    <ul data-bind="weeks"></ul>
 
-    </div>
+    <ul data-bind="day"></ul>
+    <!--<ul class="mm-times"></ul>-->
 </div>

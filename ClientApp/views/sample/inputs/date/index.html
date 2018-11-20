@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col-md-2">
+        <div class="dropdown">
+            <input class="form-control" type="text" data-toggle="dropdown" />
+            <div data-view="datepicker" class="dropdown-menu noselect">
+                <ul data-view="controls" data-dismiss="false">
+                    <li data-view="control prev">‹</li>
+                    <li data-view="control current">November 2018</li>
+                    <li data-view="control next">›</li>
+                </ul>
+                <!--<ul data-view="years" data-dismiss="false" data-bind="each: [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022]">
+                    <li data-view="year" data-bind="text: $data"></li>
+                </ul>
+                <ul data-view="months" data-dismiss="false" data-bind="months: $vm.month"></ul>-->
+                <ul data-bind="weeks" data-dismiss="false"></ul>
+                <ul data-bind="day"></ul>
+                <!--<ul class="mm-times"></ul>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div data-bind="date: date"></div>
