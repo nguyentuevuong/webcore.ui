@@ -585,6 +585,9 @@ ko.utils.extend(ko.utils, {
         removeAttr: (element: HTMLElement, key: string) => {
             element.removeAttribute(key);
         },
+        hasClass: (element: HTMLElement, classCss: string) => {
+           return element.className && element.classList.contains(classCss.trim());
+        },
         addClass: (element: HTMLElement, classCss: Array<string> | string) => {
             if (element) {
                 if (typeof classCss == 'string') {

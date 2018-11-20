@@ -139,6 +139,7 @@ declare interface KnockoutUtils {
         setAttr: (element: HTMLElement, key: string, value: string | number) => void;
         getAttr: (element: HTMLElement, key: string) => string;
         removeAttr: (element: HTMLElement, key: string) => void;
+        hasClass: (element: HTMLElement, classCss: string) => boolean;
         addClass: (element: HTMLElement, classCss: string) => void;
         removeClass: (element: HTMLElement, classCss: string) => void;
         getScroll: (element: HTMLElement, side?: string) => number;

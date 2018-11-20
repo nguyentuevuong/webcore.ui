@@ -1,9 +1,5 @@
 import { ko } from '@app/providers';
 
-function hasClass(element: HTMLElement | null, className: string) {
-    return element && element.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(element.className);
-}
-
 document.addEventListener("click", function (e) {
     let clicked: HTMLElement | null = null;
 
@@ -13,7 +9,7 @@ document.addEventListener("click", function (e) {
             if (node.getAttribute('data-dismiss') == "false") {
                 clicked = node;
                 break;
-            } else if (hasClass(node, 'dropdown') || hasClass(node, 'dropdown-toggle') || node.getAttribute('data-toggle') == "dropdown") {
+            } else if (ko.utils.dom.hasClass(node, 'dropdown') || ko.utils.dom.hasClass(node, 'dropdown-toggle') || node.getAttribute('data-toggle') == "dropdown") {
                 clicked = node;
                 break;
             }
@@ -27,7 +23,7 @@ document.addEventListener("click", function (e) {
 
                     if (dropdown) {
                         if (clicked == element) {
-                            if (!hasClass(dropdown, 'show')) {
+                            if (!ko.utils.dom.hasClass(dropdown, 'show')) {
                                 ko.utils.dom.addClass(dropdown, 'show');
                             } else {
                                 ko.utils.dom.removeClass(dropdown, 'show');
