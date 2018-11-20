@@ -137,6 +137,7 @@ declare interface KnockoutUtils {
     dom: {
         create: (tag: string, options?: { [key: string]: string | number }) => HTMLElement;
         setAttr: (element: HTMLElement, key: string, value: string | number) => void;
+        getAttr: (element: HTMLElement, key: string) => string;
         removeAttr: (element: HTMLElement, key: string) => void;
         addClass: (element: HTMLElement, classCss: string) => void;
         removeClass: (element: HTMLElement, classCss: string) => void;

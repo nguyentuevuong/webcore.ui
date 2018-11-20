@@ -579,6 +579,9 @@ ko.utils.extend(ko.utils, {
         setAttr: (element: HTMLElement, key: string, value: string | number) => {
             element.setAttribute(key, value.toString());
         },
+        getAttr: (element: HTMLElement, key: string) => {
+            element.getAttribute(key);
+        },
         removeAttr: (element: HTMLElement, key: string) => {
             element.removeAttribute(key);
         },
