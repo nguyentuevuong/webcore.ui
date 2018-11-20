@@ -1172,9 +1172,12 @@ pre {
                     width: 71.4284%;
                     line-height: 1.8rem;
                 }
-                &[data-view="year"],
-                &[data-view="month"] {
+                &[data-view="year"] {
                     width: 25%;
+                    line-height: 2.5rem;
+                }
+                &[data-view="month"] {
+                    width: 33.33333%;
                     line-height: 2.5rem;
                 }
                 &[data-view="day"] {
