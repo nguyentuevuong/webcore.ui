@@ -1,6 +1,8 @@
 // import external libs
-import 'popper.js';
-import 'bootstrap';
+//import 'popper.js';
+//import 'bootstrap';
+
+import '@app/common/ui/bootstrap';
 
 import { _, $, ko, crossroads, createBrowserHistory } from '@app/providers';
 
