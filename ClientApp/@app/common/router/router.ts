@@ -1,4 +1,4 @@
-import { _, ko, $ } from '@app/providers';
+import { _, ko } from '@app/providers';
 
 import { History } from 'history';
 import * as crossroads from 'crossroads';
@@ -17,13 +17,13 @@ import { lang, i18n, getText } from '@app/common/lang';
 export class Router {
     public currentRoute = ko.observableOrig<IComponent>({});
     private disposeHistory: () => void;
-    private clickEventListener: JQuery.EventHandlerBase<any, JQuery.Event<Document, any>>;
+    private clickEventListener: (evt: MouseEvent) => void;
 
     constructor(private history: History, basename: string) {
         let self = this;
 
         // extend NormAsObject
-        _.extend(crossroads, {
+        ko.utils.extend(crossroads, {
             normalizeFn: crossroads.NORM_AS_OBJECT
         });
 
@@ -47,7 +47,7 @@ export class Router {
             ko.clearError();
 
             // remove lastest matched url
-            _.extend(crossroads, {
+            ko.utils.extend(crossroads, {
                 _prevMatchedRequest: null
             });
         })
@@ -55,7 +55,8 @@ export class Router {
         Components.forEach(route => {
             if (route.url) {
                 crossroads.addRoute(route.url, (requestParams: any) => {
-                    let rmk = _.chain(requestParams).keys()
+                    let rmk = _(requestParams)
+                        .keys()
                         .map(k => Number(k))
                         .filter(k => _.isNumber(k))
                         .map(k => String(k))
@@ -68,7 +69,7 @@ export class Router {
                     self.currentRoute(ko.utils.extend({ component: route }, _.omit(requestParams, _.concat(rmk, ['request_', 'vals_']))));
 
                     // remove lastest bypassed url
-                    _.extend(crossroads, {
+                    ko.utils.extend(crossroads, {
                         _prevBypassedRequest: null
                     });
                 });
@@ -80,7 +81,7 @@ export class Router {
             crossroads.parse(location.pathname, [location.state]);
         });
 
-        this.clickEventListener = (evt: JQuery.Event<Document, null>) => {
+        this.clickEventListener = (evt: MouseEvent) => {
             let target: any = evt.currentTarget;
 
             if (target && target.tagName === 'A') {
@@ -95,7 +96,7 @@ export class Router {
             }
         };
 
-        $(document).on('click', 'a', self.clickEventListener);
+        ko.utils.registerEventHandler(document, 'click', self.clickEventListener);
 
         // Initialize Crossroads with starting location
         crossroads.parse(history.location.pathname);
@@ -108,7 +109,7 @@ export class Router {
                     title: HTMLElement | null = document.querySelector('head>title');
 
                 // change title of document
-                title!.innerText = _.has(route, 'component.title') ? getText(route.component!.title) : (route.url || '');
+                title!.innerText = ko.utils.has(route, 'component.title') ? getText(route.component!.title) : (route.url || '');
             }
         });
     }
@@ -126,6 +127,6 @@ export class Router {
 
         self.disposeHistory();
 
-        $(document).off('click', 'a', self.clickEventListener);
+        ko.utils.removeEventHandler(document, 'click', self.clickEventListener);
     }
 }
