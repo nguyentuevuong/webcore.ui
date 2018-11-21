@@ -13,9 +13,6 @@ import '@app/common/ko/observable';
 import { Components } from '@app/common/ko';
 import { menu } from '@app/common/utils/menu';
 
-// import components
-import '@app/common/ajax-ext';
-
 // import common control
 import '@app/common';
 import '@app/controls';

@@ -1,5 +1,5 @@
-import * as ko from 'knockout';
-import * as $ from 'jquery';
+import { ko } from '@app/providers';
+import { fetch } from '@app/common/http';
 
 import { component } from '@app/common/ko';
 
@@ -26,7 +26,12 @@ class SampleDropdownViewModel {
     constructor(params: any, element: HTMLElement) {
         let self = this;
 
-        $.getJSON('/json/employee.json', {}, self.employees);
+        fetch({
+            method: 'get',
+            url: '/json/employee.json'
+        }).then((data: any) => {
+            self.employees(data.response);
+        });
 
         self.employees.subscribe((data: Array<IEmployee>) => {
             self.employee(data[0]);

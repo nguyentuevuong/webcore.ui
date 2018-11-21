@@ -1,8 +1,6 @@
+import { _, ko } from '@app/providers';
+import { fetch } from '@app/common/http';
 import { component, IView, IDispose } from '@app/common/ko';
-
-import * as $ from 'jquery';
-import * as _ from 'lodash';
-import * as ko from 'knockout';
 
 @component({
     url: 'sample/employee/:id:',
@@ -45,15 +43,36 @@ export class SampleEmployeeViewModel implements IView, IDispose {
             employee.memo(key!.memo);
         });
 
-        $.getJSON('/json/gender.json', {}, self.genders);
-        $.getJSON('/json/position.json', {}, self.positions);
-        $.getJSON('/json/department.json', {}, self.departments);
 
-        $.getJSON('/json/employee.json', {}, (data: Array<IEmployee>) => {
-            self.employees(data);
+        fetch({
+            method: 'get',
+            url: '/json/gender.json'
+        }).then((data: any) => {
+            this.genders(data.response);
+        });
+
+        fetch({
+            method: 'get',
+            url: '/json/position.json'
+        }).then((data: any) => {
+            this.positions(data.response);
+        });
+
+        fetch({
+            method: 'get',
+            url: '/json/department.json'
+        }).then((data: any) => {
+            this.departments(data.response);
+        });
+
+        fetch({
+            method: 'get',
+            url: '/json/employee.json'
+        }).then((data: any) => {
+            self.employees(data.response);
 
             if (_.isNil(params.id)) {
-                employee._raw(_.first(data));
+                employee._raw(_.first(data.response));
             } else {
                 let id = Number(params.id);
 
@@ -63,7 +82,7 @@ export class SampleEmployeeViewModel implements IView, IDispose {
                     if (!_.isNil(emp)) {
                         employee._raw(emp);
                     } else {
-                        employee._raw(_.first(data));
+                        employee._raw(_.first(data.response));
                     }
                 }
             }

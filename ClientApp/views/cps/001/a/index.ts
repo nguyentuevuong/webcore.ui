@@ -1,5 +1,5 @@
-import * as $ from 'jquery';
-import * as ko from 'knockout';
+import { ko } from '@app/providers';
+import { fetch } from '@app/common/http';
 
 import { component } from '@app/common/ko';
 
@@ -15,7 +15,12 @@ export class Cps001aViewModel {
     listEmployee: KnockoutObservableArray<any> = ko.observableArray([]);
 
     constructor(params: any, private element: HTMLElement) {
-        $.getJSON('/json/employee.json', {}, this.listEmployee)
+        fetch({
+            method: 'get',
+            url: '/json/employee.json'
+        }).then((data: any) => {
+            this.listEmployee(data.response);
+        });
     }
 
     preventLog(abc: string) {

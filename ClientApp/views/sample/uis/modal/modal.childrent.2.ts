@@ -1,6 +1,5 @@
-import * as ko from 'knockout';
-import * as _ from 'lodash';
-
+import { _, ko } from '@app/providers';
+import { fetch } from '@app/common/http';
 import { component } from '@app/common/ko';
 
 @component({
@@ -12,7 +11,13 @@ import { component } from '@app/common/ko';
 export class SampleModalChildrent2ViewModel {
     listEmployee: KnockoutObservableArray<any> = ko.observableArray([]);
     constructor() {
-        $.getJSON('/json/employee.json', {}, this.listEmployee)
+
+        fetch({
+            method: 'get',
+            url: '/json/employee.json'
+        }).then((data: any) => {
+            this.listEmployee(data.response);
+        });
     }
 
     afterRender = () => {

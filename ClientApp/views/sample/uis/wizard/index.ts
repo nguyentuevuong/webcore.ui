@@ -1,4 +1,5 @@
-import { $, ko } from '@app/providers';
+import { ko } from '@app/providers';
+import { fetch } from '@app/common/http';
 import { component } from '@app/common/ko';
 
 @component({
@@ -14,7 +15,13 @@ export class SampleWizardViewModel {
     listEmployee: KnockoutObservableArray<any> = ko.observableArray([]);
 
     constructor(params: any, private element: HTMLElement) {
-        $.getJSON('/json/employee.json', {}, this.listEmployee)
+
+        fetch({
+            method: 'get',
+            url: '/json/employee.json'
+        }).then((data: any) => {
+            this.listEmployee(data.response);
+        });
     }
 }
 

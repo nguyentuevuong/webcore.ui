@@ -1,5 +1,6 @@
-import * as ko from 'knockout';
-import * as $ from 'jquery';
+import { _, ko } from '@app/providers';
+import { fetch } from '@app/common/http';
+
 import { component } from '@app/common/ko';
 
 @component({
@@ -14,8 +15,12 @@ export class SampleListboxViewModel {
 
     constructor(params: any, element: HTMLElement) {
         let self = this;
-        
-        $.getJSON('/json/employee.json', {}, self.employee.dataSources);
+        fetch({
+            method: 'get',
+            url: '/json/employee.json'
+        }).then((data: any) => {
+            self.employee.dataSources(data.response);
+        });
     }
 }
 

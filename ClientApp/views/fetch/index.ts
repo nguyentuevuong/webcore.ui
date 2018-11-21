@@ -1,5 +1,5 @@
-import * as ko from 'knockout';
-import * as $ from 'jquery';
+import { ko } from '@app/providers';
+import { fetch } from '@app/common/http';
 
 import { component } from '@app/common/ko';
 
@@ -31,14 +31,13 @@ export class FetchDataViewModel {
     public forecasts = ko.observableArray<IEmployee>();
 
     constructor() {
-        $.ajax({
-            url: '/json/employee.json',
-            data: {},
-            success: (data) => {
-                this.forecasts(data);
-            },
-            error: (msg) => {
-            }
+        fetch({
+            method: 'get',
+            url: '/json/employee.json'
+        }).then((data: any) => {
+            this.forecasts(data.response);
+        }).catch((rej: any) => {
+            console.log(rej);
         });
     }
 }
