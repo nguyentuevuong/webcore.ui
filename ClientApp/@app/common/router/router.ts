@@ -82,16 +82,26 @@ export class Router {
         });
 
         this.clickEventListener = (evt: MouseEvent) => {
-            let target: any = evt.currentTarget;
+            let target: HTMLElement = evt.target as HTMLElement,
+                clickPrevent = (anchor: HTMLAnchorElement) => {
+                    let href = anchor.getAttribute('href');
 
-            if (target && target.tagName === 'A') {
-                let href = target.getAttribute('href');
+                    if (href!.indexOf(`${basename}/`) === 0) {
+                        history.push(href!.substring(basename.length));
+                        evt.preventDefault();
+                    } else if (href == "#") {
+                        evt.preventDefault();
+                    }
+                };
 
-                if (href!.indexOf(`${basename}/`) === 0) {
-                    history.push(href!.substring(basename.length));
-                    evt.preventDefault();
-                } else if (href == "#") {
-                    evt.preventDefault();
+            if (target) {
+                if (target.tagName === 'A') {
+                    clickPrevent(target as HTMLAnchorElement);
+                } else {
+                    target = target.closest('a') as HTMLElement;
+                    if (target) {
+                        clickPrevent(target as HTMLAnchorElement);
+                    }
                 }
             }
         };
@@ -109,7 +119,9 @@ export class Router {
                     title: HTMLElement | null = document.querySelector('head>title');
 
                 // change title of document
-                title!.innerText = ko.utils.has(route, 'component.title') ? getText(route.component!.title) : (route.url || '');
+                if (title) {
+                    title.innerText = !!ko.utils.get(route, 'component.title') ? getText(route.component.title) : (route.url || '');
+                }
             }
         });
     }
@@ -127,6 +139,7 @@ export class Router {
 
         self.disposeHistory();
 
+        // remove 
         ko.utils.removeEventHandler(document, 'click', self.clickEventListener);
     }
 }
