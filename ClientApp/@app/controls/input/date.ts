@@ -3,9 +3,16 @@ import { handler } from '@app/common/ko';
 import * as template from '@app/templates';
 
 @handler({
-    bindingName: 'months',
+    bindingName: 'date',
     resources: {
         en: {
+            'sunday': 'Sun',
+            'monday': 'Mon',
+            'tuesday': 'Tue',
+            'wednesday': 'Wed',
+            'thursday': 'Thu',
+            'friday': 'Fri',
+            'saturday': 'Sat',
             'january': 'Jan',
             'february': 'Feb',
             'march': 'Mar',
@@ -20,6 +27,13 @@ import * as template from '@app/templates';
             'december': 'Dec'
         },
         vi: {
+            'sunday': 'CN',
+            'monday': 'Th2',
+            'tuesday': 'Th3',
+            'wednesday': 'Th4',
+            'thursday': 'Th5',
+            'friday': 'Th6',
+            'saturday': 'Th7',
             'january': 'Tháng 1',
             'february': 'Tháng 2',
             'march': 'Tháng 3',
@@ -35,115 +49,69 @@ import * as template from '@app/templates';
         }
     }
 })
-export class MonthsInYearBindingHandler implements KnockoutBindingHandler {
-    init = (element: HTMLElement, valueAccessor: () => KnockoutObservable<number>, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let obser = valueAccessor();
-
-        ko.utils.dom.setAttr(element, 'data-view', 'months');
-
-        ko.utils.arrayForEach(ko.utils.date.monthNames, (item: string, index: number) => {
-            if (index < 12) {
-                element.appendChild(ko.utils.dom.create('li', {
-                    'data-view': 'month',
-                    'data-bind': `i18n: '${item}', css: $classCss(${index}), click: $month.bind($data, ${index})`
-                }));
-            }
-        });
-
-        ko.applyBindingsToDescendants({
-            $month: (month: number) => {
-                if (obser() !== month) {
-                    obser(month);
-                } else {
-                    obser.valueHasMutated!();
-                }
-            },
-            $classCss: (month: number) => ko.toJS(obser) == month ? 'picked' : ''
-        }, element);
-
-        return { controlsDescendantBindings: true };
-    }
-}
-
-@handler({
-    bindingName: 'weeks',
-    resources: {
-        en: {
-            'sunday': 'Sun',
-            'monday': 'Mon',
-            'tuesday': 'Tue',
-            'wednesday': 'Wed',
-            'thursday': 'Thu',
-            'friday': 'Fri',
-            'saturday': 'Sat'
-        },
-        vi: {
-            'sunday': 'CN',
-            'monday': 'Th2',
-            'tuesday': 'Th3',
-            'wednesday': 'Th4',
-            'thursday': 'Th5',
-            'friday': 'Th6',
-            'saturday': 'Th7'
-        }
-    }
-})
-export class DaysInWeekBindingHandler implements KnockoutBindingHandler {
-    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        ko.utils.dom.setAttr(element, 'data-view', 'weeks');
-
-        ko.utils.arrayForEach(ko.utils.date.dayNames, (item: string, index: number) => {
-            if (index < 7) {
-                let date = ko.utils.dom.create('li', { 'data-view': 'day', 'data-bind': `i18n: '${item}'` });
-                element.appendChild(date);
-            }
-        });
-
-        ko.applyBindingsToDescendants({}, element);
-
-        return { controlsDescendantBindings: true };
-    }
-}
-
-
-@handler({
-    bindingName: 'day'
-})
-export class DaysInMonthBindingHandler implements KnockoutBindingHandler {
-    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        ko.utils.dom.setAttr(element, 'data-view', 'days');
-
-        ko.utils.arrayForEach(ko.utils.date.calendar(11, 2018), (_date: Date, index: number) => {
-            let item = ko.utils.dom.create('li', {
-                'data-view': 'day',
-                'html': _date.getDate()
-            });
-
-            console.log(ko.utils.date.format(_date, "default"));
-
-            if (_date.getMonth() != 10) {
-                ko.utils.dom.addClass(item, 'out');
-            }
-
-            element.appendChild(item);
-        });
-
-        ko.applyBindingsToDescendants({}, element);
-
-        return { controlsDescendantBindings: true };
-    }
-}
-
-@handler({
-    bindingName: 'date'
-})
 export class DateEditorBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let mode = MODE.DAYS,
-            control: ValidationObservable<any> = valueAccessor();
+        let mode = ko.observableOrig(MODE.DAYS),
+            dom = ko.utils.dom,
+            rng = ko.utils.range(0, 11),
+            dow = ko.utils.date.dayNames,
+            moy = ko.utils.date.monthNames,
+            control: ValidationObservable<any> = valueAccessor(),
 
-        ko.utils.setHtml(element, template.input);
-        ko.utils.dom.addClass(element, 'form-group row');
+            $colLabel = dom.create('div', { 'class': 'col-md-12' }),
+            $colInput = dom.create('div', { 'class': 'col-md-12' }),
+            $ddCont = dom.create('div', { 'class': 'dropdown' }),
+
+            $input = dom.create('input', { 'type': 'text', 'class': 'form-control', 'data-toggle': 'dropdown' }) as HTMLInputElement,
+            $dropdown = dom.create('div', { 'data-view': 'datepicker', 'class': 'dropdown-menu noselect' }),
+
+            $controls = dom.create('ul', { 'data-view': 'controls', 'data-dismiss': 'false' }),
+            $prevCtrl = dom.create('li', { 'data-view': 'control prev', 'html': '‹' }),
+            $currCtrl = dom.create('li', { 'data-view': 'control current', 'html': 'October 2018' }),
+            $nextCtrl = dom.create('li', { 'data-view': 'control next', 'html': '›' }),
+            $years = dom.create('ul', { 'data-view': 'years', 'data-dismiss': 'false' }),
+            $months = dom.create('ul', { 'data-view': 'months', 'data-dismiss': 'false' }),
+            $weeks = dom.create('ul', { 'data-view': 'weeks', 'data-dismiss': 'false' }),
+            $days = dom.create('ul', { 'data-view': 'days' });
+
+        element.appendChild($colLabel);
+        element.appendChild($colInput);
+        $colInput.appendChild($ddCont);
+
+        $ddCont.appendChild($input);
+        $ddCont.appendChild($dropdown);
+
+        $dropdown.appendChild($controls);
+
+        $controls.appendChild($prevCtrl);
+        $controls.appendChild($currCtrl);
+        $controls.appendChild($nextCtrl);
+
+        $dropdown.appendChild($years);
+        $dropdown.appendChild($months);
+        $dropdown.appendChild($weeks);
+        $dropdown.appendChild($days);
+
+        rng.forEach((index: number) => {
+            $years.appendChild(dom.create('li', { 'data-view': 'year', 'data-bind': `i18n: '${index}'` }));
+            $months.appendChild(dom.create('li', { 'data-view': 'month', 'data-bind': `i18n: '${moy[index + 12].toLowerCase()}'` }));
+        });
+
+        ko.utils.range(0, 6).forEach((index: number) => {
+            $weeks.appendChild(dom.create('li', { 'data-view': 'day', 'data-bind': `i18n: '${dow[index + 7].toLowerCase()}'` }))
+        });
+
+        ko.utils.date.calendar(11, 2018)
+            .forEach((day: Date, index: number) => {
+                let domDay = dom.create('li', { 'data-view': 'day', 'data-bind': `i18n: '${day.getDate()}'` });
+                $days.appendChild(domDay);
+
+                ko.utils.registerEventHandler(domDay, 'click', (evt: MouseEvent) => {
+                    $input.value = ko.utils.date.format(day, 'dd/mm/yyyy');
+                });
+            });
+
+        dom.addClass(element, 'form-group row');
 
         control
             .extend({
@@ -172,6 +140,32 @@ export class DateEditorBindingHandler implements KnockoutBindingHandler {
                 control: control
             }
         }, element);
+
+        ko.computed({
+            read: () => {
+                let _mode = ko.toJS(mode);
+
+                [].slice.call($dropdown.childNodes)
+                    .forEach((child: HTMLElement) => {
+                        if (child != $controls) {
+                            $dropdown.removeChild(child);
+                        }
+                    });
+
+                switch (_mode) {
+                    case MODE.DAYS:
+                        $dropdown.appendChild($weeks);
+                        $dropdown.appendChild($days);
+                        break;
+                    case MODE.MONTHS:
+                        $dropdown.appendChild($months);
+                        break;
+                    case MODE.YEARS:
+                        $dropdown.appendChild($years);
+                        break;
+                }
+            }
+        })
 
         return { controlsDescendantBindings: true };
     }
