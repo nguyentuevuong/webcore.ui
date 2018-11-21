@@ -9,7 +9,7 @@ document.addEventListener("click", function (e) {
             if (!node || !node.parentNode) {
                 break;
             }
-            
+
             if (ko.utils.dom.getAttr(node, 'data-dismiss') == "false") {
                 clicked = node;
                 break;
@@ -60,6 +60,41 @@ document.addEventListener("click", function (e) {
                 .forEach((element: HTMLElement) => {
                     ko.utils.dom.removeClass(element, 'show');
                 });
+        }
+    })(e);
+
+    // tabs
+    ((evt: MouseEvent) => {
+        let target = evt.target as HTMLElement;
+
+        if (ko.utils.dom.hasClass(target, 'nav-link') && !ko.utils.dom.hasClass(target, 'disabled')) {
+            let parent = target.closest('.nav'),
+                href = ko.utils.dom.getAttr(target, 'href');
+
+            if (parent) {
+                [].slice.call(parent.querySelectorAll('.nav-link'))
+                    .forEach((element: HTMLElement) => {
+                        ko.utils.dom.removeClass(element, 'active');
+                    });
+
+                ko.utils.dom.addClass(target, 'active');
+
+                let siblings = parent.nextSibling as HTMLElement;
+
+                if (siblings) {
+                    let tab = siblings.querySelector(href) as HTMLElement;
+
+                    [].slice.call(siblings.querySelectorAll('.tab-pane'))
+                        .forEach((element: HTMLElement) => {
+                            if (tab == element) {
+                                ko.utils.dom.addClass(element, 'show active');
+                            } else {
+                                ko.utils.dom.removeClass(element, 'show active');
+                            }
+                        });
+                }
+            }
+            evt.preventDefault();
         }
     })(e);
 

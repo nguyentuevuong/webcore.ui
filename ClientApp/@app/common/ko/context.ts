@@ -627,7 +627,7 @@ ko.utils.extend(ko.utils, {
                 }
             }
         },
-        getScroll(element: HTMLElement, side: string = 'top') {
+        getScroll: (element: HTMLElement, side: string = 'top') => {
             if (element.nodeName === 'BODY' || element.nodeName === 'HTML') {
                 let html = element.ownerDocument!.documentElement,
                     scrollingElement = element.ownerDocument!.scrollingElement || html;
@@ -638,6 +638,12 @@ ko.utils.extend(ko.utils, {
             }
 
             return side === 'top' ? element.scrollTop : element.scrollLeft;
+        },
+        parent: (element: HTMLElement) => {
+            return element.parentNode as HTMLElement;
+        },
+        parents: (element: HTMLElement, helper: string) => {
+            return element.closest(helper) as HTMLElement;
         }
     }
 });
