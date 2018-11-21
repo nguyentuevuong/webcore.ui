@@ -327,9 +327,9 @@ ko.utils.extend(ko.utils, {
             // If no format is specified, try a few common formats
             if (typeof (format) == "undefined" || format == null || format == "") {
                 let preferAmericanFormat = true,
-                    generalFormats = new Array('y-M-d', 'MMM d, y', 'MMM d,y', 'y-MMM-d', 'd-MMM-y', 'MMM d', 'MMM-d', 'd-MMM'),
-                    monthFirst = new Array('M/d/y', 'M-d-y', 'M.d.y', 'M/d', 'M-d'),
-                    dateFirst = new Array('d/M/y', 'd-M-y', 'd.M.y', 'd/M', 'd-M'),
+                    generalFormats = new Array('y-m-d', 'mmm d, y', 'mmm d,y', 'y-mmm-d', 'd-mmm-y', 'mmm d', 'mmm-d', 'd-mmm'),
+                    monthFirst = new Array('m/d/y', 'm-d-y', 'm.d.y', 'm/d', 'm-d'),
+                    dateFirst = new Array('d/m/y', 'd-m-y', 'd.m.y', 'd/m', 'd-m'),
                     checkList = new Array(generalFormats, preferAmericanFormat ? monthFirst : dateFirst, preferAmericanFormat ? dateFirst : monthFirst);
 
                 for (var i = 0; i < checkList.length; i++) {
@@ -396,10 +396,10 @@ ko.utils.extend(ko.utils, {
                         }
                     }
                 }
-                else if (token == "MMM" || token == "NNN") {
+                else if (token == "mmm" || token == "NNN") {
                     month = '0';
                     for (var i = 0; i < 12; i++) {
-                        var month_name = ko.utils.date.monthNames[i + (token == "MMM" ? 12 : 0)];
+                        var month_name = ko.utils.date.monthNames[i + (token == "mmm" ? 12 : 0)];
                         if (dateStr.substring(i_val, i_val + month_name.length).toLowerCase() == month_name.toLowerCase()) {
                             month = String((i % 12) + 1);
                             i_val += month_name.length;
@@ -419,7 +419,7 @@ ko.utils.extend(ko.utils, {
                         }
                     }
                 }
-                else if (token == "MM" || token == "M") {
+                else if (token == "mm" || token == "m") {
                     month = getInt(dateStr, i_val, token.length, 2);
                     if (month == null || (Number(month) < 1) || (Number(month) > 12)) {
                         return null;
@@ -463,7 +463,7 @@ ko.utils.extend(ko.utils, {
                     i_val += hh.length;
                     hh = String(Number(hh) - 1);
                 }
-                else if (token == "mm" || token == "m") {
+                else if (token == "MM" || token == "M") {
                     mm = getInt(dateStr, i_val, token.length, 2);
                     if (mm == null || (Number(mm) < 0) || (Number(mm) > 59)) {
                         return null;
