@@ -14,8 +14,8 @@ export class I18nBindingHandler implements KnockoutBindingHandler {
                 let i18n: string | Ii18n = ko.toJS(valueAccessor()),
                     params: { [key: string]: string } = ko.toJS(allBindingsAccessor().params);
 
-                if (typeof i18n == 'string') {
-                    element.innerText = i18text(i18n, params);
+                if (['number', 'string'].indexOf(typeof i18n) > -1) {
+                    element.innerText = i18text(i18n.toString(), params);
                 } else {
                     _.forIn(i18n, (resource: any, prop: any) => {
                         if (_.isString(resource)) {

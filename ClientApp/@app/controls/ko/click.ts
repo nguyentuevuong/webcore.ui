@@ -20,9 +20,9 @@ export class SafeClickBindingHandler implements KnockoutBindingHandler {
                     let currentPreventTime: number = new Date().getTime(),
                         time: number = currentPreventTime - lastPreventTime;
 
-                    if (time > (timeClick || 500)) {
+                    if (time > (timeClick == 0 ? 0 : timeClick || 500)) {
                         //pass through the arguments
-                        originalFunction && originalFunction.apply(viewModel, _.concat([viewModel], arguments));
+                        originalFunction && originalFunction.apply(viewModel, arguments);
                     }
 
                     lastPreventTime = new Date().getTime();
