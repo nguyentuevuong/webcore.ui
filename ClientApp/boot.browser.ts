@@ -44,7 +44,6 @@ if (module.hot) {
 // for debugger
 ko.utils.extend(window, {
     _: _,
-    $: $,
     ko: ko,
     routes: Components,
     crossroads: crossroads,
