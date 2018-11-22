@@ -1,6 +1,6 @@
 export const i18n: {
     [lang: string]: {
-        [key: string]: string
+        [key: string]: string;
     }
 } = {
     'en': {

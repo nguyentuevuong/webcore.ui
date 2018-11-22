@@ -1,5 +1,4 @@
-import { _, ko } from '@app/providers';
-
+import { ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 import { Ii18n, i18text } from '@app/common/lang';
 
@@ -8,23 +7,24 @@ import { Ii18n, i18text } from '@app/common/lang';
     bindingName: 'i18n'
 })
 export class I18nBindingHandler implements KnockoutBindingHandler {
-    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
+    init = (element: HTMLElement, valueAccessor: () => KnockoutObservable<Ii18n | string | number> | Ii18n | string | number, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
         ko.computed({
             read: () => {
-                let i18n: string | Ii18n = ko.toJS(valueAccessor()),
+                let i18n: number | string | Ii18n = ko.toJS(valueAccessor()),
                     params: { [key: string]: string } = ko.toJS(allBindingsAccessor().params);
 
                 if (['number', 'string'].indexOf(typeof i18n) > -1) {
                     element.innerText = i18text(i18n.toString(), params);
                 } else {
-                    _.forIn(i18n, (resource: any, prop: any) => {
-                        if (_.isString(resource)) {
-                            if (prop == 'html') {
-                                element.innerHTML = i18text(resource, params);
-                            } else if (prop == 'text') {
-                                element.innerText = i18text(resource, params);
+
+                    ko.utils.objectForEach(i18n, (key: string, value: string) => {
+                        if (typeof value === 'string') {
+                            if (key == 'html') {
+                                element.innerHTML = i18text(value, params);
+                            } else if (key == 'text') {
+                                element.innerText = i18text(value, params);
                             } else {
-                                element.setAttribute(prop, i18text(resource, params));
+                                element.setAttribute(key, i18text(value, params));
                             }
                         }
                     });
