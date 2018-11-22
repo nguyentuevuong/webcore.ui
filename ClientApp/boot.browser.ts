@@ -4,7 +4,7 @@
 
 import '@app/common/ui/bootstrap';
 
-import { _, $, ko, crossroads, createBrowserHistory } from '@app/providers';
+import { _, ko, crossroads, createBrowserHistory } from '@app/providers';
 
 // import external observable
 import '@app/common/ko/context';
