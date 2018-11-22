@@ -142,6 +142,7 @@ declare interface KnockoutUtils {
         hasClass: (element: HTMLElement, classCss: string) => boolean;
         addClass: (element: HTMLElement, classCss: string) => void;
         removeClass: (element: HTMLElement, classCss: string) => void;
+        toggleClass: (element: HTMLElement, classCss: Array<string> | string) =>  void;
         getScroll: (element: HTMLElement, side?: string) => number;
         parent: (element: HTMLElement) => HTMLElement;
         parents: (element: HTMLElement, helper: string) => HTMLElement;

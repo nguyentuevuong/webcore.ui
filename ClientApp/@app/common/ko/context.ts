@@ -627,6 +627,26 @@ ko.utils.extend(ko.utils, {
                 }
             }
         },
+        toggleClass: (element: HTMLElement, classCss: Array<string> | string) => {
+            if (element) {
+                if (typeof classCss == 'string') {
+                    if (classCss.indexOf(' ') == -1) {
+                        classCss = [classCss];
+                    } else {
+                        classCss = [].slice.call(classCss.split(/\s/));
+                    }
+                }
+
+                [].slice.call(classCss)
+                    .forEach((css: string) => {
+                        if (!ko.utils.dom.hasClass(element, css)) {
+                            ko.utils.dom.addClass(element, css);
+                        } else {
+                            ko.utils.dom.removeClass(element, css);
+                        }
+                    });
+            }
+        },
         getScroll: (element: HTMLElement, side: string = 'top') => {
             if (element.nodeName === 'BODY' || element.nodeName === 'HTML') {
                 let html = element.ownerDocument!.documentElement,

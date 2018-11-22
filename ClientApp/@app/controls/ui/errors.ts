@@ -1,5 +1,4 @@
-import * as ko from 'knockout';
-import * as $ from 'jquery';
+import { ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 
 @handler({
@@ -24,7 +23,7 @@ export class ErrorsControlBindingHandler implements KnockoutBindingHandler {
             soh = ko.computed({
                 read: () => {
                     let lste: Array<any> = ko.toJS(errors);
-                    
+
                     if (lste.length && ko.toJS(errors.showDialog)) {
                         element.classList.add('show');
                     } else {

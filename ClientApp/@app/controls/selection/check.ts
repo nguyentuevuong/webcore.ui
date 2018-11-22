@@ -1,4 +1,4 @@
-import { $, ko } from '@app/providers';
+import { ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 
 @handler({

@@ -1,4 +1,4 @@
-import { $, ko } from '@app/providers';
+import { ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 
 @handler({
@@ -6,11 +6,9 @@ import { handler } from '@app/common/ko';
 })
 export class NumberEditorBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let $element = $(element),
-            control: ValidationObservable<any> = valueAccessor();
+        let control: ValidationObservable<any> = valueAccessor();
 
-        $element
-            .addClass('form-group row');
+        ko.utils.dom.addClass(element, 'form-group row');
 
         control
             .extend({
@@ -23,13 +21,13 @@ export class NumberEditorBindingHandler implements KnockoutBindingHandler {
             });
 
         ko.bindingHandlers.component.init!(element, () => ({ name: 'input', params: { control: valueAccessor() } }), allBindingsAccessor, viewModel, bindingContext);
-       
+
         control.$raw!.subscribe((raw: any) => {
             // validate and rebind value to control at here
             control.checkError!(raw);
 
             if (!control.hasError!()) {
-                
+
             }
         });
 

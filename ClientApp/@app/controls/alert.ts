@@ -1,17 +1,15 @@
-import * as ko from "knockout";
-import * as $ from 'jquery';
+import { ko } from '@app/providers';
 import { handler } from "@app/common/ko";
 
 @handler({
     bindingName: 'alert'
 })
 export class AlertBindingHandler implements KnockoutBindingHandler {
-    init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+    init = (element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
         return { controlsDescendantBindings: true };
     }
-    update = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        var $element = $(element),
-            value = valueAccessor(),
+    update = (element: HTMLElement, valueAccessor: () => any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
+        var value = valueAccessor(),
             usedTemplateEngine = !value.template ? ko.nativeTemplateEngine.instance : null,
             userTemplate = ko.unwrap(value.template) || 'alertInner',
             template, data;
@@ -22,9 +20,9 @@ export class AlertBindingHandler implements KnockoutBindingHandler {
             data = value.data || { message: value.message };
 
             // ola lawal added this code to removeclassess for resulable alerts using hide show (issue #29)
-            $element.removeClass("alert-info alert-danger alert-success ");
+            ko.utils.dom.removeClass(element, "alert-info alert-danger alert-success ");
+            ko.utils.dom.addClass(element, 'alert fade in alert-' + (ko.unwrap(value.type) || 'info'));
 
-            $element.addClass('alert fade in').addClass('alert-' + (ko.unwrap(value.type) || 'info'));
         } else if (element.nodeType === (typeof Node !== 'undefined' && Node.COMMENT_NODE || 8)) {
             template = 'alert';
             data = {

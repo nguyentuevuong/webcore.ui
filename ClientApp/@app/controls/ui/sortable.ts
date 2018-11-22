@@ -1,7 +1,6 @@
-import * as ko from 'knockout';
-import * as $ from 'jquery';
-import 'jqueryui';
+//import 'jqueryui';
 
+/*import { $, ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 
 const ITEMKEY = "ko_sortItem",
@@ -471,4 +470,4 @@ export class DroppableBindingHandler implements KnockoutBindingHandler {
         //handle disposal
         ko.utils.domNodeDisposal.addDisposeCallback(element, () => $(element).droppable("destroy"));
     }
-}
+}*/

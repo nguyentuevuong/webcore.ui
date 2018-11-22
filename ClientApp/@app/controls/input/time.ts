@@ -1,21 +1,18 @@
 var IMask = require('imask');
 
-import { _, $, ko } from '@app/providers';
+import { _, ko } from '@app/providers';
 import { handler } from '@app/common/ko';
-
-import { time, clock } from '@app/common/utils';
+import { time } from '@app/common/utils';
 
 @handler({
     bindingName: 'time'
 })
 export class TimeEditorBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: KnockoutAllBindingsAccessor, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let $element = $(element),
-            control: ValidationObservable<any> = valueAccessor(),
+        let control: ValidationObservable<any> = valueAccessor(),
             type: { min: number, max: number } = ko.toJS(control.$type);
 
-        $element
-            .addClass('form-group row');
+        ko.utils.dom.addClass(element, 'form-group row');
 
         if (!type) {
             type = {

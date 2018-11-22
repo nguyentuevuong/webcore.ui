@@ -1,7 +1,5 @@
-import { _, ko, $ } from '@app/providers';
-
+import { _, ko } from '@app/providers';
 import { getText } from '@app/common/lang';
-
 import { handler, IComponent, Components } from '@app/common/ko';
 
 @handler({
@@ -10,14 +8,13 @@ import { handler, IComponent, Components } from '@app/common/ko';
 })
 export class ModalBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let $element = $(element),
-            accessor: any = valueAccessor(),
+        let accessor: any = valueAccessor(),
             params: any = ko.unwrap(accessor.params),
             viewName: string = ko.toJS(accessor.viewName),
             configs: IModalConfigs = ko.unwrap(accessor.configs) || {};
 
 
-        $element.on('click', () => {
+        /*$element.on('click', () => {
             if (_.isString(viewName) && !_.isEmpty(viewName)) {
                 let $modal = $('<div>', { 'class': 'modal fade', role: 'dialog', tabindex: -1 }),
                     $dialog = $('<div>', { 'class': 'modal-dialog', role: 'document' }), //modal-lg modal-dialog-centered
@@ -125,7 +122,7 @@ export class ModalBindingHandler implements KnockoutBindingHandler {
                         handle: ".modal-header"
                     });
             }
-        });
+        }); */
     }
 }
 

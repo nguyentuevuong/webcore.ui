@@ -1,10 +1,6 @@
-import * as $ from 'jquery';
-import * as _ from 'lodash';
-import * as ko from 'knockout';
-
+import { _, ko } from '@app/providers';
 import { component } from '@app/common/ko';
 import { Router } from '@app/common/router';
-
 import { menu, IMenu } from '@app/common/utils/menu';
 
 @component({
@@ -18,7 +14,7 @@ export class NavMenuViewModel {
 
     public keyword: KnockoutObservable<string> = ko.observable('');
 
-    constructor(params: { router: Router }) {
+    constructor(params: { router: Router }, private element: HTMLElement) {
         // This viewmodel doesn't do anything except pass through the 'route' parameter to the view.
         // You could remove this viewmodel entirely, and define 'nav-menu' as a template-only component.
         // But in most apps, you'll want some viewmodel logic to determine what navigation options appear.
@@ -36,10 +32,20 @@ export class NavMenuViewModel {
     }
 
     public toggleSample(model: any, evt: any) {
-        $('.fa-ud-chevron')
-            .toggleClass('fa-chevron-down')
-            .toggleClass('fa-chevron-up');
-        $('.nav-sample').toggleClass('d-none');
+        let self = this,
+            navsmps = self.element.querySelectorAll('.nav-sample'),
+            chevrons = self.element.querySelectorAll('.fa-ud-chevron');
+
+        [].slice.call(chevrons)
+            .forEach((chevron: HTMLElement) => {
+                ko.utils.dom.toggleClass(chevron, 'fa-chevron-up fa-chevron-down');
+            });
+
+        [].slice.call(navsmps)
+            .forEach((nav: HTMLElement) => {
+                ko.utils.dom.toggleClass(nav, 'd-none');
+            });
+
         evt.stopPropagation();
     }
 }

@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import { ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 
 @handler({

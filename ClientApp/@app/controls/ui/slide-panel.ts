@@ -1,4 +1,4 @@
-import { _, $, ko } from '@app/providers';
+import { _, ko } from '@app/providers';
 
 import { handler } from '@app/common/ko';
 import { lang, getText } from '@app/common/lang';
@@ -11,7 +11,7 @@ import { IComponent, Components } from '@app/common/ko';
 })
 export class SlidePanelBindingHandler implements KnockoutBindingHandler {
     init = (element: HTMLElement, valueAccessor: any, allBindingsAccessor: any, viewModel: any, bindingContext: KnockoutBindingContext) => {
-        let hide = true,
+        /*let hide = true,
             $element = $(element),
             accessor: any = valueAccessor(),
             params: any = ko.unwrap(accessor.params),
@@ -77,8 +77,7 @@ export class SlidePanelBindingHandler implements KnockoutBindingHandler {
         });
 
         // bind component to modal
-        ko.bindingHandlers['component'].init!($content[0], () => ({ name: viewName || 'no-component', params: params }), allBindingsAccessor, viewModel, bindingContext);
-
+        ko.bindingHandlers['component'].init!($content[0], () => ({ name: viewName || 'no-component', params: params }), allBindingsAccessor, viewModel, bindingContext);*/
         return { controlsDescendantBindings: true };
     }
 }

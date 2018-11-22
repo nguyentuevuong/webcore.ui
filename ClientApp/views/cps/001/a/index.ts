@@ -24,6 +24,11 @@ export class Cps001aViewModel {
     }
 
     preventLog(abc: string) {
-        $(this.element).find('#log').append($('<pre>', { text: abc + ': ' + new Date().getTime() }))
+        let self = this,
+            log = self.element.querySelector('#log');
+
+        if (log) {
+            ko.utils.setHtml(log, `<pre>${abc + new Date().getTime()}</pre>`);
+        }
     }
 }

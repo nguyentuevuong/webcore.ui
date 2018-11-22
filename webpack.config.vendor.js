@@ -24,8 +24,8 @@ module.exports = (env) => {
                 'knockout',
                 'crossroads',
                 'history',
-                'jquery',
-                'jqueryui',
+                //'jquery',
+                //'jqueryui',
                 'lodash',
                 'moment',
                 //'@chenfengyuan/datepicker',
@@ -101,8 +101,8 @@ module.exports = (env) => {
             }),
             // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
             new webpack.ProvidePlugin({
-                $: 'jquery',
-                jQuery: 'jquery'
+                //$: 'jquery',
+                //jQuery: 'jquery'
             }),
             new webpack.DllPlugin({
                 path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
