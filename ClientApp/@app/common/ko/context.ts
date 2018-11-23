@@ -647,6 +647,20 @@ ko.utils.extend(ko.utils, {
                     });
             }
         },
+        animate: (element: HTMLElement, classAnimated: string) => {
+            if (element) {
+                ko.utils.dom.removeClass(element, 'animated');
+                ko.utils.dom.removeClass(element, classAnimated);
+
+                if (classAnimated.indexOf('animated') == -1) {
+                    classAnimated = `animated ${classAnimated.trim()}`;
+                }
+
+                setTimeout(() => {
+                    ko.utils.dom.addClass(element, classAnimated);
+                }, 10);
+            }
+        },
         getScroll: (element: HTMLElement, side: string = 'top') => {
             if (element.nodeName === 'BODY' || element.nodeName === 'HTML') {
                 let html = element.ownerDocument!.documentElement,

@@ -1,4 +1,4 @@
-import { History } from 'history';
+import { History } from '@app/providers';
 
 export interface IComponent {
     url?: string;

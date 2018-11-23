@@ -34,7 +34,7 @@ export class AlertBindingHandler implements KnockoutBindingHandler {
                 type: 'alert-' + (ko.unwrap(value.type) || 'info')
             };
         } else {
-            throw new Error('alert binding should be used with dom elements or ko virtual elements');
+            throw new Error('Alert binding should be used with dom elements or ko virtual elements');
         }
 
         ko.renderTemplate(template, bindingContext.createChildContext(data), ko.utils.extend({ templateEngine: usedTemplateEngine }, value.templateOptions), element);

@@ -11,3 +11,5 @@ import '@app/controls/ui/each';
 import '@app/controls/ui/i18n';
 import '@app/controls/ui/sortable';
 import '@app/controls/ui/switch';
+
+import '@app/controls/ui/topmenu';

@@ -1,14 +1,17 @@
-// import external libs
-//import 'popper.js';
-//import 'bootstrap';
-
-import '@app/common/ui/bootstrap';
-
-import { _, ko, crossroads, createBrowserHistory } from '@app/providers';
+import {
+    _,
+    ko,
+    crossroads,
+    createBrowserHistory
+} from '@app/providers';
 
 // import external observable
 import '@app/common/ko/context';
 import '@app/common/ko/observable';
+
+// import custom bootstrap event
+import '@app/common/ui/bootstrap';
+
 
 import { Components } from '@app/common/ko';
 import { menu } from '@app/common/utils/menu';

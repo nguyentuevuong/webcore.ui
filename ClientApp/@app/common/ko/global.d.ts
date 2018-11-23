@@ -146,6 +146,7 @@ declare interface KnockoutUtils {
         getScroll: (element: HTMLElement, side?: string) => number;
         parent: (element: HTMLElement) => HTMLElement;
         parents: (element: HTMLElement, helper: string) => HTMLElement;
+        animate: (element: HTMLElement, classAnimated: string) => void;
     };
     date: {
         gmt: (year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number) => Date;

@@ -123,7 +123,7 @@ export function component(params: IDecoratorComponent) {
                     } else if (_.size($contents) == 1) {
                         $contents.replaceWith(templateNodes);
                     }*/
-
+                    
                     return new constructor(ko.utils.omit(params, ['$raw', 'component']), element, templateNodes);
                 }
             },
