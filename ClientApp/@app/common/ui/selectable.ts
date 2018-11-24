@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { _ } from '@app/providers';
 
 export class Selectables {
     name: string = 'Selectables';

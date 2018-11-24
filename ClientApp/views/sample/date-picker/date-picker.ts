@@ -1,5 +1,4 @@
-import * as ko from 'knockout';
-
+import { ko } from '@app/providers';
 import { component } from '@app/common/ko';
 
 @component({

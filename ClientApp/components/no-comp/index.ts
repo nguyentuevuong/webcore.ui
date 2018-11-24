@@ -1,4 +1,4 @@
-import * as ko from 'knockout';
+import { ko } from '@app/providers';
 import { component } from '@app/common/ko';
 
 @component({
@@ -7,5 +7,5 @@ import { component } from '@app/common/ko';
     template: require('./index.html')
 })
 export class NoComponentViewModel {
-    focusSearch: KnockoutObservable<boolean> = ko.observable(true); 
+    focusSearch: KnockoutObservable<boolean> = ko.observable(true);
 }

@@ -1,6 +1,4 @@
-import * as ko from 'knockout';
-import * as _ from 'lodash';
-
+import { ko } from '@app/providers';
 import { component } from '@app/common/ko';
 
 @component({
@@ -12,7 +10,7 @@ import { component } from '@app/common/ko';
     resources: require('./resources.json')
 })
 export class SampleModalParentViewModel {
-    
+
     userName: KnockoutObservable<string> = ko.observable('admin8');
     passWord: KnockoutObservable<string> = ko.observable('admin8');
 

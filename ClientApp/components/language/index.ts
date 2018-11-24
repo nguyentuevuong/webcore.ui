@@ -1,6 +1,4 @@
-import * as ko from 'knockout';
-import * as _ from 'lodash';
-
+import { ko } from '@app/providers';
 import { component } from '@app/common/ko';
 import { lang, i18n } from '@app/common/lang';
 
@@ -11,5 +9,5 @@ import { lang, i18n } from '@app/common/lang';
 })
 export class LanguageComponent {
     lang: KnockoutObservable<string> = lang;
-    regions: KnockoutObservableArray<string> = ko.observableArray(_.keys(i18n));
+    regions: KnockoutObservableArray<string> = ko.observableArray(ko.utils.keys(i18n));
 }

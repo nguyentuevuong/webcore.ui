@@ -1,8 +1,5 @@
-import * as _ from 'lodash';
-
 import { component } from "@app/common/ko";
 import { Router } from '@app/common/router';
-
 import { menu, IMenu } from '@app/common/utils/menu';
 
 @component({

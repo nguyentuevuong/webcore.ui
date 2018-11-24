@@ -1,6 +1,4 @@
-import * as ko from 'knockout';
-
-import { route } from '@app/common/router';
+import { ko } from '@app/providers';
 import { component, IDispose, IView } from '@app/common/ko';
 
 @component({

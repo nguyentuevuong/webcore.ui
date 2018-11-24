@@ -1,8 +1,7 @@
-import { component, IView } from "@app/common/ko";
-
 import * as data from './data';
-import * as ko from 'knockout';
-import * as _ from 'lodash';
+
+import { _, ko } from '@app/providers';
+import { component, IView } from "@app/common/ko";
 
 @component({
     url: '/sample/uis/icons',

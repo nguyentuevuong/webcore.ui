@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { _ } from '@app/providers';
 
 export class UUID {
     public static random(): string {

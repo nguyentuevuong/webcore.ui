@@ -1,5 +1,3 @@
-import * as ko from 'knockout';
-
 import { component } from '@app/common/ko';
 
 @component({

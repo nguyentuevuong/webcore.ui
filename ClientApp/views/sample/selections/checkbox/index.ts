@@ -1,6 +1,4 @@
-import * as ko from 'knockout';
-import * as $ from 'jquery';
-
+import { _, ko } from '@app/providers';
 import { component } from '@app/common/ko';
 
 @component({

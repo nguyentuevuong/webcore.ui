@@ -1,5 +1,5 @@
+import { _, ko } from '@app/providers';
 import { component } from '@app/common/ko';
-import * as ko from 'knockout';
 
 @component({
     url: 'sample/input/mask',

@@ -1,9 +1,5 @@
 import { component } from '@app/common/ko';
 
-import * as $ from 'jquery';
-import * as _ from 'lodash';
-import * as ko from 'knockout';
-
 @component({
     url: 'sample/utils/date',
     name: 'utils-date',
