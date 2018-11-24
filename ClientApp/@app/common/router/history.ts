@@ -69,4 +69,4 @@ ko.utils.extend(history, {
 });
 
 // replace state when back or forward button clicked
-ko.utils.registerEventHandler(window, 'popstate', () => history.replaceState(history.state, locz.pathname));
+ko.utils.registerEventHandler(window, 'popstate', () => _listener.apply(history, [history.state, locz.pathname]));
