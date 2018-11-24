@@ -1,5 +1,5 @@
 import { ko } from '@app/providers';
-import { fetch } from '@app/common/http';
+import { fetch } from '@app/common/utils';
 import { component } from '@app/common/ko';
 
 @component({
