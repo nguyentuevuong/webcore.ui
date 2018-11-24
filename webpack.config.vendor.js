@@ -21,13 +21,13 @@ module.exports = (env) => {
         },
         entry: {
             vendor: [
-                'knockout',
-                'crossroads',
-                'history',
-                //'jquery',
-                //'jqueryui',
                 'lodash',
                 'moment',
+                'knockout',
+                //'crossroads',
+                //'history',
+                //'jquery',
+                //'jqueryui',
                 //'@chenfengyuan/datepicker',
                 //'@chenfengyuan/datepicker/dist/datepicker.css',
                 '@fortawesome/fontawesome-free/css/all.css',

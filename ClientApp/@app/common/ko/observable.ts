@@ -1,5 +1,5 @@
 import { ko } from '@app/providers';
-import { random } from '@app/common/id';
+import { random } from '@app/common/utils';
 
 let orgSet = ko.utils.setPrototypeOfOrExtend;
 

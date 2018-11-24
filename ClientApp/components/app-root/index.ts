@@ -1,5 +1,5 @@
-import { _, ko, History } from '@app/providers';
-import { Router, route } from '@app/common/router';
+import { _, ko } from '@app/providers';
+import { Router } from '@app/common/router';
 import { component, IComponent, Components, IView, IDispose } from '@app/common/ko';
 
 @component({
@@ -13,12 +13,11 @@ export class AppRootViewModel implements IView, IDispose {
 
     public template: KnockoutObservable<TEMPLATE | number> = ko.observable(TEMPLATE.HOME);
 
-    constructor(params: { history: History, baseName: string }) {
+    constructor(params: { baseName: string }) {
         let self = this;
-
         // Activate the client-side router
-        route.goto = (self.router = new Router(params.history, params.baseName)).goto;
-
+        self.router = new Router(params.baseName);
+        
         ko.computed({
             read: () => {
                 let route: IComponent = ko.toJS(self.router),
@@ -26,7 +25,7 @@ export class AppRootViewModel implements IView, IDispose {
                         .filter(f => !_.isNumber(f))
                         .map(m => String(m).toLowerCase())
                         .value(),
-                    regx: Array<any> | null = route.history!.location.pathname.match(/[a-z]+/);
+                    regx: Array<any> | null = location.pathname.match(/[a-z]+/);
 
                 if (_.isNil(regx)) {
                     self.template(self.TEMPL.HOME);

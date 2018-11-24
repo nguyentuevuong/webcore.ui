@@ -1,5 +1,5 @@
 import { ko } from '@app/providers';
-import { random } from '@app/common/id/random';
+import { random } from '@app/common/utils';
 
 let toJS = ko.toJS,
     extend = ko.utils.extend,

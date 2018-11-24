@@ -1,5 +1,3 @@
-import { History } from '@app/providers';
-
 export interface IComponent {
     url?: string;
     name?: string;
@@ -7,7 +5,6 @@ export interface IComponent {
     title?: string;
     params?: any;
     viewModel?: any;
-    history?: History;
     component?: any
 }
 

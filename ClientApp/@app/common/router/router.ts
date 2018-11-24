@@ -1,8 +1,4 @@
 import { _, ko } from '@app/providers';
-
-import { History } from 'history';
-import * as crossroads from 'crossroads';
-
 import { IComponent, Components } from '@app/common/ko';
 import { lang, i18n, getText } from '@app/common/lang';
 
@@ -16,69 +12,58 @@ import { lang, i18n, getText } from '@app/common/lang';
 // many possible ways of setting up client-side routes.
 export class Router {
     public currentRoute = ko.observableOrig<IComponent>({});
-    private disposeHistory: () => void;
     private clickEventListener: (evt: MouseEvent) => void;
 
-    constructor(private history: History, basename: string) {
+    constructor(basename: string) {
         let self = this;
 
-        // extend NormAsObject
-        ko.utils.extend(crossroads, {
-            normalizeFn: crossroads.NORM_AS_OBJECT
-        });
+        // Make history watch for navigation and notify currentRoute
+        history.listener((data: any, url: string) => {
+            let component = ko.utils.arrayFirst(Components, c => {
+                if (c.url) {
+                    let keys: Array<string> = [],
+                        flags = url.match(new RegExp(`^${c.url.replace(/:[^\s/]+/g,
+                            (match: string) => {
+                                keys.push(match.replace(/:/g, ''));
+                                return '([\\w-]+)';
+                            })}$`));
 
-        // Reset and configure Crossroads so it matches routes and updates this.currentRoute
-        crossroads.removeAllRoutes();
-        crossroads.resetState();
+                    if (flags) {
+                        if (!c.params) {
+                            c.params = {};
+                        }
 
-        crossroads.bypassed.add(url => {
-            // not match any route
-            self.currentRoute({
-                url: url,
-                title: 'Not found',
-                name: 'no-component',
-                history: history,
-                component: {
-                    name: 'no-component'
+                        flags = flags.slice(1);
+
+                        ko.utils.arrayForEach(keys, (key: string, index: number) => {
+                            c.params[key] = flags && flags[index];
+                        });
+
+                        return true;
+                    }
+
+                    return false;
                 }
+
+                return false;
             });
 
-            // clear old errors
-            ko.clearError();
-
-            // remove lastest matched url
-            ko.utils.extend(crossroads, {
-                _prevMatchedRequest: null
-            });
-        })
-
-        Components.forEach(route => {
-            if (route.url) {
-                crossroads.addRoute(route.url, (requestParams: any) => {
-                    let rmk = _(requestParams)
-                        .keys()
-                        .map(k => Number(k))
-                        .filter(k => _.isNumber(k))
-                        .map(k => String(k))
-                        .value();
-
-                    // clear old errors
-                    ko.clearError();
-
-                    // remove request, vals, number params;
-                    self.currentRoute(ko.utils.extend({ component: route }, _.omit(requestParams, _.concat(rmk, ['request_', 'vals_']))));
-
-                    // remove lastest bypassed url
-                    ko.utils.extend(crossroads, {
-                        _prevBypassedRequest: null
-                    });
+            if (component) {
+                self.currentRoute({
+                    url: url,
+                    params: data,
+                    component: component
+                })
+            } else {
+                self.currentRoute({
+                    url: url,
+                    title: 'Not found',
+                    name: 'no-component',
+                    component: {
+                        name: 'no-component'
+                    }
                 });
             }
-        });
-
-        // Make history.js watch for navigation and notify Crossroads
-        this.disposeHistory = history.listen(location => {
-            crossroads.parse(location.pathname, [location.state]);
         });
 
         this.clickEventListener = (evt: MouseEvent) => {
@@ -87,7 +72,7 @@ export class Router {
                     let href = anchor.getAttribute('href');
 
                     if (href!.indexOf(`${basename}/`) === 0) {
-                        history.push(href!.substring(basename.length));
+                        history.pushState(null, href!.substring(basename.length));
                         evt.preventDefault();
                     } else if (href == "#") {
                         evt.preventDefault();
@@ -108,8 +93,8 @@ export class Router {
 
         ko.utils.registerEventHandler(document, 'click', self.clickEventListener);
 
-        // Initialize Crossroads with starting location
-        crossroads.parse(history.location.pathname);
+        // Initialize history with starting location
+        history.replaceState(null, location.pathname);
 
         // computed route for change title
         ko.computed({
@@ -126,18 +111,10 @@ export class Router {
         });
     }
 
-    public link = (url: string): string => this.history.createHref({ pathname: url.replace(/([\/|\-|\_]:\w+:)+/g, '') });
-
-    goto = (url: string, params: any) => {
-        let self = this;
-
-        self.history.push(url, params);
-    }
+    public link = (url: string): string => url.replace(/([\/|\-|\_]:\w+)+/g, '');
 
     public dispose() {
         let self = this;
-
-        self.disposeHistory();
 
         // remove 
         ko.utils.removeEventHandler(document, 'click', self.clickEventListener);

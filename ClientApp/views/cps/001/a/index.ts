@@ -4,7 +4,7 @@ import { fetch } from '@app/common/http';
 import { component } from '@app/common/ko';
 
 @component({
-    url: '/employee/update-info',
+    url: '/employee/update-info/:id',
     title: '#cps001_title',
     icon: 'fa fa-globe',
     styles: require('./style.css'),
@@ -21,6 +21,8 @@ export class Cps001aViewModel {
         }).then((data: any) => {
             this.listEmployee(data.response);
         });
+
+        console.log(params);
     }
 
     preventLog(abc: string) {

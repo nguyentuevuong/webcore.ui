@@ -1,7 +1,8 @@
 import { ko } from '@app/providers';
 import { i18n } from '@app/common/lang';
-import { random } from '@app/common/id';
+import { random } from '@app/common/utils';
 import { Components } from '@app/common/ko';
+import { MD5 } from '@app/common/utils';
 
 interface IDecoratorComponent {
     url?: string;
@@ -43,9 +44,9 @@ export function component(params: IDecoratorComponent) {
 
         if (!params.name) {
             if (params.url) {
-                params.name = params.url
+                params.name = MD5.init(params.url
                     .replace(/\/+/gi, '-')
-                    .replace(/^-/gi, '') || id;
+                    .replace(/^-/gi, '')) || id;
             } else {
                 params.name = id;
             }
@@ -103,8 +104,8 @@ export function component(params: IDecoratorComponent) {
                     let element = elementRef.element,
                         templateNodes: Array<HTMLElement> = [].slice.call(elementRef.templateNodes)
                             .filter((node: HTMLElement) => !!node.tagName);
-                        //$element = $(element),
-                        //$contents = $element.find('content');
+                    //$element = $(element),
+                    //$contents = $element.find('content');
 
                     element.setAttribute('role', id);
 
@@ -123,7 +124,7 @@ export function component(params: IDecoratorComponent) {
                     } else if (_.size($contents) == 1) {
                         $contents.replaceWith(templateNodes);
                     }*/
-                    
+
                     return new constructor(ko.utils.omit(params, ['$raw', 'component']), element, templateNodes);
                 }
             },

@@ -1,10 +1,3 @@
-import {
-    _,
-    ko,
-    crossroads,
-    createBrowserHistory
-} from '@app/providers';
-
 // import external observable
 import '@app/common/ko/context';
 import '@app/common/ko/observable';
@@ -12,9 +5,8 @@ import '@app/common/ko/observable';
 // import custom bootstrap event
 import '@app/common/ui/bootstrap';
 
-
-import { Components } from '@app/common/ko';
-import { menu } from '@app/common/utils/menu';
+// import history extend
+import '@app/common/router/history';
 
 // import common control
 import '@app/common';
@@ -26,6 +18,8 @@ import '@app/components';
 import '@views';
 import '@components';
 
+import { ko } from '@app/providers';
+
 // History component needs no trailing slash
 const base = document.querySelector('base'),
     baseUrl = base!.getAttribute('href') || '',
@@ -33,8 +27,7 @@ const base = document.querySelector('base'),
 
 // Tell Knockout to start up an instance of your application
 ko.applyBindings({
-    baseName: baseName,
-    history: createBrowserHistory({ basename: baseName })
+    baseName: baseName
 }, document.body);
 
 // Basic hot reloading support. Automatically reloads and restarts the Knockout app each time
@@ -45,10 +38,4 @@ if (module.hot) {
 }
 
 // for debugger
-ko.utils.extend(window, {
-    _: _,
-    ko: ko,
-    routes: Components,
-    crossroads: crossroads,
-    menu: menu
-});
+ko.utils.extend(window, { ko: ko });

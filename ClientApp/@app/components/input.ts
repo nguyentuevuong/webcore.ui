@@ -1,6 +1,6 @@
 import { _, ko } from '@app/providers';
 import { component, IView } from "@app/common/ko";
-import { random } from '@app/common/id';
+import { random } from '@app/common/utils';
 import { mask } from '@app/common/ui/mask';
 import * as template from '@app/templates';
 

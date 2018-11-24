@@ -1,7 +1,7 @@
 import { _, ko } from '@app/providers';
 import { component, IView } from "@app/common/ko";
+import { random } from '@app/common/utils';
 import { BarCode } from '@app/common/utils';
-import { random, randomId } from '@app/common/id';
 
 import { BrowserQRCodeReader, Result } from '@zxing/library';
 

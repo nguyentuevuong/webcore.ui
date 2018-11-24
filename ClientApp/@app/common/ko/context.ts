@@ -1,5 +1,4 @@
 import { ko } from '@app/providers';
-import { min } from 'moment';
 
 let hasOwnProperty = Object.prototype.hasOwnProperty,
     origBinding2Desc = ko.applyBindingsToDescendants;

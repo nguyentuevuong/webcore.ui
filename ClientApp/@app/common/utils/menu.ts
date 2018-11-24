@@ -1,5 +1,5 @@
 import { _, ko } from '@app/providers';
-import { random } from '@app/common/id';
+import { random } from '@app/common/utils';
 import { Components, IComponent } from '@app/common/ko';
 
 export interface IMenu {
