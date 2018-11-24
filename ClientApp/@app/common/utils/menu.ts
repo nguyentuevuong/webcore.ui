@@ -19,8 +19,7 @@ export class Menu {
             childs: [],
             component: m
         })).value(),
-            names: { [key: string]: Array<Array<string>> } = _(menus).map(m => m.name.split('|')).groupBy(m => m[0]).value(),
-            keys: Array<string> = _.keys(names);
+            names: { [key: string]: Array<Array<string>> } = _(menus).map(m => m.name.split('|')).groupBy(m => m[0]).value();
 
         _(names).keys().each((k: string, i: number) => {
             if (_.size(names[k]) > 1) {

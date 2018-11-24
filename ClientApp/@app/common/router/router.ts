@@ -94,7 +94,7 @@ export class Router {
         ko.utils.registerEventHandler(document, 'click', self.clickEventListener);
 
         // Initialize history with starting location
-        history.replaceState(null, location.pathname);
+        history.initState(null, location.pathname);
 
         // computed route for change title
         ko.computed({

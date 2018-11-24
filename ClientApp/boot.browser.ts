@@ -36,6 +36,3 @@ if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => ko.cleanNode(document.body));
 }
-
-// for debugger
-ko.utils.extend(window, { ko: ko });

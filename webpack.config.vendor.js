@@ -24,12 +24,8 @@ module.exports = (env) => {
                 'lodash',
                 'moment',
                 'knockout',
-                //'crossroads',
-                //'history',
                 //'jquery',
                 //'jqueryui',
-                //'@chenfengyuan/datepicker',
-                //'@chenfengyuan/datepicker/dist/datepicker.css',
                 '@fortawesome/fontawesome-free/css/all.css',
                 '@fortawesome/fontawesome-free/css/v4-shims.css',
                 'animate.css/animate.css'
