@@ -122,7 +122,7 @@ export class MarkDown {
         str = str.replace(/\[(\s|x)*\]/g, match => `<i class='fa fa-${match.match(/x/) ? 'check-circle-o' : 'circle-o'}'></i>`);
 
         /* bock quotes */
-        str = str.replace(/(^(\n*(&gt;|>)) ?.+?)(\r?\n\r?\n)/gms, match => {// /^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
+        str = str.replace(/(^(\n*(&gt;|>)) ?.+?)(\r?\n\r?\n)/gm, match => {// /^( *(\&gt;|&amp;gt;|&amp;amp;gt|\>)[^\n]+(\n(?!def)[^\n]+)*)+/gm, match => {
             let quotes = [].slice.call(match.split('\n') || [])
                 .filter((str: string) => !!str)
                 .map((line: string) => line

@@ -22,7 +22,7 @@ import '@views';
 import '@components';
 
 import { ko } from '@app/providers';
-import { microlight } from '@app/common/utils';
+import { CodeHighlighter } from '@app/common/utils';
 
 // History component needs no trailing slash
 const base = document.querySelector('base'),
@@ -41,4 +41,4 @@ if (module.hot) {
     module.hot.dispose(() => ko.cleanNode(document.body));
 }
 
-ko.utils.extend(window, { microlight });
+ko.utils.extend(window, { CodeHighlighter });

@@ -1,6 +1,6 @@
 import { _, ko } from '@app/providers';
 import { component } from '@app/common/ko';
-import '@app/common/utils/microhighlight';
+import { CodeHighlighter } from '@app/common/utils/highlight';
 
 @component({
     url: 'sample/documents/hightlight',
