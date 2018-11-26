@@ -1,0 +1,89 @@
+	pre {
+		padding : 1em;
+		line-height: 1.5;
+		background: #000;
+		color: #ce9178;
+	}
+	
+	code {
+		font-size: 1.2em;
+	}
+
+	h1 span {
+		font-size : 0.5em;
+	}
+
+	a {
+		color : gray;
+	}
+
+	/* end of page css - below is for the code highlighter */
+
+	.javascript .comment, .ruby .comment {
+		color : green;
+	}
+
+	.javascript .string, .ruby .string {
+		color : teal;
+	}
+
+	.javascript .keywords, .ruby .keywords {
+		color : #569cd6;
+	}
+
+	.javascript .global {
+		color : blue;
+	}
+
+	.javascript .typeof {
+		color: #f00;
+	}
+
+	.javascript .prop {
+		color: floralwhite;
+	}
+
+	.javascript .brackets, .ruby .brackets {
+		color : #569cd6;
+	}
+
+	.css .comment {
+		color : gray;
+	}
+
+	.css .properties {
+		color : #569cd6;
+	}
+
+	.css .selectors {
+		color : maroon;
+		font-weight : bold;
+	}
+
+	.css .units {
+		color :red;
+	}
+
+	.css .urls {
+		color :green;
+	}
+
+	.html .tag {
+		color : purple;
+	}
+
+	.html .comment {
+		color : gray;
+		font-style: italic;
+	}
+
+	.html .string {
+		color : aqua;
+	}
+
+	.html .doctype {
+		color : teal;
+	}
+	.html .attribute {
+		color: blueviolet;
+	}

@@ -4,3 +4,4 @@ import '@views/sample/documents/route';
 import '@views/sample/documents/resource';
 
 import '@views/sample/documents/markdown';
+import '@views/sample/documents/highlight';
