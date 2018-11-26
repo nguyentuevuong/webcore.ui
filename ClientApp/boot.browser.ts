@@ -2,6 +2,9 @@
 import '@app/common/ko/context';
 import '@app/common/ko/observable';
 
+// import prototype
+import '@app/common/prototype';
+
 // import custom bootstrap event
 import '@app/common/ui/bootstrap';
 
@@ -19,6 +22,7 @@ import '@views';
 import '@components';
 
 import { ko } from '@app/providers';
+import { microlight } from '@app/common/utils';
 
 // History component needs no trailing slash
 const base = document.querySelector('base'),
@@ -36,3 +40,5 @@ if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => ko.cleanNode(document.body));
 }
+
+ko.utils.extend(window, { microlight });
