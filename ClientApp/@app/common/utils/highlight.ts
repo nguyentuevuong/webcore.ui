@@ -46,16 +46,20 @@ export class CodeHighlighter {
             comment: {
                 exp: /&lt;!\s*(--([^-]|[\r\n]|-[^-])*--\s*)&gt;/
             },
-            tag: {
-                exp: /(&lt;\/?)([a-zA-Z]+\s?)/,
-                replacement: "$1<span class=\"$0\">$2</span>"
-            },
-            string: {
-                exp: /'[^']*'|"[^"]*"/
-            },
             attribute: {
                 exp: /\b([a-zA-Z-:]+)(=)/,
                 replacement: "<span class=\"$0\">$1</span>$2"
+            },
+            'attribute-value': {
+                exp: /'[^']*'|"[^"]*"/
+            },
+            tag: {
+                exp: /(&lt;\/?)([a-zA-Z]+)/,
+                replacement: "<span class=\"brackets\">$1</span><span class=\"$0\">$2</span>"
+            },
+            brackets: {
+                exp: /(&gt;)/,
+                replacement: "<span class=\"brackets\">$1</span>"
             },
             value: {
                 exp: /"([a-zA-Z0-9])+"/
@@ -63,7 +67,8 @@ export class CodeHighlighter {
             doctype: {
                 exp: /&lt;!DOCTYPE([^&]|&[^g]|&g[^t])*&gt;/
             }
-        }
+        },
+        ignoreCase: false
     }, {
         name: "css",
         rules: {
@@ -80,11 +85,18 @@ export class CodeHighlighter {
                 exp: "([\\w-]+)(?=\\s*:)"
             },
             units: {
-                exp: /([0-9])(em|en|px|%|pt)\b/,
-                replacement: "$1<span class=\"$0\">$2</span>"
+                exp: /([0-9]+)(em|en|px|%|pt)\b/,
+                replacement: "<span class=\"$0\">$1$2</span>"
             },
             urls: {
-                exp: /url\([^\)]*\)/
+                exp: /(url)(\()([^\)]*)(\))/,
+                replacement: "<span class='url-name'>$1</span><span class='url-brackets'>$2</span><span class='url-value'>$3</span><span class='url-brackets'>$4</span>"
+            },
+            brackets: {
+                exp: /\{|\}/
+            },
+            comma: {
+                exp: /:|;/
             }
         }
     }, {
@@ -93,6 +105,15 @@ export class CodeHighlighter {
             comment: {
                 exp: /(\/\/[^\n]*(\n|$))|(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)/
             },
+            const: {
+                exp: /(window|document)/
+            },
+            blocks: {
+                exp: /{|}/
+            },
+            groups: {
+                exp: /\[|\]/
+            },
             brackets: {
                 exp: /\(|\)/
             },
@@ -100,15 +121,23 @@ export class CodeHighlighter {
                 exp: /'[^'\\]*(\\.[^'\\]*)*'|"[^"\\]*(\\.[^"\\]*)*"/
             },
             keywords: {
-                exp: /\b(arguments|break|case|continue|default|delete|do|else|for|function|if|in|instanceof|new|null|return|switch|typeof|var|void|while|with)\b/
+                exp: /\b(arguments|break|case|continue|default|delete|do|else|for|function|if|in|instanceof|new|null|open|return|switch|typeof|var|void|while|with)\b/
             },
             global: {
-                exp: /\b(toString|valueOf|window|element|prototype|constructor|document|escape|unescape|parseInt|parseFloat|setTimeout|clearTimeout|setInterval|clearInterval|NaN|isNaN|Infinity)\b/
+                exp: /\b(valueOf|element|prototype|constructor|escape|unescape|parseInt|parseFloat|setTimeout|clearTimeout|setInterval|clearInterval|NaN|isNaN|Infinity)\b/
             },
             typeof: {
-                exp: /\b(this|true|false|Date|Number|String)\b/
+                exp: /(this|true|false|([^\b](Date|Number|String)[^\b]))/
             },
-            prop: {
+            /*event: {
+                exp: /(\.)((on)*((dbl)*click|mousedown|mouseup|mouseenter|mousemove|mouseleave))/,
+                replacement: "<span class='comma'>$1</span><span class='$0'>$2</span>"
+            },*/
+            prototype: {
+                exp: /(\.)(length|indexOf|toString|(get(Date|Day|Month|Year)s*)|getElementsByTagName)/,
+                replacement: "<span class='comma'>$1</span><span class='$0'>$2</span>"
+            },
+            property: {
                 exp: /\.([a-zA-Z0-9_])+\b/
             }
         }
@@ -253,14 +282,17 @@ export class CodeHighlighter {
                                 spaces += "&nbsp;";
                             }
 
-                            return `<br /><span>${spaces}</span>`; // "\n" + spaces;
+                            return `\n<span>${spaces}</span>`; // "\n" + spaces;
                         });
 
                         parentNode.innerHTML = parsed
-                            .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
-                            .replace(/\n(<\/\w+>)?/g, "<br />$1").replace(/<br \/>[\n\r\s]*<br \/>/g, "<p><br></p>");
+                            .replace(/\n(<\/\w+>)?/g, "$1<br />")
+                            .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+                        //.replace(/<br \/>[\n\r\s]*<br \/>/g, "<p><br></p>");
                     } else {
-                        element.innerHTML = parse(element.innerHTML, styleSet.ignoreCase);
+                        element.innerHTML = parse(element.innerHTML, styleSet.ignoreCase)
+                            .replace(/\n(<\/\w+>)?/g, "$1<br />")
+                            .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
                     }
 
                     ko.utils.domData.set(element, 'highlight', true);

@@ -41,44 +41,42 @@ function initialiseLinks() {
             if (links[i].href.indexOf(&quot;http:&quot;)==0) {
                 // if the links URL starts with http: then we assume it's an external link
                 links[i].onclick = function() {
-                    window.open(this.href);
+                    window.open(this.href.getDate());
                     return false; // stop normal link behaviour
                 }
             }
         }
+
+        new Date
     }
 }
 
 window.onload = initialiseLinks();</code></pre>
 <h2>CSS Example</h2>
-<pre><code class="css">.javascript  .comment {
-	color : green; /* ffbgffg */
-}
-
-.javascript  .string {
-	color : maroon;
-}
-
-.javascript  .keywords {
-	font-weight : bold;
-}
-
-.javascript  .global {
-	color : blue;
-	font-weight: bolder;
-}
-
-.javascript  .brackets {
-	color : Gray;
-}
-
-.javascript .typeof {
-	color: #f00;
-}
-
-.javascript  .thing {
-	font-size : 10px;
-	background : url(ghgfhfg gh f.rtjhf);
+<pre><code class="css">.javascript {
+  .comment {
+    color: green; /* ffbgffg */
+  }
+  .string {
+    color: maroon;
+  }
+  .keywords {
+    font-weight: bold;
+  }
+  .global {
+    color: blue;
+    font-weight: bolder;
+  }
+  .brackets {
+    color: Gray;
+  }
+  .typeof {
+    color: #f00;
+  }
+  .thing {
+    font-size: 10px;
+    background: url("image-background.png");
+  }
 }</code></pre>
 <h2>HTML Example</h2>
 <pre><code class="html">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;

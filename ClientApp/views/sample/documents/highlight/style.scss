@@ -1,89 +1,107 @@
 	pre {
-		padding : 1em;
-		line-height: 1.5;
-		background: #000;
-		color: #ce9178;
+	    padding: 1em;
+	    line-height: 1.5;
+	    color: #ce9178;
+	    background-color: #252526;
 	}
-	
+
 	code {
-		font-size: 1.2em;
+	    font-size: 1.2em;
 	}
 
 	h1 span {
-		font-size : 0.5em;
+	    font-size: 0.5em;
 	}
 
 	a {
-		color : gray;
+	    color: gray;
 	}
 
 	/* end of page css - below is for the code highlighter */
 
-	.javascript .comment, .ruby .comment {
-		color : green;
+	.javascript .comment,
+	.ruby .comment {
+	    color: green;
 	}
 
-	.javascript .string, .ruby .string {
-		color : teal;
+	.javascript .string,
+	.ruby .string {
+	    color: teal;
 	}
 
-	.javascript .keywords, .ruby .keywords {
-		color : #569cd6;
+	.javascript .keywords,
+	.ruby .keywords {
+	    color: #569cd6;
 	}
 
 	.javascript .global {
-		color : blue;
+	    color: blue;
 	}
 
 	.javascript .typeof {
-		color: #f00;
+	    color: #f00;
 	}
 
 	.javascript .prop {
-		color: floralwhite;
+	    color: floralwhite;
 	}
 
-	.javascript .brackets, .ruby .brackets {
-		color : #569cd6;
+	.javascript .brackets,
+	.ruby .brackets {
+	    color: #569cd6;
 	}
 
-	.css .comment {
-		color : gray;
+	.css {
+	    .comment {
+	        color: #6a9955;
+	    }
+	    .properties {
+	        color: #9cdcfe;
+	    }
+	    .selectors {
+	        color: #d7ba7d;
+	    }
+	    .brackets {
+	        color: #d4d4d4;
+	    }
+	    .units {
+	        color: #b5cea8;
+	    }
+	    .url {
+	        &-name {
+	            color: #dcdcaa;
+	        }
+	        &-value {
+	            color: #ce9178;
+	        }
+	        &-brackets {
+	            color: #808080;
+	        }
+	    }
+	    .comma {
+	        color: #d4d4d4;
+	    }
 	}
 
-	.css .properties {
-		color : #569cd6;
-	}
-
-	.css .selectors {
-		color : maroon;
-		font-weight : bold;
-	}
-
-	.css .units {
-		color :red;
-	}
-
-	.css .urls {
-		color :green;
-	}
-
-	.html .tag {
-		color : purple;
-	}
-
-	.html .comment {
-		color : gray;
-		font-style: italic;
-	}
-
-	.html .string {
-		color : aqua;
-	}
-
-	.html .doctype {
-		color : teal;
-	}
-	.html .attribute {
-		color: blueviolet;
+	.html {
+	    color: #d4d4d4;
+	    .tag {
+	        color: #569cd6;
+	    }
+	    .comment {
+	        color: #6a9955;
+	        font-style: italic;
+	    }
+	    .doctype {
+	        color: #569cd6;
+	    }
+	    .attribute {
+	        color: #9cdcfe;
+	    }
+	    .attribute-value {
+	        color: #ce9178;
+	    }
+	    .brackets {
+	        color: #808080;
+	    }
 	}
