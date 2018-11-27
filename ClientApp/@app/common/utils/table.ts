@@ -264,6 +264,7 @@ export class FixedTable {
         styles += `\n{role} div[class^='fx-row'] { position: relative; }`;
         styles += `\n{role} tbody>tr { height: ${options.rowHeight}px }`;
 
+        styles += `\n{role} .fx-row-header.resize { cursor: ew-resize; }`;
         styles += `\n{role} .fx-row-header, {role} .fx-row-footer { z-index: 1 }`;
         styles += `\n{role} .fx-row-body { z-index: 2; background-color: #fff; }`;
 
@@ -872,6 +873,34 @@ export class FixedTable {
 
         // init default table (prevent exception)
         scrollBody.appendChild(table);
+
+        registerEvent(rowHeader, 'mousemove', (evt: MouseEvent) => {
+            let target: HTMLElement | null = evt.target as HTMLElement;
+
+            if (target && target.tagName === "TH") {
+                let bound = target.getBoundingClientRect();
+
+                if (bound.right - evt.pageX < 2) {
+                    ko.utils.dom.addClass(rowHeader, 'resize noselect');
+
+                    if (ko.utils.domData.get(rowHeader, 'resizecolumn')) {
+                        console.log(evt.target);
+                    }
+                } else {
+                    ko.utils.dom.removeClass(rowHeader, 'resize noselect');
+                }
+            }
+        });
+
+        registerEvent(rowHeader, 'mouseup', (evt: MouseEvent) => {
+            ko.utils.domData.set(rowHeader, 'resizecolumn', false);
+        });
+
+        registerEvent(rowHeader, 'mousedown', (evt: MouseEvent) => {
+            if (ko.utils.dom.hasClass(rowHeader, 'resize')) {
+                ko.utils.domData.set(rowHeader, 'resizecolumn', true);
+            }
+        });
 
         registerEvent(scrollBody, 'scroll', (evt: Event) => {
             fixedBody.scrollTop = scrollBody.scrollTop;
