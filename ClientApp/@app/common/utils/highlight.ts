@@ -65,7 +65,8 @@ export class CodeHighlighter {
                 exp: /"([a-zA-Z0-9])+"/
             },
             doctype: {
-                exp: /&lt;!DOCTYPE([^&]|&[^g]|&g[^t])*&gt;/
+                exp: /(&lt;)(!DOCTYPE)(([^&]|&[^g]|&g[^t])*)(&gt;)/,
+                replacement: "<span class='brackets'>$1</span><span class='$0'>$2</span><span class='attribute-value'>$3</span><span class='brackets'>&gt;</span>"
             }
         },
         ignoreCase: false
@@ -106,13 +107,14 @@ export class CodeHighlighter {
                 exp: /(\/\/[^\n]*(\n|$))|(\/\*[^*]*\*+([^\/][^*]*\*+)*\/)/
             },
             const: {
-                exp: /(window|document)/
+                exp: /(window|document|function|href|typeof|var)/
             },
             blocks: {
-                exp: /{|}/
+                exp: /{|}|;/
             },
             groups: {
-                exp: /\[|\]/
+                exp: /(\[)(.+)(\])/,
+                replacement: "<span class='groups'>$1</span><span class='groups-value'>$2</span><span class='groups'>$3</span>"
             },
             brackets: {
                 exp: /\(|\)/
@@ -121,24 +123,21 @@ export class CodeHighlighter {
                 exp: /'[^'\\]*(\\.[^'\\]*)*'|"[^"\\]*(\\.[^"\\]*)*"/
             },
             keywords: {
-                exp: /\b(arguments|break|case|continue|default|delete|do|else|for|function|if|in|instanceof|new|null|open|return|switch|typeof|var|void|while|with)\b/
+                exp: /(\s{1})(arguments|break|case|continue|default|delete|do|else|for|if|in|instanceof|new|null|open|return|switch|void|while|with)(\s{1})/
             },
             global: {
-                exp: /\b(valueOf|element|prototype|constructor|escape|unescape|parseInt|parseFloat|setTimeout|clearTimeout|setInterval|clearInterval|NaN|isNaN|Infinity)\b/
+                exp: /(\s{1})(valueOf|element|prototype|constructor|escape|unescape|parseInt|parseFloat|setTimeout|clearTimeout|setInterval|clearInterval|NaN|isNaN|Infinity)(\s{1})/
             },
             typeof: {
-                exp: /(this|true|false|([^\b](Date|Number|String)[^\b]))/
+                exp: /(this|true|false|Date|Number|String)/
             },
-            /*event: {
-                exp: /(\.)((on)*((dbl)*click|mousedown|mouseup|mouseenter|mousemove|mouseleave))/,
-                replacement: "<span class='comma'>$1</span><span class='$0'>$2</span>"
-            },*/
             prototype: {
                 exp: /(\.)(length|indexOf|toString|(get(Date|Day|Month|Year)s*)|getElementsByTagName)/,
                 replacement: "<span class='comma'>$1</span><span class='$0'>$2</span>"
             },
-            property: {
-                exp: /\.([a-zA-Z0-9_])+\b/
+            event: {
+                exp: /(on)*((dbl)*click|mousedown|mouseup|mouseenter|mousemove|mouseleave|load)/,
+                replacement: "<span class='$0'>$1$2</span>"
             }
         }
     }, {

@@ -19,36 +19,50 @@
 
 	/* end of page css - below is for the code highlighter */
 
-	.javascript .comment,
 	.ruby .comment {
 	    color: green;
 	}
 
-	.javascript .string,
 	.ruby .string {
 	    color: teal;
 	}
 
-	.javascript .keywords,
 	.ruby .keywords {
 	    color: #569cd6;
 	}
 
-	.javascript .global {
-	    color: blue;
-	}
-
-	.javascript .typeof {
-	    color: #f00;
-	}
-
-	.javascript .prop {
-	    color: floralwhite;
-	}
-
-	.javascript .brackets,
 	.ruby .brackets {
 	    color: #569cd6;
+	}
+
+	.javascript {
+	    color: #4ec9b0;
+	    .const {
+	        color: #9cdcfe;
+	    }
+	    .prototype {
+	        color: #dcdcaa;
+		}
+		.event,
+	    .keywords {
+	        color: #569cd6;
+	    }
+	    .groups {
+	        color: #d4d4d4;
+	        &-value {
+	            color: #d7ba7d;
+	        }
+	    }
+	    .blocks,
+	    .brackets {
+	        color: #d4d4d4
+	    }
+	    .comment {
+	        color: #6a9955;
+		}
+		.string {
+			color: #ce9178;
+		}
 	}
 
 	.css {
