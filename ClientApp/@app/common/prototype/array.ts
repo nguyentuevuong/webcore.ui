@@ -1,5 +1,4 @@
 import { ko } from '@app/providers';
-import { FunctionBind } from 'lodash';
 
 // find function
 if (!ko.utils.has([], 'find')) {
