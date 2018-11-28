@@ -16,7 +16,8 @@ export class FixedTable {
         displayRow: 10,
         fixedColumn: 0,
         rowHeight: 0,
-        columns: []
+        columns: [],
+        boundRights: []
     };
 
     constructor(table?: HTMLTableElement, options?: {
@@ -246,7 +247,13 @@ export class FixedTable {
             fixedH = Math.abs(options.displayRow) === options.displayRow,
             maxHeight = options.rowHeight * Math.abs(options.displayRow);
 
-        styles += `\n{role}.fx-container { width: ${totalW}px; }`;
+        self.options.columns
+            .reduce((p: number, c: number, i: number) => {
+                self.options.boundRights[i] = p + c;
+                return self.options.boundRights[i];
+            }, 0);
+
+        styles += `\n{role}.fx-container { position: relative; width: ${totalW}px; }`;
         styles += `\n{role} .fx-fixed-header, {role} .fx-fixed-body, {role} .fx-fixed-footer { width: ${fixedW}px; }`;
 
         styles += `\n{role} .fx-scroll-body { width: ${viewedW}px; }`;
@@ -880,13 +887,14 @@ export class FixedTable {
                 resize: {
                     index: number;
                     width: number;
-                    column: HTMLElement;
                 } | null = ko.utils.domData.get(rowHeader, 'resizecolumn');
 
             if (target && target.tagName === "TH") {
-                let bound = target.getBoundingClientRect();
+                let cbound = container.getBoundingClientRect(),
+                    bounds = self.options.boundRights,
+                    resizeable = bounds.filter(f => f + 2 > evt.pageX - cbound.left && f - 2 < evt.pageX - cbound.left).length;
 
-                if (bound.right - evt.pageX < 5) {
+                if (resizeable) {
                     ko.utils.dom.addClass(rowHeader, 'resize noselect');
                 } else if (!resize) {
                     ko.utils.dom.removeClass(rowHeader, 'resize noselect');
@@ -903,37 +911,33 @@ export class FixedTable {
             }
         });
 
-        registerEvent(window, 'mouseup', (evt: MouseEvent) => {
-            ko.utils.domData.set(rowHeader, 'resizecolumn', false);
-            ko.utils.dom.removeClass(rowHeader, 'resize noselect');
+        registerEvent(container, 'mouseup', (evt: MouseEvent) => {
+            if (rowHeader) {
+                ko.utils.domData.set(rowHeader, 'resizecolumn', false);
+                ko.utils.dom.removeClass(rowHeader, 'resize noselect');
+            }
         });
 
-        registerEvent(window, 'mousedown', (evt: MouseEvent) => {
-            if (ko.utils.dom.hasClass(rowHeader, 'resize')) {
-                let target = evt.target as HTMLElement,
-                    cols = self.options.columns.map(m => m),
-                    offsetTarg = target.getBoundingClientRect(),
-                    offsetCont = container.getBoundingClientRect(),
-                    position = evt.pageX - offsetCont.left;
+        registerEvent(container, 'mousedown', (evt: MouseEvent) => {
+            if (rowHeader) {
+                if (ko.utils.dom.hasClass(rowHeader, 'resize')) {
+                    let target = evt.target as HTMLElement,
+                        offsetCont = container.getBoundingClientRect(),
+                        position = evt.pageX - offsetCont.left,
+                        index = ko.utils.arrayFirst(self.options.boundRights
+                            .map((v: number, i: number) => {
+                                if (v + 2 > position && v - 2 < position) {
+                                    return i;
+                                }
 
-                cols.reduce((p: number, c: number, i: number, arr: Array<number>) => {
-                    cols[i] = p + c;
-                    return cols[i];
-                }, 0);
+                                return -1;
+                            }), f => f != -1);
 
-                let index = cols.map((v: number, i: number) => {
-                    if (v + 6 > position && v - 6 < position) {
-                        return i;
-                    }
-
-                    return -1;
-                }).filter(f => f != -1);
-
-                ko.utils.domData.set(rowHeader, 'resizecolumn', {
-                    index: index[0],
-                    column: target,
-                    width: self.options.columns[index[0]] - offsetTarg.right - 1
-                });
+                    ko.utils.domData.set(rowHeader, 'resizecolumn', {
+                        index: index,
+                        width: self.options.columns[index] - evt.pageX - 1
+                    });
+                }
             }
         });
 
@@ -1035,4 +1039,5 @@ interface IOptions {
     fixedColumn: number;
     rowHeight: number;
     columns: Array<number>;
+    boundRights: Array<number>;
 }
