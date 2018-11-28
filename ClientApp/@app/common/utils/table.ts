@@ -1,5 +1,6 @@
 import { ko } from '@app/providers';
 import { random } from '@app/common/utils';
+import { NumericDictionary } from 'lodash';
 
 let toJS = ko.toJS,
     extend = ko.utils.extend,
@@ -264,7 +265,7 @@ export class FixedTable {
         styles += `\n{role} div[class^='fx-row'] { position: relative; }`;
         styles += `\n{role} tbody>tr { height: ${options.rowHeight}px }`;
 
-        styles += `\n{role} .fx-row-header.resize { cursor: ew-resize; }`;
+        styles += `\n{role} .fx-row-header.resize { cursor: col-resize; }`;
         styles += `\n{role} .fx-row-header, {role} .fx-row-footer { z-index: 1 }`;
         styles += `\n{role} .fx-row-body { z-index: 2; background-color: #fff; }`;
 
@@ -874,31 +875,65 @@ export class FixedTable {
         // init default table (prevent exception)
         scrollBody.appendChild(table);
 
-        registerEvent(rowHeader, 'mousemove', (evt: MouseEvent) => {
-            let target: HTMLElement | null = evt.target as HTMLElement;
+        registerEvent(window, 'mousemove', (evt: MouseEvent) => {
+            let target: HTMLElement | null = evt.target as HTMLElement,
+                resize: {
+                    index: number;
+                    width: number;
+                    column: HTMLElement;
+                } | null = ko.utils.domData.get(rowHeader, 'resizecolumn');
 
             if (target && target.tagName === "TH") {
                 let bound = target.getBoundingClientRect();
 
-                if (bound.right - evt.pageX < 2) {
+                if (bound.right - evt.pageX < 5) {
                     ko.utils.dom.addClass(rowHeader, 'resize noselect');
-
-                    if (ko.utils.domData.get(rowHeader, 'resizecolumn')) {
-                        console.log(evt.target);
-                    }
-                } else {
+                } else if (!resize) {
                     ko.utils.dom.removeClass(rowHeader, 'resize noselect');
                 }
             }
+
+            if (resize) {
+                let ow = resize.width,
+                    width = ow + evt.pageX;
+
+                self.options.columns[resize.index] = width;
+
+                self.initLayout();
+            }
         });
 
-        registerEvent(rowHeader, 'mouseup', (evt: MouseEvent) => {
+        registerEvent(window, 'mouseup', (evt: MouseEvent) => {
             ko.utils.domData.set(rowHeader, 'resizecolumn', false);
+            ko.utils.dom.removeClass(rowHeader, 'resize noselect');
         });
 
-        registerEvent(rowHeader, 'mousedown', (evt: MouseEvent) => {
+        registerEvent(window, 'mousedown', (evt: MouseEvent) => {
             if (ko.utils.dom.hasClass(rowHeader, 'resize')) {
-                ko.utils.domData.set(rowHeader, 'resizecolumn', true);
+                let target = evt.target as HTMLElement,
+                    cols = self.options.columns.map(m => m),
+                    offsetTarg = target.getBoundingClientRect(),
+                    offsetCont = container.getBoundingClientRect(),
+                    position = evt.pageX - offsetCont.left;
+
+                cols.reduce((p: number, c: number, i: number, arr: Array<number>) => {
+                    cols[i] = p + c;
+                    return cols[i];
+                }, 0);
+
+                let index = cols.map((v: number, i: number) => {
+                    if (v + 6 > position && v - 6 < position) {
+                        return i;
+                    }
+
+                    return -1;
+                }).filter(f => f != -1);
+
+                ko.utils.domData.set(rowHeader, 'resizecolumn', {
+                    index: index[0],
+                    column: target,
+                    width: self.options.columns[index[0]] - offsetTarg.right - 1
+                });
             }
         });
 
