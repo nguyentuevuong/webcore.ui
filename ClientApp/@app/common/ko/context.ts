@@ -597,17 +597,8 @@ ko.utils.extend(ko.utils, {
                     }
                 }
 
-                if (element.className) {
-                    [].slice.call(classCss)
-                        .forEach((c: string) => element.classList.add(c.trim()));
-                } else {
-                    element.className = "__temp__";
-
-                    [].slice.call(classCss)
-                        .forEach((c: string) => element.classList.add(c.trim()));
-
-                    ko.utils.dom.removeClass(element, "__temp__");
-                }
+                [].slice.call(classCss)
+                    .forEach((c: string) => element.classList.add(c.trim()));
             }
         },
         removeClass: (element: HTMLElement, classCss: Array<string> | string) => {
@@ -620,10 +611,8 @@ ko.utils.extend(ko.utils, {
                     }
                 }
 
-                if (element.className) {
-                    [].slice.call(classCss)
-                        .forEach((css: string) => element.classList.remove(css));
-                }
+                [].slice.call(classCss)
+                    .forEach((css: string) => element.classList.remove(css));
             }
         },
         toggleClass: (element: HTMLElement, classCss: Array<string> | string) => {
