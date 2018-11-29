@@ -13,7 +13,7 @@ export class LabelControlBindingHandler implements KnockoutBindingHandler {
         // bind for attr
         dom.setAttr(element, 'for', ko.toJS(control.$attr).id);
 
-        dom.addClass(element, 'control-label control-label-block mb-1');
+        dom.addClass(element, 'control-label mb-1');
 
         return { controlsDescendantBindings: true };
     }
@@ -25,6 +25,9 @@ export class LabelControlBindingHandler implements KnockoutBindingHandler {
             $constraint = ko.toJS(control.$constraint);
 
         element.innerHTML = '';
+        
+        // missing block or inline style
+        dom.addClass(element, 'control-label-block');
 
         if ($require) {
             dom.addClass(element, 'control-label-danger');
