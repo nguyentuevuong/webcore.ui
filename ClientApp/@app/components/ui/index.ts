@@ -1,4 +1,3 @@
-import '@app/components/ui/label';
 import '@app/components/ui/modal';
 import '@app/components/ui/tabs';
 import '@app/components/ui/tree';
