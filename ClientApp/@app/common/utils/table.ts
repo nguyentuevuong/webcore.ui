@@ -883,31 +883,33 @@ export class FixedTable {
         scrollBody.appendChild(table);
 
         registerEvent(window, 'mousemove', (evt: MouseEvent) => {
-            let target: HTMLElement | null = evt.target as HTMLElement,
-                resize: {
-                    index: number;
-                    width: number;
-                } | null = ko.utils.domData.get(rowHeader, 'resizecolumn');
+            if (rowHeader) {
+                let target: HTMLElement | null = evt.target as HTMLElement,
+                    resize: {
+                        index: number;
+                        width: number;
+                    } | null = ko.utils.domData.get(rowHeader, 'resizecolumn');
 
-            if (target && target.tagName === "TH") {
-                let cbound = container.getBoundingClientRect(),
-                    bounds = self.options.boundRights,
-                    resizeable = bounds.filter(f => f + 2 > evt.pageX - cbound.left && f - 2 < evt.pageX - cbound.left).length;
+                if (target && target.tagName === "TH") {
+                    let cbound = container.getBoundingClientRect(),
+                        bounds = self.options.boundRights,
+                        resizeable = bounds.filter(f => f + 2 > evt.pageX - cbound.left && f - 2 < evt.pageX - cbound.left).length;
 
-                if (resizeable) {
-                    ko.utils.dom.addClass(rowHeader, 'resize noselect');
-                } else if (!resize) {
-                    ko.utils.dom.removeClass(rowHeader, 'resize noselect');
+                    if (resizeable) {
+                        ko.utils.dom.addClass(rowHeader, 'resize noselect');
+                    } else if (!resize) {
+                        ko.utils.dom.removeClass(rowHeader, 'resize noselect');
+                    }
                 }
-            }
 
-            if (resize) {
-                let ow = resize.width,
-                    width = ow + evt.pageX;
+                if (resize) {
+                    let ow = resize.width,
+                        width = ow + evt.pageX;
 
-                self.options.columns[resize.index] = width;
+                    self.options.columns[resize.index] = width;
 
-                self.initLayout();
+                    self.initLayout();
+                }
             }
         });
 
