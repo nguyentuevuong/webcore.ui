@@ -8,4 +8,4 @@ import '@views/ccg';
 
 import '@views/sample';
 
-import '@views/clone-ui';
+//import '@views/clone-ui';
