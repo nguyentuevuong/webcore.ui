@@ -294,6 +294,19 @@ export class CodeHighlighter {
                             .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
                     }
 
+                    [].slice.call(element.childNodes)
+                        .forEach((child: HTMLElement) => {
+                            if (child.nodeType == 3) {
+                                let replacement = ko.utils.dom.create('span', { text: child.nodeValue || '' });
+
+                                if (!child.nodeValue) {
+                                    element.removeChild(child);
+                                } else {
+                                    element.replaceChild(replacement, child);
+                                }
+                            }
+                        });
+
                     ko.utils.domData.set(element, 'highlight', true);
                 }
             });

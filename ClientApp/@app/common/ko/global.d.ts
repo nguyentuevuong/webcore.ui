@@ -135,6 +135,7 @@ declare interface KnockoutUtils {
     removeEventHandler: (element: any, eventType: any, handler: Function) => void;
     registerOnceEventHandler: (element: HTMLElement, any: any, handler: Function) => void;
     dom: {
+        remove: (element: HTMLElement) => boolean;
         create: (tag: string, options?: { [key: string]: string | number }) => HTMLElement;
         empty: (element: HTMLElement) => void;
         isEmpty: (element: HTMLElement) => boolean;

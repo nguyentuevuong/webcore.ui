@@ -580,6 +580,16 @@ ko.utils.extend(ko.utils, {
                 element.removeChild(element.firstChild);
             }
         },
+        remove: (element: HTMLElement) => {
+            let parent: Node | null = element.parentNode;
+
+            if (parent) {
+                parent.removeChild(element);
+                return true;
+            }
+
+            return false;
+        },
         isEmpty: (element: HTMLElement) => {
             return element.hasChildNodes();
         },
