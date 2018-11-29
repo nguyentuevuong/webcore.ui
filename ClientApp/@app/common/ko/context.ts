@@ -560,11 +560,11 @@ ko.utils.extend(ko.utils, {
             if (options) {
                 ko.utils.objectForEach(options, (key: string, value: string | number) => {
                     switch (key) {
-                        case 'text':
-                            element.setAttribute(key, value.toString());
-                            break;
                         case 'html':
                             ko.utils.setHtml(element, value.toString());
+                            break;
+                        case 'text':
+                            ko.utils.setTextContent(element, value.toString());
                             break;
                         default:
                             ko.utils.dom.setAttr(element, key, value);
