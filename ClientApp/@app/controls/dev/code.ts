@@ -22,11 +22,11 @@ export class I18nBindingHandler implements KnockoutBindingHandler {
                 if (selector) {
                     ko.cleanNode(selector);
 
-                    code = ko.utils.unescape(selector.innerHTML.replace(/\<br\s*\/*\>/g, '\n').trim());
+                    code = ko.utils.unescape((selector.textContent || "").replace(/\<br\s*\/*\>/g, '\n').trim());
                 }
             } else {
                 if (!code) {
-                    code = ko.utils.unescape(element.innerHTML.replace(/\<br\s*\/*\>/g, '\n').trim());
+                    code = ko.utils.unescape((element.textContent || "").replace(/\<br\s*\/*\>/g, '\n').trim());
                 }
 
                 switch (type) {

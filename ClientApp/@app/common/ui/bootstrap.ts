@@ -68,7 +68,7 @@ document.addEventListener("click", function (e) {
         let target = evt.target as HTMLElement;
 
         if (ko.utils.dom.hasClass(target, 'nav-link') && !ko.utils.dom.hasClass(target, 'disabled')) {
-            let parent = target.closest('.nav'),
+            let parent = target.closest('.nav.nav-tabs'),
                 href = ko.utils.dom.getAttr(target, 'href');
 
             if (parent) {
@@ -81,7 +81,7 @@ document.addEventListener("click", function (e) {
 
                 let siblings = parent.nextSibling as HTMLElement;
 
-                if (siblings) {
+                if (siblings && href.match(/#.+/)) {
                     let tab = siblings.querySelector(href) as HTMLElement;
 
                     [].slice.call(siblings.querySelectorAll('.tab-pane'))
