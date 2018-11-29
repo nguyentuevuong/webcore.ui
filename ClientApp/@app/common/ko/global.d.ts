@@ -136,17 +136,21 @@ declare interface KnockoutUtils {
     registerOnceEventHandler: (element: HTMLElement, any: any, handler: Function) => void;
     dom: {
         create: (tag: string, options?: { [key: string]: string | number }) => HTMLElement;
+        empty: (element: HTMLElement) => void;
+        isEmpty: (element: HTMLElement) => boolean;
+        next: (element: HTMLElement) => HTMLElement | null;
+        preview: (element: HTMLElement) => HTMLElement | null;
         setAttr: (element: HTMLElement, key: string, value: string | number) => void;
         getAttr: (element: HTMLElement, key: string) => string;
         removeAttr: (element: HTMLElement, key: string) => void;
         hasClass: (element: HTMLElement, classCss: string) => boolean;
         addClass: (element: HTMLElement, classCss: string) => void;
         removeClass: (element: HTMLElement, classCss: string) => void;
-        toggleClass: (element: HTMLElement, classCss: Array<string> | string) =>  void;
+        toggleClass: (element: HTMLElement, classCss: Array<string> | string) => void;
         getScroll: (element: HTMLElement, side?: string) => number;
         parent: (element: HTMLElement) => HTMLElement;
         parents: (element: HTMLElement, helper: string) => HTMLElement;
-        animate: (element: HTMLElement, classAnimated: string) => void;
+        animate: (element: HTMLElement, classAnimated: string, removeAfterEnd?: boolean) => void;
     };
     date: {
         gmt: (year: number, month: number, day?: number, hour?: number, minute?: number, second?: number, ms?: number) => Date;

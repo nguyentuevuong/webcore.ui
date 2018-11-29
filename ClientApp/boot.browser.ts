@@ -41,4 +41,4 @@ if (module.hot) {
     module.hot.dispose(() => ko.cleanNode(document.body));
 }
 
-ko.utils.extend(window, { CodeHighlighter });
+ko.utils.extend(window, { ko, CodeHighlighter });

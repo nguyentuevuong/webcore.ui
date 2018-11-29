@@ -575,6 +575,20 @@ ko.utils.extend(ko.utils, {
 
             return element;
         },
+        empty: (element: HTMLElement) => {
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+        },
+        isEmpty: (element: HTMLElement) => {
+            return element.hasChildNodes();
+        },
+        next: (element: HTMLElement) => {
+            return element.nextSibling;
+        },
+        preview: (element: HTMLElement) => {
+            return element.previousSibling;
+        },
         setAttr: (element: HTMLElement, key: string, value: string | number) => {
             element && element.setAttribute && element.setAttribute(key, value.toString());
         },
@@ -613,6 +627,10 @@ ko.utils.extend(ko.utils, {
 
                 [].slice.call(classCss)
                     .forEach((css: string) => element.classList.remove(css));
+
+                if (!ko.utils.dom.getAttr(element, 'class')) {
+                    ko.utils.dom.removeAttr(element, 'class');
+                }
             }
         },
         toggleClass: (element: HTMLElement, classCss: Array<string> | string) => {
@@ -635,17 +653,26 @@ ko.utils.extend(ko.utils, {
                     });
             }
         },
-        animate: (element: HTMLElement, classAnimated: string) => {
-            if (element) {
-                ko.utils.dom.removeClass(element, 'animated');
-                ko.utils.dom.removeClass(element, classAnimated);
+        animate: (element: HTMLElement, classAnimated: string, removeAfterEnd: boolean = false) => {
+            let rmClass = ko.utils.dom.removeClass,
+                addClass = ko.utils.dom.addClass,
+                rgOneEvent = ko.utils.registerOnceEventHandler;
 
+            if (element) {
                 if (classAnimated.indexOf('animated') == -1) {
                     classAnimated = `animated ${classAnimated.trim()}`;
                 }
 
+                rmClass(element, classAnimated);
+
                 setTimeout(() => {
-                    ko.utils.dom.addClass(element, classAnimated);
+                    addClass(element, classAnimated);
+
+                    if (removeAfterEnd) {
+                        rgOneEvent(element, 'animationend', function () {
+                            rmClass(element, classAnimated);
+                        });
+                    }
                 }, 10);
             }
         },
