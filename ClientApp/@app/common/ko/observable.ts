@@ -166,16 +166,16 @@ ko.utils.extend(ko.errors, {
 
         return items;
     },
-    removeAll: (b: any) => {
-        let items = origRA.apply(ko.errors, [b]);
+    removeAll: (items: any) => {
+        let _items = origRA.apply(ko.errors, items);
 
-        ko.utils.arrayForEach(items, (item: KnockoutObservable<any>) => {
+        ko.utils.arrayForEach(_items, (item: KnockoutObservable<any>) => {
             if (item.clearError) {
                 item.clearError.apply(item);
             }
         });
 
-        return items;
+        return _items;
     },
     showDialog: ko.observableOrig(true)
 });

@@ -5,7 +5,10 @@ if ("a".replace(/a/, function () { return "b" }) != "b") {
     String.prototype.replace = function (search: string | RegExp, replace: string | Function) {
         // replace is not function
         if (typeof replace != "function") {
-            return default_replace.apply(this, arguments)
+            let searchValue: string = arguments[0],
+                replacement: string = arguments[1];
+
+            return default_replace(searchValue, replacement);
         }
 
         let str = "" + this,

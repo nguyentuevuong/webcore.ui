@@ -972,7 +972,7 @@ export class FixedTable {
         registerEvent(container, 'wheel', (evt: WheelEvent) => {
             let cls = container.classList,
                 step = evt.deltaY ? 125 : 40,
-                wheel = (evt.deltaY || evt.wheelDelta),
+                wheel = evt.deltaY,
                 scrollY = cls.contains('has-scroll-y');
 
             if (evt.shiftKey || !scrollY) {

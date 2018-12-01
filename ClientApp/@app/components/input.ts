@@ -4,8 +4,6 @@ import { random } from '@app/common/utils';
 import { mask } from '@app/common/ui/mask';
 import * as template from '@app/templates';
 
-var IMask = require('imask');
-
 @component({
     name: 'input',
     template: template.input,
@@ -54,7 +52,7 @@ export class InputComponent implements IView {
     }
 
     afterRender(): void {
-        let self = this,
+        /*let self = this,
             input: HTMLInputElement | null = document.getElementById((ko.toJS(self.control.$attr) || {}).id) as HTMLInputElement,
             imask = new IMask(input, ko.toJS(self.control.$type) || {
                 mask: String
@@ -104,6 +102,6 @@ export class InputComponent implements IView {
             },
             owner: self,
             disposeWhen: () => !self
-        });
+        });*/
     }
 }

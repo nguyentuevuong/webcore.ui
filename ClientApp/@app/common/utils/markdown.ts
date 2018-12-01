@@ -194,7 +194,7 @@ export class MarkDown {
                     .split(/\n/g)
                     .filter(f => !!f)
                     .map(m => m.trim()),
-                    align = [].slice.call(rows)
+                    align: string = [].slice.call(rows)
                         .filter((r: string) => !!r.match(/^(-|_|:)(-|_|:|\|)+(-|_|:)$/g))[0],
                     cols: Array<{
                         align: string

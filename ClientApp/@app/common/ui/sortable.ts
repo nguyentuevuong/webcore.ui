@@ -111,10 +111,15 @@ export class Sortable {
             evt.preventDefault();
 
             if (options.onSelect) {
-                options.onSelect.apply(null, [evt, {
-                    sourceIndex: (self.clickIndex = [].slice.call(self.dragcontainer.children).indexOf(target)),
-                    sourceParentNode: self.dragcontainer
-                }]);
+                let childs: Array<HTMLElement> = [].slice.call(self.dragcontainer.children || []);
+                
+                options.onSelect(evt, {
+                    sourceIndex: (self.clickIndex = childs.indexOf(target) as number),
+                    sourceParentNode: self.dragcontainer,
+                    targetParentNode: self.targetContainer,
+                    targetIndex: self.clickIndex,
+                    cancelDrop: true
+                });
             }
 
             if (!evt.cancelBubble) {
@@ -150,7 +155,7 @@ export class Sortable {
             options.onDrop.apply(null, [evt, {
                 sourceIndex: self.clickIndex,
                 sourceParentNode: self.dragcontainer,
-                targetParentNode: self.placeHolderItem.parentElement,
+                targetParentNode: self.placeHolderItem.parentElement as HTMLElement,
                 targetIndex: self.targetIndex,
                 cancelDrop: false
             }]);
@@ -186,10 +191,11 @@ export class Sortable {
             // container is empty, move clicked item over to it on hover 
             if (isOnTop(self.targetContainer, dropPoint.x, dropPoint.y) && self.targetContainer.children.length === 0) {
                 self.targetContainer.appendChild(self.placeHolderItem);
+                let childs: Array<HTMLElement> = [].slice.call(self.targetContainer.children);
 
-                self.targetIndex = [].slice.call(self.targetContainer.children)
+                self.targetIndex = childs
                     .filter((e: HTMLElement) => e != self.clickItem)
-                    .indexOf(self.placeHolderItem);
+                    .indexOf(self.placeHolderItem) as number;
 
                 setTimeout(() => {
                     // check if current drag item is over another item and swap places
@@ -215,8 +221,9 @@ export class Sortable {
                     if (subItem !== self.clickItem && subItem !== self.placeHolderItem) {
                         if (isOnTop(subItem, dropPoint.x, dropPoint.y)) {
                             self.swapItems(self.placeHolderItem, subItem);
-
-                            self.targetIndex = [].slice.call(self.targetContainer.children)
+                            let childs: Array<HTMLElement> = [].slice.call(self.targetContainer.children);
+            
+                            self.targetIndex = childs
                                 .filter((e: HTMLElement) => e != self.clickItem)
                                 .indexOf(self.placeHolderItem);
 
@@ -304,7 +311,7 @@ export class Sortable {
 
         self.clickIndex = 0;
         self.targetIndex = 0;
-        
+
         self.targetContainer = document.createElement('div');
 
         itemClass(self.dragcontainer, ITEMCLASS.REMOVE, 'sortable-dragging');

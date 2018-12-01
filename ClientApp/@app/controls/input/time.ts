@@ -1,5 +1,3 @@
-var IMask = require('imask');
-
 import { _, ko } from '@app/providers';
 import { handler } from '@app/common/ko';
 import { time } from '@app/common/utils';

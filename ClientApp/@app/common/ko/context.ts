@@ -38,7 +38,7 @@ ko.utils.extend(ko.utils, {
     },
     registerOnceEventHandler: (element: HTMLElement, eventType: string | any, handler: (evt: any) => any) => {
         ko.utils.registerEventHandler(element, eventType, function handlerWrapper(evt: any) {
-            handler.apply(evt);
+            handler(evt);
             ko.utils.removeEventHandler(element, eventType, handlerWrapper);
         });
     },

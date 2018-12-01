@@ -196,10 +196,10 @@ export class CodeHighlighter {
             if (!old) {
                 window.onload = () => CodeHighlighter.init();
             } else {
-                window.onload = () => {
+                window.onload = (evt: Event) => {
                     CodeHighlighter.init();
                     // call old onload func
-                    old && old.apply(window);
+                    old && old.apply(window, [evt]);
                 }
             }
         }

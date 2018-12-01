@@ -57,5 +57,5 @@ ko.utils.extend(ko.extenders, {
 
 interface IRequireConfig {
     message: string;
-    validate: () => boolean;
+    validate: (value?: any) => boolean;
 }

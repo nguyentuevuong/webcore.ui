@@ -3,7 +3,7 @@ import { component, IView } from "@app/common/ko";
 import { random } from '@app/common/utils';
 import { BarCode } from '@app/common/utils';
 
-import { BrowserQRCodeReader, Result } from '@zxing/library';
+//import { BrowserQRCodeReader, Result } from '@zxing/library';
 
 @component({
     name: 'barcode',
@@ -47,7 +47,7 @@ export class InputComponent implements IView {
 
     afterRender(): void {
 
-        let self = this,
+        /*let self = this,
             video = document.getElementById(self.ids.video) as HTMLVideoElement,
             codeReader = new BrowserQRCodeReader(),
             continuos = () => {
@@ -71,6 +71,6 @@ export class InputComponent implements IView {
                 }
             };
 
-        continuos();
+        continuos();*/
     }
 }
